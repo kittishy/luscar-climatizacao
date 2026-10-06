@@ -473,6 +473,304 @@ async function main() {
       record('message is decodable', text ? decodeURIComponent(text) === text : false);
       await page.close();
     }
+
+    // ---------------------------------------------------------------- 15
+    // Regression checks for the defects found in the 2026-10-06 review.
+    // Each one reproduced a measured failure, so each has a hard threshold.
+    console.log(`\n[15] review regressions: menu, footer, page header, gallery`);
+
+    // 15a. Compact-menu CTA was white text on a white button: contrast 1:1.
+    // The cause was a `.nav-panel a` rule that also matched the CTA anchor.
+    {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      await page.locator('#nav-toggle').click();
+      await page.waitForTimeout(120);
+
+      const cta = await page.evaluate(() => {
+        const el = document.querySelector('#nav-panel .btn--on-deep');
+        if (!(el instanceof HTMLElement)) return null;
+        const s = getComputedStyle(el);
+        // Walk up for the first non-transparent background.
+        let bg = s.backgroundColor;
+        let node = el.parentElement;
+        while (
+          node &&
+          (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')
+        ) {
+          bg = getComputedStyle(node).backgroundColor;
+          node = node.parentElement;
+        }
+        const r = el.getBoundingClientRect();
+        return { color: s.color, bg, w: Math.round(r.width), h: Math.round(r.height) };
+      });
+      record('panel CTA present @390', cta !== null);
+      const ratio = cta ? await page.evaluate(
+        ([fg, bg]) => {
+          const lum = (c) => {
+            const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
+            const f = (v) => {
+              const s = v / 255;
+              return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+            };
+            return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+          };
+          const a = lum(fg);
+          const b = lum(bg);
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        },
+        [cta.color, cta.bg],
+      ) : 0;
+      record('panel CTA contrast >= 4.5:1 @390', ratio >= 4.5, `${ratio.toFixed(2)}:1 (${cta?.color} on ${cta?.bg})`);
+      record('panel CTA is a comfortable target @390', cta !== null && cta.h >= 44, `${cta?.w}x${cta?.h}`);
+      await page.close();
+    }
+
+    // 15b. Four page controls stayed reachable behind the open panel.
+    {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      await page.locator('#nav-toggle').click();
+      await page.waitForTimeout(120);
+
+      const leakage = await page.evaluate(() => {
+        const panel = document.getElementById('nav-panel');
+        const behind = [];
+        for (const el of Array.from(document.querySelectorAll('a[href], button'))) {
+          if (panel?.contains(el)) continue;
+          // The toggle is the documented escape route from the panel, and the
+          // skip link is inert; everything else must be unreachable.
+          if (el.id === 'nav-toggle') continue;
+          // An inert subtree cannot take focus at all; that is the proof.
+          el.focus();
+          if (document.activeElement === el) behind.push(el.className || el.tagName);
+        }
+        return behind;
+      });
+      record('no focusable control behind open panel', leakage.length === 0, leakage.slice(0, 4).join(' | '));
+
+      const inertCount = await page.evaluate(
+        () => document.querySelectorAll('#conteudo[inert], .site-footer[inert], .contact-bar[inert], .brand[inert]').length,
+      );
+      record('background marked inert while panel is open', inertCount >= 4, `${inertCount} regions`);
+
+      await page.locator('#nav-toggle').click();
+      await page.waitForTimeout(120);
+      const released = await page.evaluate(() => {
+        const probe = document.querySelector('.hero__actions a[href]');
+        if (!(probe instanceof HTMLElement)) return false;
+        probe.focus();
+        return document.activeElement === probe;
+      });
+      record('inert released when panel closes', released);
+      await page.close();
+    }
+
+    // 15c. Footer links inherited the 2.19:1 action blue and rendered
+    // list markers; the page shipped `.site-footer` while CSS said `.footer`.
+    {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      const footer = await page.evaluate(() => {
+        const root = document.querySelector('.site-footer');
+        if (!root) return null;
+        const out = { links: [], markers: [], minHeight: Infinity };
+        for (const a of Array.from(root.querySelectorAll('a[href]'))) {
+          const s = getComputedStyle(a);
+          let bg = s.backgroundColor;
+          let node = a.parentElement;
+          while (node && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) {
+            bg = getComputedStyle(node).backgroundColor;
+            node = node.parentElement;
+          }
+          out.links.push({ color: s.color, bg });
+          const r = a.getBoundingClientRect();
+          if (r.height > 0) out.minHeight = Math.min(out.minHeight, r.height);
+        }
+        for (const li of Array.from(root.querySelectorAll('li'))) {
+          if (getComputedStyle(li).listStyleType === 'disc') out.markers.push(1);
+        }
+        // The old `.footer` selector must not be the one carrying the styling.
+        out.matchesOldSelector = root.matches('.footer');
+        return out;
+      });
+      record('footer found by its own class', footer !== null && footer.matchesOldSelector === false);
+      const worst = await page.evaluate((pairs) => {
+        const lum = (c) => {
+          const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
+          const f = (v) => {
+            const s = v / 255;
+            return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+          };
+          return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+        };
+        let min = 21;
+        for (const p of pairs) {
+          const a = lum(p.color);
+          const b = lum(p.bg);
+          min = Math.min(min, (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05));
+        }
+        return min;
+      }, footer?.links ?? []);
+      record('footer link contrast >= 4.5:1', worst >= 4.5, `${worst.toFixed(2)}:1`);
+      record('footer has no list markers', (footer?.markers.length ?? 1) === 0);
+      record('footer link targets >= 44px', (footer?.minHeight ?? 0) >= 44, `${Math.round(footer?.minHeight ?? 0)}px`);
+      await page.close();
+    }
+
+    // 15d. Page header put a 673px photograph in the first column and left the
+    // H1 a 404px box, because `.altitude__media`'s `order: -1` leaked in.
+    for (const [w, route] of [[1440, '/about/'], [1024, '/instalacao-ar-condicionado-joinville/']]) {
+      const page = await browser.newPage({ viewport: { width: w, height: 900 } });
+      await page.goto(base + route, { waitUntil: 'load' });
+      const head = await page.evaluate(() => {
+        const grid = document.querySelector('.page-head__grid');
+        const copy = document.querySelector('.page-head__copy');
+        const fig = document.querySelector('.page-head__figure');
+        if (!grid || !copy) return null;
+        const g = grid.getBoundingClientRect();
+        const c = copy.getBoundingClientRect();
+        const f = fig?.getBoundingClientRect();
+        const h1 = document.querySelector('.page-head h1');
+        return {
+          usesLegacyClass: Boolean(document.querySelector('.page-head .altitude__media')),
+          copyW: Math.round(c.width),
+          copyLeft: Math.round(c.left - g.left),
+          copyTop: Math.round(c.top - g.top),
+          figW: f ? Math.round(f.width) : 0,
+          figLeft: f ? Math.round(f.left - g.left) : 0,
+          figTop: f ? Math.round(f.top - g.top) : 0,
+          h1W: h1 ? Math.round(h1.getBoundingClientRect().width) : 0,
+          h1Text: h1 ? (h1.textContent || '').trim() : '',
+        };
+      });
+      record(`page head no longer borrows altitude class @${w}`, head?.usesLegacyClass === false);
+      record(`page head text column >= 440px @${w}`, (head?.copyW ?? 0) >= 440, `${head?.copyW}px`);
+      record(`page head text precedes photo @${w}`, (head?.figW ?? 0) === 0 || head.copyLeft < head.figLeft, `copy@${head?.copyLeft} photo@${head?.figLeft}`);
+      record(`page head H1 has room to breathe @${w}`, (head?.h1W ?? 0) >= 440, `${head?.h1W}px`);
+
+      // "ar-condicionado" must not break at its own hyphen: CSS cannot prevent
+      // that, so the word is wrapped in a nowrap span at render time.
+      const split = await page.evaluate(() => {
+        const h1 = document.querySelector('.page-head h1');
+        if (!h1) return null;
+        const range = document.createRange();
+        range.selectNodeContents(h1);
+        const lines = range.getClientRects();
+        // A hyphenated word split across lines shows up as a rect whose text
+        // ends in "-" on one line. Measure the wrapped spans instead.
+        const wrapped = h1.querySelectorAll('span.nowrap');
+        return {
+          wrapped: [...wrapped].map((s) => (s.textContent || '').trim()),
+          rects: lines.length,
+        };
+      });
+      const hyphensInH1 = head?.h1Text?.match(/[^\s-]+-\S+/g) ?? [];
+      const brokenOnes = (split?.wrapped ?? []).filter(
+        (w) => hyphensInH1.some((h) => h.includes(w)) === false,
+      );
+      record(
+        `page head keeps hyphenated words whole @${w}`,
+        hyphensInH1.every((h) => (split?.wrapped ?? []).some((w) => h.includes(w))) && brokenOnes.length === 0,
+        `esperado ${hyphensInH1.join(', ') || '(nenhum)'} | nowrap ${(split?.wrapped ?? []).join(', ') || '(nenhum)'}`,
+      );
+      await page.close();
+    }
+
+    // Text-only headers must not leave an empty second column.
+    {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      await page.goto(base + '/contact/', { waitUntil: 'load' });
+      const wide = await page.evaluate(() => {
+        const grid = document.querySelector('.page-head__grid');
+        if (!grid) return 0;
+        return Math.round(getComputedStyle(grid).gridTemplateColumns.split(' ').length);
+      });
+      record('text-only page head is one track @1440', wide === 1, `${wide} tracks`);
+      const cta = await page.evaluate(() => {
+        const a = document.querySelector('.page-head__actions .btn--primary');
+        return a ? (a.textContent || '').trim() : '';
+      });
+      record('contact page head leads with WhatsApp', cta.length > 0, cta);
+      await page.close();
+    }
+
+    // 15e. Gallery rendered disc bullets; the lightbox close button was a
+    // 44px box holding 52px of content.
+    {
+      const page = await browser.newPage({ viewport: { width: 768, height: 1024 } });
+      await page.goto(base + '/projects/', { waitUntil: 'load' });
+      const markers = await page.evaluate(() =>
+        Array.from(document.querySelectorAll('.gallery li'))
+          .filter((li) => getComputedStyle(li).listStyleType === 'disc').length,
+      );
+      record('gallery has no bullets @768', markers === 0, `${markers} items`);
+
+      await page.locator('[data-gallery-open]').first().click();
+      await page.waitForTimeout(150);
+      const close = await page.evaluate(() => {
+        const btn = document.querySelector('[data-lightbox-close]');
+        if (!(btn instanceof HTMLElement)) return null;
+        const r = btn.getBoundingClientRect();
+        return {
+          client: btn.clientWidth,
+          scroll: btn.scrollWidth,
+          h: Math.round(r.height),
+          text: (btn.textContent || '').trim(),
+        };
+      });
+      record('lightbox close content fits its box', close !== null && close.scroll <= close.client, `${close?.scroll} in ${close?.client}`);
+      record('lightbox close keeps a 44px target', (close?.h ?? 0) >= 44, `${close?.h}px`);
+      record('lightbox close label is legible', (close?.text ?? '').includes('Fechar'), close?.text ?? '');
+
+      // Clicking the dimmed area outside the photograph must dismiss.
+      await page.mouse.click(6, 6);
+      await page.waitForTimeout(150);
+      record('backdrop click closes lightbox', !(await page.locator('[data-lightbox]').isVisible()));
+      await page.close();
+    }
+
+    // 15f. Composition: the hero measured 415px of text beside 461px of photo
+    // with a four-line H1; services and the FAQ stayed single-column on tablet.
+    for (const [w, h, label] of [[1440, 900, 'desktop'], [1366, 768, 'laptop'], [768, 1024, 'tablet']]) {
+      const page = await browser.newPage({ viewport: { width: w, height: h } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      const hero = await page.evaluate(() => {
+        const copy = document.querySelector('.hero__copy');
+        const media = document.querySelector('.hero__media');
+        const h1 = document.querySelector('.hero__title');
+        if (!copy || !media || !h1) return null;
+        const cs = getComputedStyle(h1);
+        const lineHeight = parseFloat(cs.lineHeight);
+        return {
+          copyW: Math.round(copy.getBoundingClientRect().width),
+          mediaW: Math.round(media.getBoundingClientRect().width),
+          h1H: Math.round(h1.getBoundingClientRect().height),
+          lines: Math.max(1, Math.round(h1.getBoundingClientRect().height / lineHeight)),
+        };
+      });
+      if (w >= 900) {
+        record(`hero text column >= 470px @${label}`, (hero?.copyW ?? 0) >= 470, `${hero?.copyW}px`);
+        record(`hero H1 fits in 3 lines @${label}`, (hero?.lines ?? 9) <= 3, `${hero?.lines} lines`);
+        record(`hero photo stays in its column @${label}`, (hero?.mediaW ?? 0) <= 500, `${hero?.mediaW}px`);
+      } else {
+        record(`hero photo leads the page on ${label}`, (hero?.mediaW ?? 0) >= 400, `${hero?.mediaW}px`);
+      }
+      const serviceCols = await page.evaluate(
+        () => getComputedStyle(document.querySelector('.services-grid')).gridTemplateColumns.split(' ').length,
+      );
+      record(`services use two columns @${label}`, serviceCols === 2, `${serviceCols} columns`);
+      await page.close();
+    }
+    {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      const faqCols = await page.evaluate(
+        () => getComputedStyle(document.querySelector('.faq')).gridTemplateColumns.split(' ').length,
+      );
+      record('homepage FAQ uses two columns @1440', faqCols === 2, `${faqCols} columns`);
+      await page.close();
+    }
   } finally {
     await browser.close();
     server.close();

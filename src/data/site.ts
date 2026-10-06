@@ -452,10 +452,10 @@ export const logoUrl = `/media/logo/${photos.logo.slug}-${photos.logo.maxRender}
  * 560, 768, 900, 1024, 1120, 1440 and 1920 CSS px and rounded up.
  */
 export const sizes = {
-  /** Hero column: full width below 900, then ~350-460px. */
-  hero: '(min-width: 1240px) 460px, (min-width: 900px) 42vw, 96vw',
-  /** Inner-page header photo, right column of a two-column head. */
-  pageHead: '(min-width: 1440px) 680px, (min-width: 1024px) 580px, (min-width: 900px) 500px, 96vw',
+  /** Hero photo: full width below 900, then a clamped 360-480px column. */
+  hero: '(min-width: 1120px) 480px, (min-width: 900px) 36vw, 96vw',
+  /** Inner-page header photo: the narrower of the two header columns. */
+  pageHead: '(min-width: 1440px) 500px, (min-width: 1024px) 470px, (min-width: 900px) 440px, 96vw',
   /** Deep-section feature photo, the wider of the two columns. */
   feature: '(min-width: 1440px) 700px, (min-width: 1024px) 600px, (min-width: 900px) 500px, 96vw',
   /** Portrait in a `.human` block: full width below 768, then a narrow column. */

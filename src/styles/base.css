@@ -308,6 +308,18 @@ button {
   border: 0;
 }
 
+/*
+ * Keeps a word from being split across lines.
+ *
+ * `hyphens: none` disables automatic hyphenation but cannot prevent a break at
+ * a hyphen already present in the text, which is how "ar-condicionado" ended up
+ * as "ar-" / "condicionado" in a page H1. The word has to be wrapped in markup
+ * for this to work.
+ */
+.nowrap {
+  white-space: nowrap;
+}
+
 /* ==========================================================================
    Composition step-ups.
    Breakpoints follow the space the content needs, not device names:

@@ -74,32 +74,36 @@ const logo = photos.logo;
   </div>
 
   <nav class="nav-panel" id="nav-panel" data-open="false" aria-label="Navegação principal (compacto)">
-    <ul>
-      {
-        navItems.map((item) => (
-          <li>
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-              {item.label}
-            </a>
-          </li>
-        ))
-      }
-      <li>
-        <a href={routes.instalacao}>Instalação</a>
-      </li>
-      <li>
-        <a href={routes.manutencao}>Manutenção e consertos</a>
-      </li>
-      <li>
-        <a href={routes.altura}>Acesso por cordas</a>
-      </li>
-      <li>
-        <a href={routes.limpeza}>Limpeza</a>
-      </li>
-      <li>
-        <a href={routes.pex}>Tubulação PEX/EPEX</a>
-      </li>
-    </ul>
+    <div class="nav-panel__group">
+      <p class="nav-panel__label">Navegação</p>
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                class="nav-panel__link"
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="nav-panel__group">
+      <p class="nav-panel__label">Serviços</p>
+      <ul>
+        <li><a class="nav-panel__link" href={routes.instalacao}>Instalação</a></li>
+        <li><a class="nav-panel__link" href={routes.manutencao}>Manutenção e consertos</a></li>
+        <li><a class="nav-panel__link" href={routes.altura}>Acesso por cordas</a></li>
+        <li><a class="nav-panel__link" href={routes.limpeza}>Limpeza</a></li>
+        <li><a class="nav-panel__link" href={routes.pex}>Tubulação PEX/EPEX</a></li>
+      </ul>
+    </div>
+
     <div class="nav-panel__cta">
       <a class="btn btn--on-deep btn--block" href={ctaHref} rel="noopener">Pedir orçamento</a>
       <a class="btn btn--ghost-on-deep btn--block" href={routes.contact} style="margin-top:.75rem">
@@ -110,30 +114,104 @@ const logo = photos.logo;
 </header>
 
 <script>
-  // Progressive enhancement: the panel is only interactive once this runs.
-  // Without JS the desktop nav still works and the panel stays closed.
-  const toggle = document.getElementById('nav-toggle');
-  const panel = document.getElementById('nav-panel');
+  /**
+   * Compact navigation panel.
+   *
+   * Progressive enhancement: without this script the desktop nav still works
+   * and the panel stays closed.
+   *
+   * Focus handling, in order of the interaction it solves:
+   *   - on open, every element OUTSIDE the panel and the toggle gets `inert`,
+   *     so Tab cannot wander to controls hidden behind the panel. The browser
+   *     removes them from the focus order and from the accessibility tree, and
+   *     hides them from assistive tech rather than merely ignoring keystrokes.
+   *   - focus moves to the first link inside the panel.
+   *   - Tab is kept inside the panel by wrapping from last to first.
+   *   - Shift+Tab from the first element returns focus to the toggle.
+   *   - Escape closes and returns focus to the toggle.
+   *
+   * `inert` is used because it is a single declarative attribute that fixes
+   * focus, scrolling and accessibility exposure together, rather than a
+   * hand-rolled trap that can leak.
+   */
+const toggle = document.getElementById('nav-toggle');
+    const panel = document.getElementById('nav-panel');
 
-  if (toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
+    if (toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
+      const main = document.getElementById('conteudo');
+      const footer = document.querySelector('.site-footer');
+      const contactBar = document.querySelector('.contact-bar');
+      // The skip link sits outside <main>, and the brand link sits inside the
+      // header but above the panel, so both need the same treatment or they
+      // stay reachable controls while the panel covers the page. The toggle
+      // itself is deliberately excluded: Shift+Tab from the first panel item
+      // must be able to land on it to close the menu.
+      const skipLink = document.querySelector('.skip-link');
+      const brand = document.querySelector('.brand');
+
+      /** Elements that must not be reachable while the panel is open. */
+      const background = [main, footer, contactBar, skipLink, brand].filter(
+        (el): el is HTMLElement => el instanceof HTMLElement,
+      );
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      ).filter((el) => el.getBoundingClientRect().height > 0);
+
     const setOpen = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
       panel.dataset.open = String(open);
       const label = toggle.querySelector('.visually-hidden');
-      if (label) label.textContent = open ? 'Fechar menu de navegação' : 'Abrir menu de navegação';
+      if (label) {
+        label.textContent = open ? 'Fechar menu de navegação' : 'Abrir menu de navegação';
+      }
+
+      for (const el of background) {
+        if (open) el.setAttribute('inert', '');
+        else el.removeAttribute('inert');
+      }
+
       // Stop the page behind the panel from scrolling on touch devices.
       document.documentElement.style.overflow = open ? 'hidden' : '';
+
+      if (open) {
+        focusables()[0]?.focus();
+      }
     };
 
     toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
+      setOpen(willOpen);
+      if (!willOpen) toggle.focus();
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape') return;
       if (toggle.getAttribute('aria-expanded') !== 'true') return;
-      setOpen(false);
-      toggle.focus();
+
+      if (event.key === 'Escape') {
+        setOpen(false);
+        toggle.focus();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      // Wrap forward from the last item, and backward from the first, so
+      // focus stays inside the panel instead of escaping to the page behind.
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        toggle.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     });
 
     // Following a link inside the panel must not leave it stuck open.
@@ -141,11 +219,11 @@ const logo = photos.logo;
       if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
     });
 
-    // Leaving the small-screen range must not strand the open panel state.
+    // Leaving the small-screen range must not strand the open panel state, and
+    // must release the `inert` background set on open.
     const wide = window.matchMedia('(min-width: 1024px)');
-    const onChange = (event: MediaQueryList | MediaQueryListEvent) => {
+    wide.addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
-    };
-    wide.addEventListener('change', onChange as (e: MediaQueryListEvent) => void);
+    });
   }
 </script>

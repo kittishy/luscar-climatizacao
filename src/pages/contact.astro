@@ -8,7 +8,7 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { contacts, routes, serviceGroups, site, whatsappIntents, whatsappLink } from '../data/site.js';
+import { contacts, serviceGroups, site, whatsappIntents, whatsappLink } from '../data/site.js';
 
 export const meta = {
   route: '/contact/',
@@ -23,63 +23,27 @@ const whatsappHref = whatsappLink(whatsappIntents.geral);
 ---
 
 <Base meta={meta} barMessage={whatsappIntents.geral}>
+  {/*
+    WhatsApp is the point of this page, so it comes first as an action rather
+    than as a channel listed at the bottom. The lead already explains the
+    channel; repeating the number in a channel row after two sections was
+    making the visitor hunt for the only useful control on the page.
+  */}
   <PageHead
     crumbs={meta.breadcrumb ?? []}
     eyebrow="Contato"
     h1={meta.h1}
     lead="O atendimento começa pelo WhatsApp. Envie as informações que tiver sobre o serviço e a conversa sobre avaliação e orçamento segue por aí."
+    cta={{ label: 'Falar com o técnico', intent: 'geral' }}
   />
-
-  <section class="section" aria-labelledby="servicos-title">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="servicos-title">Qual serviço você precisa?</h2>
-        <p class="lead">
-          Cada serviço tem uma página com o que costuma ser perguntado e o
-          que ajuda a iniciar a conversa.
-        </p>
-      </div>
-
-      <div class="services-grid">
-        {
-          serviceGroups.map((group) => (
-            <article class="service-group">
-              <h3 class="service-group__title">{group.title}</h3>
-              <p class="service-group__lead">{group.lead}</p>
-              <a class="link-more" href={group.route}>
-                Ver sobre {group.title.toLowerCase()}
-              </a>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--ice" aria-labelledby="info-title">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="info-title">Informações que ajudam no atendimento</h2>
-        <p class="lead">
-          Para a conversa começar com contexto, ajuda enviar:
-        </p>
-      </div>
-      <ul>
-        <li>O serviço desejado: instalação, manutenção, limpeza, altura ou tubulação.</li>
-        <li>Fotos do aparelho, da fachada ou do local do serviço.</li>
-        <li>O endereço, para verificar a disponibilidade.</li>
-        <li>Se o local é casa, comércio, indústria, apartamento ou prédio.</li>
-      </ul>
-    </div>
-  </section>
 
   <section class="section" aria-labelledby="canais-title">
     <div class="container">
       <div class="section-head">
-        <h2 id="canais-title">Atendimento em Joinville e região</h2>
+        <h2 id="canais-title">Canais de atendimento</h2>
         <p class="lead">
-          A Luscar atende em {site.regionFull}. A disponibilidade para o
-          seu endereço é confirmada pelo WhatsApp.
+          A Luscar atende em {site.regionFull}. A disponibilidade para o seu
+          endereço é confirmada pelo WhatsApp.
         </p>
       </div>
 
@@ -107,6 +71,47 @@ const whatsappHref = whatsappLink(whatsappIntents.geral);
           </a>
         </li>
       </ul>
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="info-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="info-title">Informações que ajudam no atendimento</h2>
+        <p class="lead">Para a conversa começar com contexto, ajuda enviar:</p>
+      </div>
+      <ul>
+        <li>O serviço desejado: instalação, manutenção, limpeza, altura ou tubulação.</li>
+        <li>Fotos do aparelho, da fachada ou do local do serviço.</li>
+        <li>O endereço, para verificar a disponibilidade.</li>
+        <li>Se o local é casa, comércio, indústria, apartamento ou prédio.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="servicos-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="servicos-title">Sobre cada serviço</h2>
+        <p class="lead">
+          Se ainda não sabe qual serviço procura, cada página explica o que é
+          avaliado e que informações ajudam a iniciar a conversa.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        {
+          serviceGroups.map((group) => (
+            <article class="service-group">
+              <h3 class="service-group__title">{group.title}</h3>
+              <p class="service-group__lead">{group.lead}</p>
+              <a class="link-more" href={group.route}>
+                Ver sobre {group.title.toLowerCase()}
+              </a>
+            </article>
+          ))
+        }
+      </div>
     </div>
   </section>
 

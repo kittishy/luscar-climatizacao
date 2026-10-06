@@ -178,7 +178,17 @@ async function main() {
     console.error('No build. Run `npm run build` first.');
     process.exit(1);
   }
-  await rm(outDir, { recursive: true, force: true });
+  /*
+ * Only the generated trees are cleared.
+ *
+ * `rm -rf screenshots/` used to run here, which silently deleted
+ * `screenshots/live/` — the hand-curated before-captures of the deployed site
+ * that the comparison relies on. Each generated directory is emptied on its own
+ * so anything a human put in `screenshots/` survives a re-capture.
+ */
+for (const dir of ['desktop', 'tablet', 'mobile', 'routes', 'states', 'check']) {
+  await rm(join(outDir, dir), { recursive: true, force: true });
+}
 
   const { server, port } = await serve();
   const base = `http://127.0.0.1:${port}`;

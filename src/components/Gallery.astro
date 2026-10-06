@@ -25,7 +25,18 @@ import { photos, sizes as sizePresets, type PhotoKey } from '../data/site.js';
 
 interface Props {
   items: readonly PhotoKey[];
-  /** Wide tiles get a 16:9 crop; the rest keep 4:5. */
+  /**
+   * Indices that span two of the three desktop columns.
+   *
+   * Only pass indices whose source is landscape: the wide tile is cropped
+   * harder than the 4:5 tile, and forcing a 960x1280 portrait into it keeps
+   * roughly 40% of the height and loses the subject. Landscape and portrait
+   * sources are handled separately by the `--wide` crop classes below, so a
+   * portrait wide tile is safe but a 16:9 one is not.
+   *
+   * Cell arithmetic matters too. With three columns, a grid is only flush when
+   * `items.length + wideIndices.length` is a multiple of three.
+   */
   wideIndices?: readonly number[];
   /**
    * Layout hint for a NARROW tile (one of three columns on desktop).
@@ -56,8 +67,18 @@ const wide = new Set(wideIndices);
       const photo = photos[key];
       const full = `/media/${photo.dir}/${photo.slug}-${photo.maxRender}.jpg`;
       const isWide = wide.has(index);
+      // Landscape sources can take the aggressive 16:9 crop; portrait ones
+      // need a gentler ratio or the subject is cropped out of the frame.
+      const isLandscape = photo.width >= photo.height;
       return (
-        <li class:list={['gallery__item', isWide && 'gallery__item--wide']}>
+        <li
+          class:list={[
+            'gallery__item',
+            isWide && 'gallery__item--wide',
+            isWide && (isLandscape ? 'gallery__item--wide-landscape' : 'gallery__item--wide-portrait'),
+          ]}
+          style={`--photo-position:${photo.position}`}
+        >
           <button
             class="gallery__btn"
             type="button"
@@ -79,7 +100,7 @@ const wide = new Set(wideIndices);
 </ul>
 
 <dialog class="lightbox" data-lightbox aria-label="Fotografia em tamanho maior">
-    <div>
+  <div data-lightbox-figure>
       {/*
         src is intentionally ABSENT rather than empty.
 
@@ -93,6 +114,19 @@ const wide = new Set(wideIndices);
     <div class="lightbox__bar">
       <p class="lightbox__caption" data-lightbox-caption></p>
       <button class="lightbox__close" type="button" data-lightbox-close>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
         Fechar<span class="visually-hidden"> (Esc)</span>
       </button>
     </div>
@@ -104,12 +138,21 @@ const wide = new Set(wideIndices);
   const img = dialog?.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const caption = dialog?.querySelector<HTMLElement>('[data-lightbox-caption]');
   const closeBtn = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+  const figure = dialog?.querySelector<HTMLElement>('[data-lightbox-figure]');
   let opener: HTMLElement | null = null;
 
-  if (dialog && img && caption && closeBtn) {
-    dialog.querySelector('div')?.addEventListener('click', (event) => {
-      // Clicking the backdrop (outside the figure wrapper) dismisses.
-      if (event.target === event.currentTarget) dialog.close();
+  if (dialog && img && caption && closeBtn && figure) {
+    /*
+     * Backdrop click.
+     *
+     * The listener sits on the <dialog> itself and tests for a click that
+     * landed OUTSIDE the figure wrapper. Previously it was bound to the inner
+     * wrapper, where `event.target === event.currentTarget` only fired on the
+     * wrapper's own padding, so clicking the dimmed area around the photograph
+     * did nothing.
+     */
+    dialog.addEventListener('click', (event) => {
+      if (!figure.contains(event.target as Node)) dialog.close();
     });
 
     closeBtn.addEventListener('click', () => dialog.close());
@@ -119,11 +162,11 @@ const wide = new Set(wideIndices);
         opener = btn;
         img.src = btn.dataset.full ?? '';
         img.alt = btn.dataset.alt ?? '';
+        caption.textContent = btn.dataset.caption ?? '';
         // Carry the real pixel dimensions through so the dialog never
         // reserves the wrong space while the larger photograph loads.
         img.width = Number(btn.dataset.width) || img.width;
         img.height = Number(btn.dataset.height) || img.height;
-        caption.textContent = btn.dataset.caption ?? '';
         dialog.showModal();
         closeBtn.focus();
       });

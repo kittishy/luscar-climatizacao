@@ -3,9 +3,10 @@
 Redesign completo e novo SEO do site da **Luscar Climatização** (Joinville/SC).
 Astro com saída estática, 13 rotas, imagens e fontes locais.
 
-Documentos internos (**não** são servidos pelo site): [`PRODUCT.md`](PRODUCT.md),
-[`DECISIONS.md`](DECISIONS.md), [`LIMITACOES.md`](LIMITACOES.md),
-[`MIGRACAO.md`](MIGRACAO.md), [`RELATORIO-VALIDACAO.md`](RELATORIO-VALIDACAO.md).
+Documentos internos (**não** são servidos pelo site): [`DESIGN.md`](DESIGN.md),
+[`PRODUCT.md`](PRODUCT.md), [`DECISIONS.md`](DECISIONS.md),
+[`LIMITACOES.md`](LIMITACOES.md), [`MIGRACAO.md`](MIGRACAO.md),
+[`RELATORIO-VALIDACAO.md`](RELATORIO-VALIDACAO.md).
 
 ---
 

@@ -68,28 +68,16 @@ const faqItems = [
         <p class="eyebrow">Climatização em {site.region}</p>
         <h1 class="hero__title">{meta.h1}</h1>
         <p class="lead hero__lead">
-          Instalação, manutenção e limpeza de ar-condicionado, com atendimento para prédios
-          e apartamentos e acesso por cordas quando o local exige. A Luscar também trabalha
-          com tubulação flexível PEX/EPEX.
+          Instalação, manutenção e limpeza de ar-condicionado em Joinville e região.
+          Atendimento em prédios e apartamentos, com acesso por cordas quando necessário.
         </p>
         <div class="hero__actions">
           <a class="btn btn--primary" href={ctaHref} rel="noopener">Falar com o técnico</a>
           <a class="link-more" href={routes.servicos}>Conhecer os serviços</a>
         </div>
-        <div class="hero__meta">
-          <dl>
-            <div>
-              <dt>Atendimento</dt>
-              <dd style="margin:0">{site.regionFull}</dd>
-            </div>
-            <div>
-              <dt>Contato</dt>
-              <dd style="margin:0">
-                <a href={ctaHref} rel="noopener">WhatsApp (47) 8482-4814</a>
-              </dd>
-            </div>
-          </dl>
-        </div>
+        <p class="hero__region">
+          Atendimento em {site.regionFull}
+        </p>
       </div>
 
       <figure class="hero__figure">
@@ -115,8 +103,7 @@ const faqItems = [
         <p class="eyebrow">O que a Luscar faz</p>
         <h2 id="servicos-title">Serviços da Luscar</h2>
         <p class="lead">
-          Quatro frentes de atendimento. Cada uma tem uma página própria com o que costuma
-          perguntar, o que é avaliado e que informações ajudam a iniciar a conversa.
+          Instalação, manutenção, limpeza e serviços em altura em Joinville e região.
         </p>
       </div>
 
@@ -157,15 +144,16 @@ const faqItems = [
       <div class="altitude__copy">
         <p class="eyebrow eyebrow--on-deep">Acesso por cordas</p>
         <h2 id="altura-title">Quando o acesso faz parte do serviço</h2>
-        <p>
-          Em prédios e apartamentos, o caminho até a unidade externa também precisa ser
-          considerado. A Luscar atua com acesso por cordas para trabalhos em locais de difícil
-          alcance.
-        </p>
-        <p>
-          A conversa começa com as condições do imóvel e a necessidade do serviço — não com a
-          garantia de que qualquer fachada pode ser trabalhada.
-        </p>
+<p>
+        Em prédios e apartamentos, o caminho até a unidade externa também precisa ser
+        considerado. A Luscar atua com acesso por cordas para trabalhos em locais de difícil
+        alcance.
+      </p>
+      <p>
+        A viabilidade depende das condições de cada imóvel: geometria da fachada, pontos de
+        ancoragem e espaço para manusear o equipamento. Envie fotos da fachada e do ponto de
+        instalação para avaliarmos o seu caso.
+      </p>
         <p><a class="link-more" href={routes.altura}>Como funciona o acesso por cordas</a></p>
       </div>
     </div>
@@ -178,15 +166,20 @@ const faqItems = [
         <p class="eyebrow">Registro do trabalho</p>
         <h2 id="trabalhos-title">Trabalhos da Luscar</h2>
         <p class="lead">
-          Veja registros publicados pela empresa e conheça diferentes situações de instalação
-          e atendimento. As legendas descrevem o que aparece na fotografia.
+          Instalações e atendimentos realizados pela Luscar em Joinville e região.
         </p>
       </div>
 
       <Gallery
         items={['condensadorFachada', 'rapelServico', 'instalacaoInterna', 'predioInstalacoes', 'tecnicoInstrumentos', 'alpinismoFachada']}
-        wideIndices={[0, 4]}
       />
+      {/*
+        No wide tile here on purpose: three columns plus a two-column tile needs
+        `items + wides` to be a multiple of three. Six photos and two wides gave
+        eight cells and a visible hole in the last row; six photos alone fill a
+        clean 3x2. The section's rhythm comes from the alternating background
+        and the varied section heights above, not from an unbalanced span.
+      */}
 
       <p style="margin-top:1.75rem">
         <a class="link-more" href={routes.projects}>Ver a galeria completa</a>
@@ -249,8 +242,8 @@ const faqItems = [
         <p class="eyebrow">Quem faz</p>
         <h2 id="sobre-title">Climatização com o trabalho à vista</h2>
         <p class="lead">
-          A Luscar Climatização atende em {site.regionFull} com serviços de instalação,
-          manutenção, acesso por cordas e tubulação flexível.
+          Instalações, manutenção e limpeza de ar-condicionado em {site.regionFull}, incluindo
+          prédios e apartamentos com acesso por cordas.
         </p>
         <ul class="human__facts" role="list">
           <li><strong>Atuação</strong><span>{site.regionFull}</span></li>
@@ -275,7 +268,7 @@ const faqItems = [
           o assunto com mais detalhe.
         </p>
       </div>
-      <Faq items={faqItems} />
+      <Faq items={faqItems} columns />
     </div>
   </section>
 

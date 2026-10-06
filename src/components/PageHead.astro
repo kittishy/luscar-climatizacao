@@ -1,14 +1,38 @@
 ---
 /**
- * Inner page header: breadcrumb, H1, lead and the page's own photograph.
+ * Inner page header: breadcrumb, eyebrow, H1, lead, optional contextual CTA
+ * and the page's own photograph.
  *
- * Every commercial page gets this same shape but a different photograph and
- * different copy, so the pages read as one system without repeating one
- * layout verbatim.
+ * Every inner page gets this shape, but the photograph is optional and the
+ * layout adapts: a page without one declares the text variant explicitly
+ * instead of leaving an empty grid column.
+ *
+ * The figure carries `.page-head__figure`, its OWN class. It previously
+ * borrowed `.altitude__media`, whose desktop `order: -1` was written for the
+ * rope-access section and leaked into every page header, putting the photo in
+ * the wide first column and squeezing the real H1 into a narrow one.
  */
 import Breadcrumb from './Breadcrumb.astro';
 import Figure from './Figure.astro';
-import { sizes, type PhotoKey } from '../data/site.js';
+import {
+  contacts,
+  photos,
+  sizes,
+  whatsappLink,
+  type PhotoKey,
+  type WhatsappIntent,
+} from '../data/site.js';
+
+/**
+ * Keeps hyphenated words whole.
+ *
+ * CSS cannot stop a line from breaking at a hyphen that is already in the text:
+ * `hyphens: none` only disables *automatic* hyphenation. The review found the
+ * H1 rendering as "Instalação de ar-" / "condicionado", which reads as a typo.
+ *
+ * So the word is wrapped in a nowrap span at render time. This builds elements
+ * rather than concatenating HTML, so a page title can never inject markup.
+ */
 
 interface Crumb {
   name: string;
@@ -21,27 +45,101 @@ interface Props {
   h1: string;
   lead: string;
   photo?: PhotoKey;
+  photoPosition?: string;
+  photoCaption?: string;
   /** Defaults to the measured inner-page header curve. */
   photoSizes?: string;
-  /** Optional factual line under the photograph. */
-  photoCaption?: string;
+  /**
+   * Contextual action placed with the introduction.
+   *
+   * Callers pass an `intent` and the href is built from the WhatsApp link table,
+   * so the phone digits live in exactly one place; or they pass a plain `href`.
+   * The union keeps both spellings honest: `intent` wins when present.
+   */
+  cta?: { label: string; intent?: WhatsappIntent; href?: string };
+  /** Secondary, visually subordinate action. */
+  secondary?: { href: string; label: string };
 }
 
-const { crumbs, eyebrow, h1, lead, photo, photoSizes = sizes.pageHead, photoCaption } = Astro.props;
+const {
+  crumbs,
+  eyebrow,
+  h1,
+  lead,
+  photo,
+  photoPosition,
+  photoCaption,
+  photoSizes = sizes.pageHead,
+  cta,
+  secondary,
+} = Astro.props;
+
+/**
+ * Keeps hyphenated words whole.
+ *
+ * CSS cannot stop a line from breaking at a hyphen that is already in the text:
+ * `hyphens: none` only disables *automatic* hyphenation. The review found the
+ * H1 rendering as "Instalação de ar-" / "condicionado", which reads as a typo.
+ *
+ * The split happens here, after the props are destructured, and the markup is
+ * built in the template from plain tokens, so a page title can never inject
+ * HTML.
+ */
+const HYPHENATED = /^\S*[^\s-]-\S+$/;
+const h1Parts = h1.split(/(\S*[^\s-]-\S+)/g).filter((part) => part !== '');
+const h1Whole = new Set(h1Parts.filter((part) => HYPHENATED.test(part)));
+
+/*
+ * Resolve the CTA href here so callers pass an intent, not a raw URL, which
+ * keeps the WhatsApp digit string in exactly one place. An action without an
+ * href would render a dead link, so it is resolved to null and dropped from the
+ * DOM entirely rather than falling through to an empty attribute.
+ */
+const ctaHref = cta ? (cta.intent ? whatsappLink(cta.intent) : (cta.href ?? null)) : null;
+const action = cta && ctaHref ? { href: ctaHref, label: cta.label } : null;
+const hasPhoto = Boolean(photo);
 ---
 
 <Breadcrumb crumbs={crumbs} />
 
 <section class="page-head">
-  <div class="container page-head__grid">
-    <div>
+  <div class:list={['container', 'page-head__grid', !hasPhoto && 'page-head__grid--text']}>
+    <div class="page-head__copy">
       <p class="eyebrow">{eyebrow}</p>
-      <h1>{h1}</h1>
+      <h1>{h1Parts.map((part) => (h1Whole.has(part) ? <span class="nowrap">{part}</span> : part))}</h1>
       <p class="lead">{lead}</p>
+
+      {
+        (action || secondary) && (
+          <div class="page-head__actions">
+            {action && (
+              <a
+                class="btn btn--primary"
+                href={action.href}
+                rel="noopener"
+                aria-label={`${action.label}, ${contacts.phoneDisplay}`}
+              >
+                {action.label}
+              </a>
+            )}
+            {secondary && (
+              <a class="link-more" href={secondary.href}>
+                {secondary.label}
+              </a>
+            )}
+          </div>
+        )
+      }
     </div>
+
     {
       photo && (
-        <figure class="altitude__media">
+        /*
+         * The crop position comes from the photo registry, where it was set by
+         * measuring the subject in the original file. It is applied as a custom
+         * property so the stylesheet owns the rule instead of an ad-hoc class.
+         */
+        <figure class="page-head__figure" style={`--photo-position:${photoPosition ?? photos[photo].position}`}>
           <Figure photo={photo} sizes={photoSizes} loading="eager" fetchpriority="high" />
           {photoCaption && <figcaption class="hero__caption">{photoCaption}</figcaption>}
         </figure>

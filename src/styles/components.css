@@ -279,7 +279,21 @@
   margin-inline: auto;
 }
 
-.nav-panel a {
+/*
+ * SCOPE RULE.
+ *
+ * These styles are written as `a.nav-panel__link`, NOT `.nav-panel a`.
+ * The previous `.nav-panel a` selector matched every anchor inside the panel,
+ * including the two buttons in `.nav-panel__cta`, and set
+ * `color: var(--on-deep)` on them. `.btn--on-deep` paints a white background,
+ * so the button rendered white-on-white at a computed contrast of 1:1 on a
+ * 350x56 element: an invisible primary action.
+ *
+ * Navigation link styling must never reach button variants. Selecting the
+ * explicit class keeps the two concerns separate, so a future button inside
+ * the panel cannot be recoloured by accident.
+ */
+.nav-panel a.nav-panel__link {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -294,11 +308,32 @@
   text-decoration: none;
 }
 
-.nav-panel a:hover {
+.nav-panel a.nav-panel__link:hover {
   color: var(--cyan);
 }
 
-.nav-panel a[aria-current='page'] {
+.nav-panel a.nav-panel__link[aria-current='page'] {
+  color: var(--cyan);
+}
+
+/*
+ * The panel is grouped: primary navigation first, then the service routes under
+ * a discrete label. Nine undifferentiated links at one hierarchy were hard to
+ * scan and gave no clue which four were the main nav.
+ */
+.nav-panel__group + .nav-panel__group {
+  margin-top: var(--space-lg);
+}
+
+.nav-panel__label {
+  margin: 0 0 var(--space-xs);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  font-family: var(--font-body);
+  font-size: var(--step-micro);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--cyan);
 }
 
@@ -317,7 +352,7 @@
     padding-block: var(--space-md) calc(var(--space-2xl));
   }
 
-  .nav-panel a {
+  .nav-panel a.nav-panel__link {
     min-height: 48px;
     font-size: 1.25rem;
     padding-block: var(--space-xs);
@@ -364,15 +399,16 @@
 }
 
 /*
- * The hero runs in a deliberately narrower measure than the site container.
+ * The hero container is wider than the earlier 990px.
  *
- * Inside the full 1240px container the flexible text track was ~700px while
- * the readable measure is ~455px, which left a 300px+ empty gutter between
- * the words and the photograph. A tighter hero container makes the
- * asymmetric split look composed instead of unbalanced.
+ * At 990px the text track measured 415px and the H1 needed four lines at
+ * 1440x900. The review asks for roughly 520-560px of text against a
+ * 400-480px photograph, which needs about 1100px of usable width before the
+ * gap. 540 text + 64 gap + 440 photo fits inside this container with margin to
+ * spare, and keeps the hero in the same rhythm as the site's 1240px.
  */
 .hero .container {
-  max-width: calc(990px + var(--gutter) * 2);
+  max-width: calc(1120px + var(--gutter) * 2);
 }
 
 .hero__grid {
@@ -383,6 +419,46 @@
 
 .hero__copy {
   max-width: 34ch;
+}
+
+/*
+ * Tablet: a deliberately wide stacked composition.
+ *
+ * At 768x1024 the copy inherited `max-width: 34ch` from the phone range and
+ * measured 345px inside a ~697px column, while the photograph below it ran the
+ * full 712px. The hero measured 1711px tall and the whole right half of the
+ * screen stayed empty next to the short text block.
+ *
+ * Below 900px the hero is stacked, so the column cap has to be released by hand
+ * — there is no second track doing the bounding. From 640px the measure opens
+ * to 56ch (~500px) and the photograph stops spanning the page: it is capped,
+ * centred and shortened, which brings the hero to roughly 950px instead of
+ * 1711px and leaves the composition reading as one deliberate column.
+ */
+@media (min-width: 640px) and (max-width: 899px) {
+  .hero .container {
+    max-width: calc(760px + var(--gutter) * 2);
+  }
+
+  .hero__copy {
+    max-width: 56ch;
+  }
+
+  .hero__figure {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  .hero__media {
+    /* A portrait source at 420px wide needs no more than 525px of height. */
+    aspect-ratio: 4 / 5;
+    max-height: 525px;
+  }
+
+  .hero__caption {
+    max-width: 420px;
+    margin-inline: auto;
+  }
 }
 
 .hero__title {
@@ -404,28 +480,19 @@
   align-items: center;
 }
 
-.hero__meta {
-  margin-top: var(--space-xl);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--line);
+/*
+ * Region, one discreet line.
+ *
+ * This replaces a bordered definition list that repeated the WhatsApp number
+ * and pushed the photograph roughly 120px further down the first screen. The
+ * contact action is already the primary CTA directly above, so repeating the
+ * number here was redundant. The rules for the old `.hero__meta` block are
+ * removed rather than left orphaned.
+ */
+.hero__region {
+  margin: var(--space-lg) 0 0;
   font-size: var(--step-small);
   color: var(--ink-2);
-}
-
-.hero__meta dl {
-  display: grid;
-  gap: var(--space-2xs);
-  margin: 0;
-}
-
-.hero__meta div {
-  display: flex;
-  gap: var(--space-xs);
-}
-
-.hero__meta dt {
-  font-weight: 700;
-  color: var(--ink);
 }
 
 /* The photograph: vertical source, never stretched to fill a wide monitor. */
@@ -459,29 +526,33 @@
 @media (min-width: 900px) {
   .hero__grid {
     /*
-     * Text takes the flexible track; the photograph gets an explicit column.
-     *
-     * An earlier version used 1.15fr / 0.85fr with a `max-width` in ch on the
-     * copy. At 1366x768 that produced a narrow text measure beside a wide
-     * empty gutter, breaking "Ar-condicionado" onto its own line and pushing
-     * the CTA below the fold. Fixing the photo column instead of capping the
-     * text keeps the measure readable AND fills the row.
-     */
-    /*
      * Both tracks are bounded, so the text track matches the readable measure
-     * and the photograph sits where the layout intends. An earlier version
-     * gave the text a flexible `1fr` track with a `max-width` in ch, which
-     * left a 200-360px empty gutter between the words and the photograph at
-     * every desktop width.
+     * and the photograph sits where the layout intends.
+     *
+     * The text track was 440px, which made "Ar-condicionado" wrap onto its own
+     * line and gave the H1 three to four lines across every desktop width. The
+     * review asks for a text column of roughly 520-560px, which fits
+     * "Ar-condicionado" on line two and needs no hyphen-free orphan rules.
+     *
+     * The photo column is a clamp, so it grows with the viewport between 340px
+     * and 480px and never exceeds the 960px source.
      */
-    grid-template-columns: minmax(0, 440px) clamp(340px, 32vw, 480px);
+    grid-template-columns: minmax(0, 540px) clamp(360px, 34vw, 480px);
     justify-content: space-between;
-    gap: clamp(2rem, 1.2rem + 3.5vw, 4.5rem);
+    gap: clamp(2rem, 1.2rem + 3vw, 4rem);
     align-items: center;
   }
 
+  /*
+   * No `max-width` in ch on the copy at this breakpoint.
+   *
+   * The track above already bounds the measure at 540px. Adding a `ch` cap on
+   * top of it clamped the real box to 456px, which is what kept the H1 at four
+   * lines. A character cap is only useful where no track bounds the box, which
+   * is the single-column range below 900px.
+   */
   .hero__copy {
-    max-width: 42ch;
+    max-width: none;
   }
 
   /* Cap the photo at a real column instead of letting it run the full width:
@@ -489,16 +560,6 @@
   .hero__media {
     aspect-ratio: 4 / 5;
     max-height: 620px;
-  }
-
-  .hero__meta {
-    margin-top: var(--space-2xl);
-  }
-}
-
-@media (min-width: 1120px) {
-  .hero__copy {
-    max-width: 40ch;
   }
 }
 
@@ -521,35 +582,49 @@
     max-height: 500px;
   }
 
-  .hero__meta {
-    margin-top: var(--space-lg);
+  .hero__region {
+    margin-top: var(--space-md);
   }
 }
 
 /* --------------------------------------------------------------------------
-   Service list — editorial rows with purpose, not repeated icon cards
+   Service list — scannable rows, not repeated icon cards
    -------------------------------------------------------------------------- */
 
 .services-grid {
   display: grid;
-  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  grid-template-areas: 'intro';
+  gap: clamp(1.25rem, 0.9rem + 1.6vw, 2rem);
 }
 
+/*
+ * Hierarchy fix.
+ *
+ * The service names used the condensed display face at a small size, so they
+ * read weaker than the lead and detail paragraphs beside them: the eye landed
+ * on body copy instead of on the service name. Names now use Manrope at
+ * semibold/600 with a real size, and the condensed face is reserved for the
+ * large section titles where it belongs.
+ */
 .service-group {
   padding-top: var(--space-md);
   border-top: 2px solid var(--line);
 }
 
 .service-group__title {
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-2xs);
+  font-family: var(--font-body);
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
 }
 
 .service-group__lead {
-  margin-bottom: var(--space-sm);
-  font-size: var(--step-lead);
+  margin-bottom: var(--space-xs);
+  font-size: 1rem;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 .service-group__detail {
@@ -571,26 +646,23 @@
   font-weight: 600;
 }
 
-@media (min-width: 900px) {
+/*
+ * Two columns as soon as the measure allows it.
+ *
+ * At 768x1024 the review measured a ~697px available column with a single
+ * column of services, so the tablet inherited the phone composition by
+ * default rather than by decision. 700px of container minus the gutter leaves
+ * two comfortable ~320px columns, each holding a service name, one line of
+ * description and a link.
+ *
+ * Explicit placement is not needed: source order already fills the grid
+ * left-to-right, and the previous nth-child/grid-area mapping only existed to
+ * undo an auto-flow that no longer applies.
+ */
+@media (min-width: 700px) {
   .services-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      'a b'
-      'c d';
-    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
-  }
-
-  .service-group:nth-child(1) {
-    grid-area: a;
-  }
-  .service-group:nth-child(2) {
-    grid-area: b;
-  }
-  .service-group:nth-child(3) {
-    grid-area: c;
-  }
-  .service-group:nth-child(4) {
-    grid-area: d;
+    column-gap: clamp(1.75rem, 1rem + 2.5vw, 3.5rem);
   }
 }
 
@@ -621,11 +693,19 @@
 }
 
 @media (min-width: 900px) {
+  /*
+   * Scoped to `.altitude`, the rope-access section only.
+   *
+   * `order: -1` here makes the photograph lead that composition. It used to
+   * live on `.altitude__media`, a class also rendered by PageHead, so the rule
+   * reached every inner page header. The selector is now anchored to the
+   * section itself and the figure keeps its own class.
+   */
   .altitude {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   }
 
-  .altitude__media {
+  .altitude > .altitude__media {
     order: -1; /* photo leads the eye, text answers it */
   }
 }
@@ -638,6 +718,19 @@
   display: grid;
   gap: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  /*
+   * The list stays semantic (a <ul> of <li>), but the disc markers are
+   * removed: they rendered as bullets beside every photograph. `list-style`
+   * alone is not enough on a grid container in some engines, so both the
+   * shorthand and the marker are cleared.
+   */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery li {
+  list-style: none;
 }
 
 .gallery__item {
@@ -664,15 +757,27 @@
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
+  /* Per-photo crop, measured against the original file. */
+  object-position: var(--photo-position, 50% 40%);
 }
 
 .gallery__item--wide {
   grid-column: 1 / -1;
 }
 
-.gallery__item--wide .gallery__btn img {
+/*
+ * A wide tile spans two columns, so it must be wider than it is tall. How much
+ * wider depends on the source, and forcing one ratio on both orientations broke
+ * the portraits: a 960x1280 file cropped to 16:9 kept about 40% of its height
+ * and the subject disappeared. A landscape source takes 16:9; a portrait takes
+ * 4:3, which still reads as a wide tile without destroying the frame.
+ */
+.gallery__item--wide-landscape .gallery__btn img {
   aspect-ratio: 16 / 9;
-  object-position: 50% 58%;
+}
+
+.gallery__item--wide-portrait .gallery__btn img {
+  aspect-ratio: 4 / 3;
 }
 
 .gallery__caption {
@@ -701,10 +806,11 @@
     grid-column: span 2;
   }
 
-  .gallery__item--wide .gallery__btn img {
-    aspect-ratio: 16 / 9;
-    object-position: 50% 58%;
-  }
+  /*
+    The crop ratio now comes from the orientation class on the item
+    (`.gallery__item--wide-landscape` / `--wide-portrait`), so this block only
+    decides how many columns the tile spans.
+  */
 }
 
 /* Lightbox: keyboard operable, Escape closes, focus returns to the trigger. */
@@ -747,21 +853,34 @@
 .lightbox__caption {
   font-size: var(--step-small);
   color: var(--on-deep-2);
+  margin: 0;
 }
 
+/*
+ * The close control carries the word "Fechar" plus a keyboard hint, so it needs
+ * a width that fits its own content. It was pinned to 44px while its measured
+ * scrollWidth was 52px, which pushed the text outside the control.
+ * `min-width` plus padding now lets the box grow with its label, and the 44px
+ * floor is kept for touch.
+ */
 .lightbox__close {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
   background: transparent;
   border: 1px solid rgb(255 255 255 / 0.5);
   border-radius: var(--radius-sm);
   color: var(--white);
-  font-size: 1.25rem;
+  font-family: var(--font-body);
+  font-size: var(--step-small);
+  font-weight: 600;
   line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -875,6 +994,28 @@
 
 .faq {
   border-top: 1px solid var(--line);
+}
+
+/*
+ * Two columns on wide screens.
+ *
+ * The FAQ is a long vertical accordion: at 1440px a single 1240px column gave
+ * every question a 1240px-wide summary line with a short answer underneath,
+ * and the block dominated the end of the homepage. Two columns roughly halve
+ * the height and read like a reference.
+ *
+ * `<details>` elements are direct siblings here, so the grid lays them out
+ * independently and no column can be pulled taller than the other. The
+ * `border-bottom` on each item therefore renders as the rule between rows,
+ * which is what it already looked like.
+ */
+@media (min-width: 900px) {
+  .faq--columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+    align-items: start;
+  }
 }
 
 .faq__item {
@@ -1022,17 +1163,99 @@
   align-items: start;
 }
 
+.page-head__copy {
+  max-width: 62ch;
+}
+
 .page-head h1 {
   margin-bottom: var(--space-md);
   max-width: 22ch;
+  /* "ar-condicionado" must not split at its hyphen. */
+  hyphens: none;
+  overflow-wrap: normal;
+}
+
+/*
+ * Own class for the header photograph.
+ *
+ * PageHead.astro previously reused `figure.altitude__media`, and the desktop
+ * rule `.altitude__media { order: -1 }` — written for the rope-access section
+ * so the photograph leads that composition — leaked into every inner page
+ * header. Measured on the installation page at 1440x900: the photo took the
+ * first column at 673px and pushed the text into a 404px second column, where
+ * the H1 wrapped "ar-condicionado" across lines and grew to 205px tall.
+ *
+ * This class is scoped to the page header only and carries no `order`, so the
+ * two compositions can no longer affect one another.
+ */
+.page-head__figure {
+  margin: 0;
+}
+
+.page-head__figure img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  /* Per-photo crop, measured against the original file. */
+  object-position: var(--photo-position, 50% 40%);
+  border-radius: var(--radius-lg);
+}
+
+/*
+ * Pages without a photograph (contact) must not reserve an empty column.
+ * `PageHead` omits the figure entirely in that case, and this variant makes the
+ * single column explicit rather than leaving a gap.
+ */
+.page-head__grid--text {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (min-width: 900px) {
   .page-head__grid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-    gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
     align-items: center;
   }
+
+  /* The text track is the one that must be generous: the real H1 is long. */
+  .page-head__copy {
+    max-width: 56ch;
+  }
+
+  .page-head h1 {
+    max-width: 24ch;
+  }
+
+  /*
+   * The text variant declares a single track.
+   *
+   * `.page-head__grid--text` has the same specificity as `.page-head__grid`,
+   * so without this rule the desktop two-column declaration wins on source
+   * order and the header keeps an empty second column. The text then sits in
+   * the 1.1fr track while the empty 0.9fr track holds nothing.
+   */
+  .page-head__grid--text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* And it may use the full measure, since there is no photo beside it. */
+  .page-head__grid--text .page-head__copy {
+    max-width: 68ch;
+  }
+
+  .page-head__grid--text .page-head h1 {
+    max-width: 28ch;
+  }
+}
+
+/* The contextual CTA sits with the introduction, not at the end of the page. */
+.page-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  align-items: center;
+  margin-top: var(--space-lg);
 }
 
 /* --------------------------------------------------------------------------
@@ -1281,43 +1504,92 @@ a.channel__value:hover {
   max-width: 34ch;
 }
 
-.footer h2 {
+/*
+ * SCOPE CORRECTION.
+ *
+ * These rules were written as `.footer h2`, `.footer ul`, `.footer li a`, but
+ * Footer.astro renders `class="site-footer"` and there is no `.footer` element
+ * anywhere. None of the styling applied, so the footer inherited document
+ * defaults: `list-style: disc` markers, `--action` links on the deep blue
+ * background (a measured 2.19:1), underlined text, and no minimum hit area.
+ *
+ * Every selector below is now scoped to `.site-footer`, which is the class the
+ * component actually renders.
+ */
+.site-footer h2 {
+  margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
   font-size: var(--step-micro);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  /* cyan on deep = 5.81:1 */
   color: var(--cyan);
-  margin-bottom: var(--space-sm);
 }
 
-.footer ul {
+.site-footer ul {
+  margin: 0;
+  padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
-.footer li a {
+.site-footer li a {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
+  min-height: 44px;
+  /* white on deep = 14.70:1 */
   color: var(--on-deep);
   text-decoration: none;
   font-weight: 500;
 }
 
-.footer li a:hover {
+.site-footer li a:hover {
   color: var(--cyan);
   text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
-.footer__bottom {
+/*
+ * The bottom row sits on the same deep blue and needs the same treatment: an
+ * explicit colour rather than the global `--action` link, which measures
+ * 2.19:1 here. Verified per state in tests/browser.mjs.
+ *
+ * `min-height: 44px` matches the list links above. These are inline links in a
+ * sentence, so the touch target comes from padding rather than a fixed box,
+ * which keeps the line spacing tight while the hit area still reaches 44px.
+ */
+.site-footer .footer__bottom {
   margin-top: var(--space-xl);
   padding-top: var(--space-md);
   border-top: 1px solid rgb(255 255 255 / 0.14);
   display: grid;
   gap: var(--space-xs);
   font-size: var(--step-micro);
+  color: var(--on-deep-2);
+}
+
+.site-footer .footer__bottom p {
+  margin: 0;
+}
+
+.site-footer .footer__bottom a {
+  display: inline-flex;
+  align-items: center;
+  /* 44px hit area from padding, without stretching the text baseline. */
+  min-height: 44px;
+  padding-block: 0.4rem;
+  margin-block: -0.4rem;
+  color: var(--on-deep);
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.4);
+  text-underline-offset: 0.2em;
+}
+
+.site-footer .footer__bottom a:hover {
+  color: var(--cyan);
+  text-decoration-color: currentColor;
 }
 
 @media (min-width: 720px) {
@@ -1329,5 +1601,7 @@ a.channel__value:hover {
   .footer__bottom {
     grid-template-columns: auto 1fr;
     justify-content: space-between;
+    align-items: start;
+    gap: var(--space-lg);
   }
 }

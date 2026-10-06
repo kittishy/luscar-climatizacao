@@ -19,12 +19,20 @@ interface FaqItem {
 
 interface Props {
   items: readonly FaqItem[];
+  /**
+   * Two-column layout on wide screens.
+   *
+   * The homepage FAQ runs long enough to dominate the closing scroll in a
+   * single 1240px column. Inner pages usually hold two or three questions, where
+   * a grid would leave a tall empty second column, so this is opt-in.
+   */
+  columns?: boolean;
 }
 
-const { items } = Astro.props;
+const { items, columns = false } = Astro.props;
 ---
 
-<div class="faq">
+<div class:list={['faq', columns && 'faq--columns']}>
   {
     items.map((item) => (
       <details class="faq__item">
