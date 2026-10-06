@@ -84,7 +84,7 @@ Detalhes e configuração por hospedagem em [`MIGRACAO.md`](MIGRACAO.md).
 ## Verificação
 
 ```bash
-npm test            # 16 testes de contrato contra dist/
+npm test            # 23 testes de contrato e de deploy contra dist/
 npm run test:browser # 184 verificações em Chromium real
 npm run verify       # build + contrato + navegador
 ```

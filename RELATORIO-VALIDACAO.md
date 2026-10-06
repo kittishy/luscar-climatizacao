@@ -13,7 +13,7 @@ real. Onde não houve verificação, isso está dito.
 |---|---|
 | 13 rotas do contrato, HTML pré-renderizado | Concluído e verificado |
 | Build + verificação de tipos | Concluído, 0 erro |
-| Testes de contrato | 16/16 |
+| Testes de contrato e deploy | 23/23 |
 | Suíte responsiva em navegador | 184/184 |
 | Matriz de screenshots | 115 arquivos |
 | Modos preview e production | Ambos construídos e conferidos |
@@ -50,12 +50,12 @@ routes: sitemap (0 url) + robots.txt written for mode=preview
 
 `astro check` também roda dentro do build e reportou 0 erros.
 
-### Testes de contrato
+### Testes de contrato e de deploy
 
 ```
 > npm test
-# tests 16
-# pass 16
+# tests 23
+# pass 23
 # fail 0
 ```
 
@@ -220,6 +220,7 @@ Executada contra a URL publicada, não contra o comando de deploy.
 | 4 restos de template | **410 real** nos quatro |
 | Caminho desconhecido | **404 real** (não a home) |
 | `X-Robots-Tag` na home | `noindex, follow` |
+| `Cache-Control` em `/media/` | `public, max-age=31536000, immutable` |
 | canonical e og:url | própria origem |
 | `contact@example.com` | 0 ocorrências |
 | `123 Fifth Avenue` | 0 ocorrências |
@@ -229,19 +230,53 @@ Executada contra a URL publicada, não contra o comando de deploy.
 | Caminhos antigos de imagem | **35/35 servem 200** |
 | favicon, og, derivado, logo, fonte | 200 |
 
-### Defeito encontrado e corrigido na publicação
+### Defeito encontrado na publicação, por revisão independente
 
-A primeira configuração de `vercel.json` usava
-`redirects: [{ status: 410 }]`. **O Vercel rejeita** — `redirects` só aceita
-301, 302, 307 e 308. O deploy falhou, e as alternativas que "funcionariam"
-seriam piores: arquivo estático nesses caminhos devolveria 200, dizendo ao
-buscador que aquilo é conteúdo; redirecionar para a home é proibido pelo
-briefing.
+Uma revisão adversarial do site publicado encontrou dois defeitos **que build,
+testes de contrato e suíte de navegador não conseguiam enxergar**, porque
+viviam na camada de deploy:
+
+1. Os quatro restos de template respondiam **404**, não 410.
+2. **`X-Robots-Tag` estava ausente** em toda resposta, e o `Cache-Control`
+   imutável de `/media/` também.
+
+**Causa:** eu havia colocado `vercel.json` no `.gitignore`, porque o build o
+gera. Mas o Vercel lê a configuração do projeto **a partir do repositório,
+antes do build rodar**. O deploy conectado ao Git entrava sem configuração
+nenhuma. O arquivo em disco estava perfeito, e todo o resto estava verde.
+
+**Correção:** `vercel.json` passou a ser versionado (variante `preview`, que é
+o padrão seguro), mais `tests/deploy-config.test.ts` com sete verificações que
+teriam pegado isso: o arquivo precisa existir, não pode estar no `.gitignore`,
+precisa configurar as quatro rotas, não pode usar status de redirect que o
+Vercel rejeita, não pode ter padrão catch-all, e precisa concordar com o meta
+sobre `noindex`.
+
+Reverificado ao vivo depois da correção: os quatro retornam **410**,
+`X-Robots-Tag: noindex, follow` presente, `/media/` com cache imutável, e
+caminho desconhecido ainda **404**.
+
+### Defeito encontrado na publicação, por tentativa de deploy
+
+A primeira configuração usava `redirects: [{ status: 410 }]`. **O Vercel
+rejeita** — `redirects` só aceita 301, 302, 307 e 308. O deploy falhou, e as
+alternativas que "funcionariam" seriam piores: arquivo estático nesses
+caminhos devolveria 200, dizendo ao buscador que aquilo é conteúdo;
+redirecionar para a home é proibido pelo briefing.
 
 Correção: os quatro caminhos reescrevem para `api/gone.js`, que devolve **410
 HTTP real** com corpo curto explicando a remoção. A função recusa qualquer
 caminho fora da lista conhecida, para que um erro futuro de reescrita não a
 transforme em um 410 genérico.
+
+### Achados da revisão que se provaram falsos
+
+A mesma revisão accusei Mojibake em `api/gone.js` e uso de "nao" sem acento no
+título do guia. **Ambos eram artefato de renderização do console**, não do
+arquivo: a inspeção dos bytes confirmou as sequências UTF-8 corretas, e o
+endereço do guia contém `nao` apenas porque **URL não pode ter acento**. O
+texto visível diz "não". Registrado porque o console PowerShell mislead
+duas vezes e quase produziu um "correção" que quebraria o arquivo.
 
 ---
 
@@ -260,6 +295,9 @@ Build e testes passavam nos três casos abaixo. Só apareceram olhando a tela.
    barra e perdia por empate de especificidade. Movida para junto da barra.
 3. **Menu no celular em retrato** — o botão de contato aparecia cortado atrás
    da barra fixa. Painel passou a reservar a altura real.
+
+E dois achados que **só apareceram porque a publicação foi verificada ao
+vivo** — ver a seção 6. Ambos eram invisíveis para o build e para os testes.
 
 ---
 
