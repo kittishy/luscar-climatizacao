@@ -1,0 +1,232 @@
+{
+  "measuredAt": "2026-10-06T16:02:16.396Z",
+  "disclaimer": "Laboratory measurement on a local static server with simulated throttling. NOT field data, NOT Core Web Vitals from real users, and NOT a ranking signal.",
+  "profiles": {
+    "desktop": "viewport 1440x900, download 10 Mbps, latency 20 ms, CPU 1x",
+    "mobile": "Pixel 7 emulation, download 4 Mbps, latency 85 ms, CPU 4x"
+  },
+  "results": [
+    {
+      "profile": "desktop",
+      "route": "home",
+      "domContentLoaded": 194,
+      "load": 272,
+      "transferSize": 34599,
+      "fcp": 260,
+      "lcp": 260,
+      "resources": 10,
+      "byType": {
+        "woff2": 70488,
+        "js": 3628,
+        "png": 9244,
+        "css": 23091,
+        "avif": 51290
+      },
+      "images": 12,
+      "heaviest": [
+        {
+          "name": "tecnico-em-altura-560.avif",
+          "kb": 35
+        },
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 0,
+      "worstLongTask": 0,
+      "requests": 11,
+      "kb": 188
+    },
+    {
+      "profile": "desktop",
+      "route": "instalacao",
+      "domContentLoaded": 171,
+      "load": 187,
+      "transferSize": 21182,
+      "fcp": 228,
+      "lcp": 228,
+      "resources": 7,
+      "byType": {
+        "woff2": 47880,
+        "css": 23091,
+        "png": 9244,
+        "js": 2638,
+        "avif": 25006
+      },
+      "images": 4,
+      "heaviest": [
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "instalacao-interna-720.avif",
+          "kb": 24
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 0,
+      "worstLongTask": 0,
+      "requests": 8,
+      "kb": 126
+    },
+    {
+      "profile": "desktop",
+      "route": "manutencao",
+      "domContentLoaded": 178,
+      "load": 197,
+      "transferSize": 20058,
+      "fcp": 236,
+      "lcp": 236,
+      "resources": 7,
+      "byType": {
+        "woff2": 47880,
+        "css": 23091,
+        "js": 2638,
+        "png": 9244,
+        "avif": 39919
+      },
+      "images": 4,
+      "heaviest": [
+        {
+          "name": "tecnico-instrumentos-720.avif",
+          "kb": 39
+        },
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 0,
+      "worstLongTask": 0,
+      "requests": 8,
+      "kb": 139
+    },
+    {
+      "profile": "mobile",
+      "route": "home",
+      "domContentLoaded": 465,
+      "load": 737,
+      "transferSize": 34599,
+      "fcp": 740,
+      "lcp": 740,
+      "resources": 9,
+      "byType": {
+        "woff2": 70488,
+        "css": 23091,
+        "png": 9244,
+        "js": 3628,
+        "avif": 47515
+      },
+      "images": 12,
+      "heaviest": [
+        {
+          "name": "tecnico-em-altura-720.avif",
+          "kb": 46
+        },
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 1,
+      "worstLongTask": 68,
+      "requests": 10,
+      "kb": 184
+    },
+    {
+      "profile": "mobile",
+      "route": "instalacao",
+      "domContentLoaded": 443,
+      "load": 500,
+      "transferSize": 21182,
+      "fcp": 652,
+      "lcp": 652,
+      "resources": 7,
+      "byType": {
+        "woff2": 47880,
+        "css": 23091,
+        "png": 9244,
+        "js": 2638,
+        "avif": 27759
+      },
+      "images": 4,
+      "heaviest": [
+        {
+          "name": "instalacao-interna-800.avif",
+          "kb": 27
+        },
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 2,
+      "worstLongTask": 117,
+      "requests": 8,
+      "kb": 129
+    },
+    {
+      "profile": "mobile",
+      "route": "manutencao",
+      "domContentLoaded": 465,
+      "load": 512,
+      "transferSize": 20058,
+      "fcp": 676,
+      "lcp": 676,
+      "resources": 7,
+      "byType": {
+        "woff2": 47880,
+        "css": 23091,
+        "png": 9244,
+        "js": 2638,
+        "avif": 44697
+      },
+      "images": 4,
+      "heaviest": [
+        {
+          "name": "tecnico-instrumentos-800.avif",
+          "kb": 44
+        },
+        {
+          "name": "manrope-latin.woff2",
+          "kb": 25
+        },
+        {
+          "name": "about.D8H6XsfD.css",
+          "kb": 23
+        }
+      ],
+      "cls": 0,
+      "longTasks": 1,
+      "worstLongTask": 117,
+      "requests": 8,
+      "kb": 144
+    }
+  ]
+}
