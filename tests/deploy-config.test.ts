@@ -29,8 +29,28 @@ const gitignore = readFileSync(join(root, '.gitignore'), 'utf8');
 
 const RETIRED = ['/ola-mundo/', '/pagina-exemplo/', '/author/projetos/', '/category/sem-categoria/'];
 
-function config() {
-  return JSON.parse(readFileSync(vercelPath, 'utf8'));
+interface VercelRule {
+  source: string;
+  destination: string;
+  status?: number;
+}
+
+interface VercelHeader {
+  key: string;
+  value: string;
+}
+
+interface VercelConfig {
+  outputDirectory?: string;
+  trailingSlash?: boolean;
+  cleanUrls?: boolean;
+  headers?: { source: string; headers: VercelHeader[] }[];
+  redirects?: VercelRule[];
+  rewrites?: VercelRule[];
+}
+
+function config(): VercelConfig {
+  return JSON.parse(readFileSync(vercelPath, 'utf8')) as VercelConfig;
 }
 
 test('vercel.json exists after a build', () => {
@@ -60,7 +80,7 @@ test('all four retired template routes are configured', () => {
   // 301/302/307/308 are accepted. This test exists so nobody reintroduces it.
   for (const r of c.redirects ?? []) {
     assert.ok(
-      [301, 302, 307, 308].includes(r.status),
+      typeof r.status === 'number' && [301, 302, 307, 308].includes(r.status),
       `vercel.json uses unsupported redirect status ${r.status}; Vercel rejects the deploy`,
     );
   }
@@ -101,10 +121,10 @@ test('no catch-all rewrite or redirect exists', () => {
 
 test('preview build ships noindex in both the head and the header', () => {
   const c = config();
-  const all = c.headers.find((h) => h.source === '/(.*)');
+  const all = c.headers?.find((h: { source: string }) => h.source === '/(.*)');
   assert.ok(all, 'no global header rule in vercel.json');
 
-  const robots = all.headers.find((h) => h.key.toLowerCase() === 'x-robots-tag');
+  const robots = all.headers.find((h: VercelHeader) => h.key.toLowerCase() === 'x-robots-tag');
   assert.ok(robots, 'X-Robots-Tag missing: preview mode would be crawlable at the edge');
 
   const isPreview = robots.value.includes('noindex');
