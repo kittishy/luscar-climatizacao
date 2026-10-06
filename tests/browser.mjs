@@ -759,7 +759,38 @@ async function main() {
       const serviceCols = await page.evaluate(
         () => getComputedStyle(document.querySelector('.services-grid')).gridTemplateColumns.split(' ').length,
       );
-      record(`services use two columns @${label}`, serviceCols === 2, `${serviceCols} columns`);
+      /*
+       * The secondary services are a compact index now, not cards. At desktop
+       * three columns keep all three entries on one line; on tablet they stack
+       * into a readable list because three ~230px columns would squeeze a
+       * sentence into a hyphenated stub. One column there is a decision about
+       * this content, not the phone layout inherited by omission.
+       */
+      if (w >= 900) {
+        record(`services index uses three columns @${label}`, serviceCols === 3, `${serviceCols} columns`);
+      } else {
+        record(`services index stacks on ${label}`, serviceCols === 1, `${serviceCols} columns`);
+      }
+
+      // The primary service must outrank the index, not sit beside it.
+      const primary = await page.evaluate(() => {
+        // The deep surface is the <section>, not the inner grid, so the probe
+        // has to start from the section to read the real background.
+        const section = document.querySelector('section.service-primary');
+        const index = document.querySelector('.services-grid');
+        if (!section || !index) return null;
+        const s = getComputedStyle(section);
+        const i = getComputedStyle(index);
+        return {
+          primaryDark: s.backgroundColor,
+          indexDark: i.backgroundColor,
+          primaryHasPhoto: Boolean(section.querySelector('img')),
+          indexHasPhoto: Boolean(index.querySelector('img')),
+        };
+      });
+      record(`primary service is the deep block @${label}`, primary?.primaryDark !== primary?.indexDark, `${primary?.primaryDark} vs ${primary?.indexDark}`);
+      record(`primary service carries its photograph @${label}`, primary?.primaryHasPhoto === true);
+      record(`index carries no photograph @${label}`, primary?.indexHasPhoto === false);
       await page.close();
     }
     {
@@ -769,6 +800,118 @@ async function main() {
         () => getComputedStyle(document.querySelector('.faq')).gridTemplateColumns.split(' ').length,
       );
       record('homepage FAQ uses two columns @1440', faqCols === 2, `${faqCols} columns`);
+
+      // The eyebrow is a banned kicker: no page may ship one.
+      const kickers = await page.evaluate(() =>
+        Array.from(document.querySelectorAll('main .eyebrow, footer .eyebrow, .eyebrow')).length,
+      );
+      record('no eyebrow kicker anywhere @1440', kickers === 0, `${kickers} found`);
+
+      // No em dash may reach the visitor.
+      const dashes = await page.evaluate(() => {
+        const hits = [];
+        const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let n;
+        while ((n = walk.nextNode())) {
+          if (/[\u2014\u2013]/.test(n.nodeValue ?? '')) hits.push(n.nodeValue.trim().slice(0, 40));
+        }
+        return hits;
+      });
+      record('no em dash in served copy @1440', dashes.length === 0, dashes.slice(0, 3).join(' | '));
+      await page.close();
+    }
+  // ---------------------------------------------------------------- 16
+    // Interactive states: the focus ring must stay legible on every surface,
+    // and the ring colour has to be one of the two measured tokens.
+    console.log(`\n[16] focus ring on dark surfaces`);
+    {
+      const probes = [
+        { route: '/', sel: '.site-footer li a', label: 'footer link' },
+        { route: '/', sel: '.site-nav a', label: 'header nav link' },
+        { route: '/contact/', sel: '.contact-bar a', label: 'contact bar' },
+        { route: '/about/', sel: '.gallery__btn', label: 'gallery tile' },
+      ];
+      for (const { route, sel, label } of probes) {
+        const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+        await page.goto(base + route, { waitUntil: 'load' });
+        const ring = await page.evaluate((s) => {
+          const el = document.querySelector(s);
+          if (!(el instanceof HTMLElement)) return null;
+          el.focus();
+          const cs = getComputedStyle(el);
+          // Walk up for the surface the ring is drawn against.
+          let bg = cs.backgroundColor;
+          let node = el.parentElement;
+          while (node && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) {
+            bg = getComputedStyle(node).backgroundColor;
+            node = node.parentElement;
+          }
+          return { outline: cs.outlineColor, width: cs.outlineWidth, offset: cs.outlineOffset, bg };
+        }, sel);
+        record(`focus ring present on ${label}`, ring !== null && ring.width !== '0px', JSON.stringify(ring));
+
+        const isCyanOnDark = ring
+          ? await page.evaluate(([fg, bg]) => {
+              const lum = (c) => {
+                const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
+                const f = (v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; };
+                return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+              };
+              const a = lum(fg);
+              const b = lum(bg);
+              return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+            }, [ring.outline, ring.bg])
+          : 0;
+        // A focus indicator needs >= 3:1 against what it sits on.
+        record(`focus ring >= 3:1 on ${label}`, isCyanOnDark >= 3, `${isCyanOnDark.toFixed(2)}:1`);
+        await page.close();
+      }
+    }
+
+    // The compact panel and the lightbox must not shift the page sideways.
+    {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      const gutter = await page.evaluate(
+        () => getComputedStyle(document.documentElement).scrollbarGutter,
+      );
+      record('scrollbar gutter reserved', gutter.includes('stable'), gutter);
+      const before = await page.evaluate(() => document.querySelector('.container').getBoundingClientRect().left);
+      await page.locator('[data-gallery-open]').first().click().catch(async () => {
+        await page.goto(base + '/projects/', { waitUntil: 'load' });
+        await page.locator('[data-gallery-open]').first().click();
+      });
+      await page.waitForTimeout(200);
+      const during = await page.evaluate(() => document.querySelector('.container').getBoundingClientRect().left);
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(200);
+      const after = await page.evaluate(() => document.querySelector('.container').getBoundingClientRect().left);
+      record('no horizontal shift when the lightbox opens', Math.abs(before - during) <= 1, `${before} -> ${during}`);
+      record('no horizontal shift when the lightbox closes', Math.abs(before - after) <= 1, `${before} -> ${after}`);
+      await page.close();
+    }
+
+    // The fixed contact bar must stand down while the compact panel is open.
+    {
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+      await page.goto(base + '/', { waitUntil: 'load' });
+      record('contact bar visible with panel closed', await page.locator('.contact-bar').isVisible());
+      await page.locator('#nav-toggle').click();
+      await page.waitForTimeout(150);
+      const barHidden = !(await page.locator('.contact-bar').isVisible());
+      record('contact bar stands down while panel is open', barHidden);
+      const overlap = await page.evaluate(() => {
+        const panel = document.querySelector('.nav-panel');
+        const bar = document.querySelector('.contact-bar');
+        if (!panel || !bar || getComputedStyle(bar).display === 'none') return { clear: true };
+        const p = panel.getBoundingClientRect();
+        const b = bar.getBoundingClientRect();
+        return { clear: !(p.bottom > b.top && p.top < b.bottom), p: p.bottom, b: b.top };
+      });
+      record('panel and contact bar do not overlap', overlap.clear === true, JSON.stringify(overlap));
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(150);
+      record('contact bar returns after Escape', await page.locator('.contact-bar').isVisible());
       await page.close();
     }
   } finally {

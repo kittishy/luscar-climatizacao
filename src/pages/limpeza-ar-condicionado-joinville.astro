@@ -43,7 +43,7 @@ const faqItems = [
   },
   {
     q: 'A limpeza elimina fungos e bactérias?',
-    a: 'A limpeza cuida dos componentes do aparelho. Não é correto prometer eliminação de vírus, fungos ou prevenção de doenças — o serviço é de cuidado do equipamento.',
+    a: 'A limpeza cuida dos componentes do aparelho. Não é correto prometer eliminação de vírus, fungos ou prevenção de doenças: o serviço é de cuidado do equipamento.',
   },
   {
     q: 'Como inicio o atendimento?',
@@ -68,7 +68,6 @@ const rail = {
 <Base meta={meta} service={service} barMessage={whatsappIntents.manutencao}>
   <PageHead
     crumbs={meta.breadcrumb ?? []}
-    eyebrow="Limpeza e cuidado"
     h1={meta.h1}
     lead="A limpeza do ar-condicionado é cuidado com os componentes do aparelho. A necessidade varia com o uso, o ambiente e a orientação do fabricante."
     photo="instrumentosServico"
@@ -86,7 +85,7 @@ const rail = {
         </p>
         <p>
           A limpeza é um serviço sobre o equipamento, não uma promessa de saúde. Ela não
-          elimina vírus nem previne doenças — o que ela faz é manter os componentes em
+          elimina vírus nem previne doenças. O que ela faz é manter os componentes em
           condição adequada de funcionamento.
         </p>
 
@@ -94,7 +93,7 @@ const rail = {
         <p>
           Alguns sinais indicam que vale avaliar: o aparelho demora mais para gelar, o
           fluxo de ar diminuiu, há cheiro ao ligar ou o consumo aumentou. Esses sinais não
-          confirmam sujeira — eles pedem avaliação, que pode apontar para limpeza ou para
+          confirmam sujeira: eles pedem avaliação, que pode apontar para limpeza ou para
           outro tipo de serviço.
         </p>
         <p>

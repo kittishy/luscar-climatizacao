@@ -44,6 +44,76 @@ seletores do rodapé agora são escopados em `.site-footer`, e
 
 ---
 
+## 1b. Estados interativos
+
+Cada estado tem um token e uma razão medida. Não há estado `:active` sem
+`:hover` equivalente, porque um controle que responde ao ponteiro e não ao
+dedo é um defeito, não uma escolha.
+
+| Estado | Claro | Escuro |
+|---|---|---|
+| repouso | `--action` 6.71 | `--on-deep` 14.70 |
+| `:hover` | `--action-hover` 8.59 | `--cyan-hover` 8.39 |
+| `:active` | `--action-active` 11.01 | `--white` / `--deep-2` |
+| `:focus-visible` | `--action` | `--cyan` 5.81 |
+
+Tokens: `--action-hover`, `--action-active`, `--cyan-hover`, `--ice-active`.
+
+### O anel de foco tem que ser listado
+
+`:focus-visible` é azul de ação por padrão. Sobre azul profundo isso dá
+**2.19:1**, ou seja, o anel fica invisível. Por isso a regra de superfície
+escura é uma lista explícita:
+
+```css
+.on-deep :focus-visible,
+.site-header :focus-visible,
+.site-footer :focus-visible,
+.contact-bar :focus-visible,
+.lightbox :focus-visible { outline-color: var(--cyan); }
+```
+
+**Toda superfície escura nova precisa entrar nessa lista.** Sem ela, o foco
+desaparece. `tests/browser.mjs` mede o anel em quatro superfícies e exige
+pelo menos 3:1.
+
+### Sem salto ao abrir um modal
+
+```css
+html { scrollbar-gutter: stable; }
+```
+
+Travar `overflow: hidden` no `<html>` ao abrir o painel ou o lightbox remove a
+barra de rolagem e a página inteira anda uns 15px na horizontal. Com o espaço
+reservado, abrir e fechar não move nada.
+
+---
+
+## 1c. O que foi removido, e por quê
+
+### O kicker (`.eyebrow`)
+
+O site marcava toda seção com um rótulo em versalete acima do título, precedido
+de um filete. Isso é **kicker**, e kicker é um padrão de categoria, não uma
+decisão de design: ele repete o que o título já diz, ocupa a primeira dobra e
+transforma a página numa pilha de rótulos. Ele foi removido de todas as 13
+rotas, e a regra `.eyebrow` saiu do CSS.
+
+Nenhuma informação se perdeu: em quase todo caso o rótulo duplicava o próprio
+título ("O que a Luscar faz" sobre "Serviços da Luscar"), e onde não duplicava
+("Guia prático") a trilha de navegação já carregava a informação.
+
+O filete ciano sobrevive onde faz sentido como marca: na legenda da foto do
+serviço principal.
+
+### Em dash
+
+Nenhum travessão longo chega ao visitante. Onde a frase precisava de uma pausa,
+virou ponto, vírgula ou dois-pontos. `tests/browser.mjs` percorre o texto
+servido e falha se encontrar `—` ou `–`.
+
+---
+
 ## 2. Tipografia
 
 Duas famílias, cada uma com um trabalho:
@@ -63,8 +133,30 @@ maior. O olho caía no texto de apoio e não no nome do serviço. Hoje:
 | H1 da home | display | `--step-display` | 700 |
 | H2 de seção | display | `--step-h2` | 700 |
 | Nome de serviço (`service-group__title`) | body | 1.1875rem | 600 |
-| Lead de serviço | body | 1rem | 500 |
+| Lead de serviço | body | `--step-body` | 400 |
 | Detalhe de serviço | body | `--step-body` | 400 |
+
+### Quebra de linha
+
+```css
+h1, h2, h3, h4 { text-wrap: balance; }
+p, .lead       { text-wrap: pretty; }
+```
+
+`balance` distribui as linhas do título para que a última não fique órfã.
+`pretty` faz o mesmo nos parágrafos, com uma última linha levemente mais frouxa
+em troca de nunca deixar uma palavra sozinha.
+
+Isso não resolve a quebra dentro de `ar-condicionado`: CSS não impede a quebra
+num hífen que já está no texto, só a hifenização automática. A palavra é
+envolvida em `.nowrap` na renderização do H1.
+
+### Medida em `ch` depende da família
+
+`max-width` em `ch` vale para a família em que é medido. `20ch` na condensada
+dá ~230px, `20ch` na Manrope dá ~330px. Onde a medida estava curta demais para o
+título, o valor foi corrigido pela medida real, não pela leitura do número
+(ex.: o H2 do bloco de fecho estava em 20ch e quebrava em três linhas curtas).
 
 ### Escala fluida
 
@@ -135,15 +227,44 @@ abaixo, deixando o hero com 1711px e metade da tela vazia à direita do texto.
 
 ## 4. Grades que precisam fechar
 
-### `.services-grid`
+### `.services-grid` — hierarquia, não cards
 
-Duas colunas a partir de **700px**, não 900px. A 768×1024 a coluna disponível
-tem ~697px, que comporta dois blocos de ~320px confortáveis. Em uma coluna o
-tablet herdava a composição do celular por omissão, não por decisão.
+Os serviços **não** são quatro blocos iguais. Um é o serviço que define a
+empresa e recebe a fotografia, o azul profundo e a prosa longa; os outros três
+são um índice compacto.
 
-O mapeamento antigo `nth-child` + `grid-area` foi removido: ele só existia para
-desfazer um `grid-auto-flow` que não se aplica mais, e a ordem do documento já
-preenche a grade da esquerda para a direita.
+```
+<hero>
+<índice dos serviços secundários>      seção clara, 3 colunas, filete entre linhas
+<bloco principal em azul profundo>     seção escura, foto + prosa + o pedido
+<galeria>
+```
+
+Isso substituiu duas coisas de uma vez: a parede de quatro cards idênticos, e a
+seção de acesso por cordas que repetia a mesma fotografia e o mesmo argumento
+logo abaixo da lista.
+
+A escolha é feita no dado, não no layout:
+
+```ts
+// src/data/site.ts
+export const primaryService = { key: 'altura', photo: 'alpinismoFachada', ... };
+export const secondaryServices = [ /* tres */ ];
+export const serviceGroups = [primaryService, ...secondaryServices];
+```
+
+O serviço primário é exportado com nome próprio em vez de marcado com um
+sinalizador, para que nenhum consumidor receba `undefined` e para que "qual
+serviço lidera" seja um fato e não uma busca que pode falhar.
+
+Três colunas a partir de **900px**, uma abaixo. A 768px três colunas de ~230px
+espremeriam uma frase num toco hifenizado; empilhado, cada entrada lê como uma
+linha de índice. Isso é uma decisão sobre este conteúdo, não o desenho do
+celular herdado por omissão.
+
+A coluna do bloco principal é 1.05fr e a do texto 1fr, sem `order`. A fotografia
+vem primeiro por ordem do documento, não por reordenação: um `order` já vazou
+uma vez para os cabeçalhos internos.
 
 ### `.faq--columns`
 
@@ -251,6 +372,29 @@ padding com margem negativa:
 }
 ```
 
+### A barra fixa e o painel não dividem a tela
+
+Com o painel compacto aberto, a barra de contato se retira e o `padding-bottom`
+reservado no `<body>` é liberado junto:
+
+```css
+body[data-nav-open='true'] .contact-bar { display: none; }
+body[data-nav-open='true']               { padding-bottom: 0; }
+```
+
+O atributo é escrito em `<body>` pela mesma função que abre o painel, e não por
+`body:has(.nav-panel[data-open='true'])`: a forma com `:has()` não faz nada em
+um motor sem suporte, o que deixaria a barra pintada sobre o botão de WhatsApp
+do próprio painel.
+
+`inert` já tira a barra da ordem de foco, mas ela continuaria pintando por
+cima da ação do painel. Em paisagem baixa (844×390) a regra continua valendo: não
+há altura para as duas.
+
+A barra reserva a safe-area do dispositivo com `--bar-safe-b`
+(`env(safe-area-inset-bottom, 0px)`), somada à altura real em `padding-bottom`
+do `<body>`, então ela nunca cobre conteúdo.
+
 ---
 
 ## 9. O que não pode
@@ -278,8 +422,16 @@ npm run verify
 
 - `astro check` + `tsc --noEmit` — 0 erros
 - `tests/*.test.ts` — 23 testes de contrato
-- `tests/browser.mjs` — 220 verificações em navegador real, incluindo a seção
-  `[15]`, que é a regressão medida contra os defeitos da revisão de 06/10/2026.
+- `tests/browser.mjs` — 248 verificações em navegador real, incluindo:
+  - `[15]` regressão medida contra os defeitos da revisão de 06/10/2026
+  - `[16]` anel de foco em quatro superfícies escuras, `scrollbar-gutter`,
+    e a barra de contato cedendo espaço ao painel aberto
+
+O detector mecânico da skill também roda sobre `src`:
+
+```bash
+impeccable detect --json src
+```
 
 Para reproduzir as medidas de um achado específico:
 

@@ -122,9 +122,30 @@ button {
   border-radius: var(--radius-sm);
 }
 
+/*
+ * The focus ring has to be legible on every surface, and the surfaces are not
+ * all the same. The action blue measures 2.19:1 on the deep blue, so a focus
+ * ring in the default colour is effectively invisible on the header, the
+ * footer, the fixed contact bar and the gallery lightbox, none of which carry
+ * `.on-deep`. Cyan measures 5.81:1 there, comfortably over the 3:1 a focus
+ * indicator needs.
+ *
+ * Any new dark surface must be added here, or its focus ring disappears.
+ */
 .on-deep :focus-visible,
-.site-header :focus-visible {
+.site-header :focus-visible,
+.site-footer :focus-visible,
+.contact-bar :focus-visible,
+.lightbox :focus-visible {
   outline-color: var(--cyan);
+}
+
+/* The dark links use a token so the hover state is measured, not guessed. */
+.on-deep a:hover,
+.site-header a:hover,
+.site-footer a:hover,
+.lightbox a:hover {
+  color: var(--cyan-hover);
 }
 
 .skip-link {
@@ -147,6 +168,18 @@ button {
 }
 
 /* --- layout ------------------------------------------------------------- */
+
+/*
+ * The scrollbar gutter is reserved permanently.
+ *
+ * Locking `overflow: hidden` on the root when the compact panel or the lightbox
+ * opens removes the scrollbar, and the whole page then shifts sideways by its
+ * width as it reappears on close. `stable` holds the gutter in both states, so
+ * opening and closing a modal costs no horizontal movement.
+ */
+html {
+  scrollbar-gutter: stable;
+}
 
 .container {
   width: 100%;
@@ -197,41 +230,13 @@ button {
   color: #6fd0f2;
 }
 
-/* A short cyan rule as the recurring brand mark on dark surfaces. */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin: 0 0 var(--space-md);
-  font-family: var(--font-body);
-  font-size: var(--step-micro);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
-
-.eyebrow::before {
-  content: '';
-  width: 1.75rem;
-  height: 2px;
-  background: var(--action);
-}
-
-.on-deep .eyebrow,
-.eyebrow--on-deep {
-  color: var(--cyan);
-}
-
-.eyebrow--on-deep::before {
-  background: var(--cyan);
-}
-
 .lead {
   font-size: var(--step-lead);
   color: var(--ink-2);
   line-height: 1.6;
   max-width: 62ch;
+  /* `pretty` trades a slightly looser last line for no orphaned single word. */
+  text-wrap: pretty;
 }
 
 .section--deep .lead {

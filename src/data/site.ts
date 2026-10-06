@@ -148,15 +148,31 @@ export const services: readonly Service[] = [
   },
 ] as const;
 
-/** The four editorial groups that structure both home and the services hub. */
-export const serviceGroups: readonly {
-  key: ServiceKey;
-  title: string;
-  route: string;
-  lead: string;
-  detail: string;
-  photo?: PhotoKey;
-}[] = [
+/**
+ * The service that defines the company.
+ *
+ * Rope access earns this place because reaching the outdoor unit is the hard
+ * part of the job, which is the whole argument of the site. It is named and
+ * exported rather than flagged, so a consumer cannot receive `undefined` and
+ * so "which service leads" is one fact instead of a lookup that can fail.
+ *
+ * The home renders it as a full-width deep-blue block with its own photograph
+ * and prose, and the other three as a compact index beneath it. There is
+ * deliberately no separate rope-access section on the home: the same subject
+ * in two places would repeat the photograph and the argument.
+ */
+export const primaryService = {
+  key: 'altura',
+  title: 'Instalações em altura',
+  route: routes.altura,
+  lead: 'Prédios e apartamentos com acesso por cordas, conforme avaliação.',
+  detail:
+    'Quando o caminho até a unidade externa é o próprio serviço, a condição do imóvel precisa ser avaliada antes. Fotos da fachada ajudam a iniciar a conversa.',
+  photo: 'alpinismoFachada',
+} as const;
+
+/** The rest of the work: three services, one level below the primary. */
+export const secondaryServices = [
   {
     key: 'instalacao',
     title: 'Instalação',
@@ -176,15 +192,6 @@ export const serviceGroups: readonly {
     photo: 'tecnicoInstrumentos',
   },
   {
-    key: 'altura',
-    title: 'Instalações em altura',
-    route: routes.altura,
-    lead: 'Prédios e apartamentos com acesso por cordas, conforme avaliação.',
-    detail:
-      'Quando o caminho até a unidade externa é o próprio serviço, a condição do imóvel precisa ser avaliada antes. Fotos da fachada ajudam a iniciar a conversa.',
-    photo: 'alpinismoFachada',
-  },
-  {
     key: 'pex',
     title: 'Tubulação PEX/EPEX',
     route: routes.pex,
@@ -194,6 +201,16 @@ export const serviceGroups: readonly {
     photo: 'pexTubos',
   },
 ] as const;
+
+/** All four groups, primary first. Drives the services hub and the home index. */
+export const serviceGroups: readonly {
+  key: ServiceKey;
+  title: string;
+  route: string;
+  lead: string;
+  detail: string;
+  photo?: PhotoKey;
+}[] = [primaryService, ...secondaryServices];
 
 export type PhotoKey =
   | 'heroTecnico'

@@ -1,6 +1,6 @@
 ---
 /**
- * Inner page header: breadcrumb, eyebrow, H1, lead, optional contextual CTA
+ * Inner page header: breadcrumb, H1, lead, optional contextual CTA
  * and the page's own photograph.
  *
  * Every inner page gets this shape, but the photograph is optional and the
@@ -41,7 +41,6 @@ interface Crumb {
 
 interface Props {
   crumbs: readonly Crumb[];
-  eyebrow: string;
   h1: string;
   lead: string;
   photo?: PhotoKey;
@@ -63,7 +62,6 @@ interface Props {
 
 const {
   crumbs,
-  eyebrow,
   h1,
   lead,
   photo,
@@ -105,7 +103,6 @@ const hasPhoto = Boolean(photo);
 <section class="page-head">
   <div class:list={['container', 'page-head__grid', !hasPhoto && 'page-head__grid--text']}>
     <div class="page-head__copy">
-      <p class="eyebrow">{eyebrow}</p>
       <h1>{h1Parts.map((part) => (h1Whole.has(part) ? <span class="nowrap">{part}</span> : part))}</h1>
       <p class="lead">{lead}</p>
 

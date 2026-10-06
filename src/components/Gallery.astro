@@ -101,16 +101,18 @@ const wide = new Set(wideIndices);
 
 <dialog class="lightbox" data-lightbox aria-label="Fotografia em tamanho maior">
   <div data-lightbox-figure>
-      {/*
-        src is intentionally ABSENT rather than empty.
+    {/*
+      There is deliberately no <img> in the static HTML.
 
-        An `src=""` resolves against the document URL, so the browser requests
-        the HTML page as if it were an image, reports the image as broken, and
-        any "all images loaded" check fails on it forever. With no src at all
-        the element is simply not yet an image; width/height still reserve the
-        dialog's space and alt is set per photo before the dialog opens.
-      */}
-      <img data-lightbox-img alt="" width="1280" height="960" decoding="async" />
+      A lightbox image with no `src` is an `<img>` the browser treats as broken,
+      and an empty `src=""` is worse: it resolves against the document URL, so
+      the browser requests the HTML page as if it were a photograph. Both are
+      defects, and the design detector flags the first.
+
+      The element is created by the script when a photograph is chosen, so the
+      page ships no image that has nothing to show. The dialog is sized by the
+      image once it exists, plus the caption row.
+    */}
     <div class="lightbox__bar">
       <p class="lightbox__caption" data-lightbox-caption></p>
       <button class="lightbox__close" type="button" data-lightbox-close>
@@ -135,13 +137,12 @@ const wide = new Set(wideIndices);
 
 <script>
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
-  const img = dialog?.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const caption = dialog?.querySelector<HTMLElement>('[data-lightbox-caption]');
   const closeBtn = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
   const figure = dialog?.querySelector<HTMLElement>('[data-lightbox-figure]');
   let opener: HTMLElement | null = null;
 
-  if (dialog && img && caption && closeBtn && figure) {
+  if (dialog && figure && caption && closeBtn) {
     /*
      * Backdrop click.
      *
@@ -160,20 +161,35 @@ const wide = new Set(wideIndices);
     document.querySelectorAll<HTMLButtonElement>('[data-gallery-open]').forEach((btn) => {
       btn.addEventListener('click', () => {
         opener = btn;
-        img.src = btn.dataset.full ?? '';
+
+        // One element is reused across opens so repeated views do not pile up
+        // detached nodes, and it is dropped again on close.
+        figure.querySelector('[data-lightbox-img]')?.remove();
+        const img = document.createElement('img');
+        img.dataset.lightboxImg = '';
+        img.decoding = 'async';
         img.alt = btn.dataset.alt ?? '';
+        // Real pixel dimensions, so the dialog reserves the right space before
+        // the larger photograph has finished downloading.
+        img.width = Number(btn.dataset.width) || 1280;
+        img.height = Number(btn.dataset.height) || 960;
+        img.src = btn.dataset.full ?? '';
+        figure.prepend(img);
+
         caption.textContent = btn.dataset.caption ?? '';
-        // Carry the real pixel dimensions through so the dialog never
-        // reserves the wrong space while the larger photograph loads.
-        img.width = Number(btn.dataset.width) || img.width;
-        img.height = Number(btn.dataset.height) || img.height;
         dialog.showModal();
         closeBtn.focus();
       });
     });
 
-    // Escape is handled natively by <dialog>, but focus must return.
+    /*
+     * Escape is handled natively by <dialog>. Focus returns to the trigger, and
+     * the image is removed so a closed dialog holds no photograph and no
+     * caption text.
+     */
     dialog.addEventListener('close', () => {
+      figure.querySelector('[data-lightbox-img]')?.remove();
+      caption.textContent = '';
       opener?.focus();
       opener = null;
     });

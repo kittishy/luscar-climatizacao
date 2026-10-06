@@ -14,7 +14,15 @@ import Figure from '../components/Figure.astro';
 import Gallery from '../components/Gallery.astro';
 import Faq from '../components/Faq.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { serviceGroups, whatsappIntents, whatsappLink, routes, site, sizes } from '../data/site.js';
+import {
+  primaryService,
+  secondaryServices,
+  whatsappIntents,
+  whatsappLink,
+  routes,
+  site,
+  sizes,
+} from '../data/site.js';
 
 export const meta = {
   route: '/',
@@ -65,7 +73,6 @@ const faqItems = [
   <section class="hero">
     <div class="container hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">Climatização em {site.region}</p>
         <h1 class="hero__title">{meta.h1}</h1>
         <p class="lead hero__lead">
           Instalação, manutenção e limpeza de ar-condicionado em Joinville e região.
@@ -96,11 +103,15 @@ const faqItems = [
     </div>
   </section>
 
-  {/* ---- 2. Services: editorial groups, not repeated icon cards ------------ */}
+  {/* ---- 2. Services: one primary block, then compact rows ----------------
+      The service that defines the company gets the photograph, the deep blue
+      and the full prose. The other three become compact rows. That gives the
+      section a real hierarchy instead of four identical cards, and it removes
+      the separate rope-access section that used to repeat the same photograph
+      and the same argument immediately below. */}
   <section class="section section--ice" aria-labelledby="servicos-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">O que a Luscar faz</p>
         <h2 id="servicos-title">Serviços da Luscar</h2>
         <p class="lead">
           Instalação, manutenção, limpeza e serviços em altura em Joinville e região.
@@ -109,11 +120,10 @@ const faqItems = [
 
       <div class="services-grid">
         {
-          serviceGroups.map((group) => (
+          secondaryServices.map((group) => (
             <article class="service-group">
               <h3 class="service-group__title">{group.title}</h3>
               <p class="service-group__lead">{group.lead}</p>
-              <p class="service-group__detail">{group.detail}</p>
               <a class="link-more" href={group.route}>
                 Ver sobre {group.title.toLowerCase()}
               </a>
@@ -132,29 +142,30 @@ const faqItems = [
     </div>
   </section>
 
-  {/* ---- 3. Access by rope: the deep blue moment --------------------------- */}
-  <section class="section section--deep section--lg on-deep" aria-labelledby="altura-title">
+  {/* ---- 3. The primary service: the deep blue moment --------------------- */}
+  <section class="section section--deep section--lg on-deep service-primary" aria-labelledby="altura-title">
     <div class="container altitude">
       <figure class="altitude__media">
         <Figure
-          photo="alpinismoFachada"
+          photo={primaryService.photo}
           sizes={sizes.feature}
         />
+        <figcaption class="altitude__caption">Acesso por cordas em fachada</figcaption>
       </figure>
       <div class="altitude__copy">
-        <p class="eyebrow eyebrow--on-deep">Acesso por cordas</p>
         <h2 id="altura-title">Quando o acesso faz parte do serviço</h2>
-<p>
-        Em prédios e apartamentos, o caminho até a unidade externa também precisa ser
-        considerado. A Luscar atua com acesso por cordas para trabalhos em locais de difícil
-        alcance.
-      </p>
-      <p>
-        A viabilidade depende das condições de cada imóvel: geometria da fachada, pontos de
-        ancoragem e espaço para manusear o equipamento. Envie fotos da fachada e do ponto de
-        instalação para avaliarmos o seu caso.
-      </p>
-        <p><a class="link-more" href={routes.altura}>Como funciona o acesso por cordas</a></p>
+        <p class="lead">
+          {primaryService.lead}
+        </p>
+        <p>
+          Em prédios e apartamentos, o caminho até a unidade externa também precisa ser
+          considerado. A viabilidade depende das condições de cada imóvel: geometria da fachada,
+          pontos de ancoragem e espaço para manusear o equipamento.
+        </p>
+        <p class="altitude__ask">
+          Envie fotos da fachada e do ponto de instalação para avaliarmos o seu caso.
+        </p>
+        <p><a class="link-more" href={primaryService.route}>Como funciona o acesso por cordas</a></p>
       </div>
     </div>
   </section>
@@ -163,7 +174,6 @@ const faqItems = [
   <section class="section" aria-labelledby="trabalhos-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Registro do trabalho</p>
         <h2 id="trabalhos-title">Trabalhos da Luscar</h2>
         <p class="lead">
           Instalações e atendimentos realizados pela Luscar em Joinville e região.
@@ -191,7 +201,6 @@ const faqItems = [
   <section class="section section--ice" aria-labelledby="solicitar-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Primeiro contato</p>
         <h2 id="solicitar-title">Como solicitar atendimento</h2>
         <p class="lead">
           Três passos simples para a conversa começar com contexto. A avaliação e o orçamento
@@ -239,7 +248,6 @@ const faqItems = [
         </figcaption>
       </figure>
       <div>
-        <p class="eyebrow">Quem faz</p>
         <h2 id="sobre-title">Climatização com o trabalho à vista</h2>
         <p class="lead">
           Instalações, manutenção e limpeza de ar-condicionado em {site.regionFull}, incluindo
@@ -261,7 +269,6 @@ const faqItems = [
   <section class="section section--ice" aria-labelledby="duvidas-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Antes de falar com a gente</p>
         <h2 id="duvidas-title">Dúvidas sobre climatização</h2>
         <p class="lead">
           Respostas curtas às perguntas que mais aparecem. Cada uma leva à página que explica

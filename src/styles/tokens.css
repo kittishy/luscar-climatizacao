@@ -32,9 +32,12 @@
   --deep: #092a45; /* header, footer, altitude section */
   --deep-2: #0d3554; /* lifted surface inside a deep section */
   --action: #0759b8; /* primary CTA + links, light surfaces only */
-  --action-hover: #054a99;
+  --action-hover: #054a99; /* white on this: 8.58 */
+  --action-active: #043a7d; /* white on this: 11.02 */
   --cyan: #20afe3; /* ACCENT ONLY — never white text, never text on light */
+  --cyan-hover: #6fd0f2; /* cyan on deep: 8.06 */
   --ice: #f2f6f8; /* gallery + breathing surfaces */
+  --ice-active: #e2ebf0;
   --white: #ffffff;
 
   /* --- ink -------------------------------------------------------------- */

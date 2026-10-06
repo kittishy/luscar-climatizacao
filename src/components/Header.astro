@@ -32,7 +32,7 @@ const logo = photos.logo;
 
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href={routes.home} aria-label={`${site.name} — página inicial`}>
+    <a class="brand" href={routes.home} aria-label={`${site.name}, página inicial`}>
       <img
         src={logoUrl}
         alt={site.name}
@@ -166,6 +166,16 @@ const toggle = document.getElementById('nav-toggle');
       if (label) {
         label.textContent = open ? 'Fechar menu de navegação' : 'Abrir menu de navegação';
       }
+
+      /*
+       * The open state is published on <body> as well, because the fixed
+       * contact bar and the body's reserved padding have to react to it. That
+       * used to be expressed as `body:has(.nav-panel[data-open='true'])`, which
+       * silently does nothing on an engine without `:has()`, leaving the bar
+       * painted over the panel's own action. An attribute set by the same
+       * function that opens the panel cannot drift.
+       */
+      document.body.dataset.navOpen = String(open);
 
       for (const el of background) {
         if (open) el.setAttribute('inert', '');
