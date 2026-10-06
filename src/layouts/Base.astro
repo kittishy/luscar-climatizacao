@@ -1,0 +1,88 @@
+---
+/**
+ * The single document shell.
+ *
+ * Everything a page needs is passed in already resolved: metadata, the
+ * service schema entry if any, and the page body. No route re-implements the
+ * head, the header, the contact bar or the footer, which is what keeps title
+ * tags, focus rings, button styles and footer links identical across all 13
+ * routes.
+ */
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ContactBar from '../components/ContactBar.astro';
+import type { PageMeta, ServiceSchemaInput } from '../data/seo.js';
+import { whatsappIntents } from '../data/site.js';
+
+import { trackIntent } from '../lib/analytics.js';
+import { serviceKeyForPath } from '../lib/routes.js';
+
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+
+interface Props {
+  meta: PageMeta;
+  service?: ServiceSchemaInput;
+  /** Overrides the fixed-bar message for pages with a more specific intent. */
+  barMessage?: string;
+}
+
+const { meta, service, barMessage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <Seo meta={meta} service={service} />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <Header />
+    <main id="conteudo">
+      <slot />
+    </main>
+    <Footer />
+    <ContactBar message={barMessage ?? whatsappIntents.geral} />
+  </body>
+
+  <script>
+    /**
+     * Contact-intent instrumentation.
+     *
+     * Reports INTENT, never outcomes: a WhatsApp click means the visitor chose
+     * to start a conversation, not that a customer was closed. Only the route
+     * and the service key are sent, both already public. No message text, no
+     * personal data, no form payload.
+     *
+     * With no PUBLIC_ANALYTICS_ID configured the adapter only writes to the
+     * console and transmits nothing, so the default build ships no tracker.
+     */
+    import { trackIntent } from '../lib/analytics.js';
+    import { serviceKeyForPath } from '../lib/routes.js';
+
+    const route = window.location.pathname;
+    const service = serviceKeyForPath(route);
+
+    const onClick = (event: Event) => {
+      const anchor = event.target instanceof Element ? event.target.closest('a') : null;
+      if (!anchor) return;
+      const href = anchor.getAttribute('href') ?? '';
+      if (href.includes('api.whatsapp.com')) {
+        trackIntent('whatsapp_click', service ? { route, service } : { route });
+      } else if (href.includes('instagram.com')) {
+        trackIntent('instagram_click', { route });
+      } else if (href.startsWith('tel:')) {
+        trackIntent('phone_click', { route });
+      }
+    };
+
+    document.addEventListener('click', onClick, { passive: true });
+
+    if (service) {
+      trackIntent('service_view', { route, service });
+    }
+  </script>
+</html>

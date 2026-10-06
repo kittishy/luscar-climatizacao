@@ -1,0 +1,114 @@
+---
+/**
+ * Contact page.
+ *
+ * WhatsApp is the chosen channel. There is deliberately no form: there is
+ * no backend, and a form that pretends to submit would be a lie.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { contacts, routes, serviceGroups, site, whatsappIntents, whatsappLink } from '../data/site.js';
+
+export const meta = {
+  route: '/contact/',
+  title: 'Contato e orçamento em Joinville | Luscar',
+  description:
+    'Fale com a Luscar pelo WhatsApp sobre instalação, manutenção e outros serviços em Joinville. Envie as informações que tiver para iniciar a conversa.',
+  h1: 'Converse com a Luscar.',
+  breadcrumb: [{ name: 'Contato', route: '/contact/' }],
+};
+
+const whatsappHref = whatsappLink(whatsappIntents.geral);
+---
+
+<Base meta={meta} barMessage={whatsappIntents.geral}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Contato"
+    h1={meta.h1}
+    lead="O atendimento começa pelo WhatsApp. Envie as informações que tiver sobre o serviço e a conversa sobre avaliação e orçamento segue por aí."
+  />
+
+  <section class="section" aria-labelledby="servicos-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="servicos-title">Qual serviço você precisa?</h2>
+        <p class="lead">
+          Cada serviço tem uma página com o que costuma ser perguntado e o
+          que ajuda a iniciar a conversa.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        {
+          serviceGroups.map((group) => (
+            <article class="service-group">
+              <h3 class="service-group__title">{group.title}</h3>
+              <p class="service-group__lead">{group.lead}</p>
+              <a class="link-more" href={group.route}>
+                Ver sobre {group.title.toLowerCase()}
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="info-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="info-title">Informações que ajudam no atendimento</h2>
+        <p class="lead">
+          Para a conversa começar com contexto, ajuda enviar:
+        </p>
+      </div>
+      <ul>
+        <li>O serviço desejado: instalação, manutenção, limpeza, altura ou tubulação.</li>
+        <li>Fotos do aparelho, da fachada ou do local do serviço.</li>
+        <li>O endereço, para verificar a disponibilidade.</li>
+        <li>Se o local é casa, comércio, indústria, apartamento ou prédio.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="canais-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="canais-title">Atendimento em Joinville e região</h2>
+        <p class="lead">
+          A Luscar atende em {site.regionFull}. A disponibilidade para o
+          seu endereço é confirmada pelo WhatsApp.
+        </p>
+      </div>
+
+      <ul class="channels" role="list">
+        <li class="channel">
+          <span class="channel__label">WhatsApp</span>
+          <a
+            class="channel__value"
+            href={whatsappHref}
+            rel="noopener"
+            aria-label={`WhatsApp ${contacts.phoneDisplay}`}
+          >
+            {contacts.phoneDisplay}
+          </a>
+        </li>
+        <li class="channel">
+          <span class="channel__label">Instagram</span>
+          <a
+            class="channel__value"
+            href={contacts.instagram}
+            target="_blank"
+            rel="noopener"
+          >
+            {contacts.instagramHandle}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

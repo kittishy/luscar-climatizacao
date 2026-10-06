@@ -1,0 +1,179 @@
+---
+/**
+ * Cleaning and care of air-conditioning units.
+ *
+ * Intent: "limpeza ar condicionado Joinville". Explains that the need for
+ * cleaning depends on use, environment and manufacturer guidance — never a
+ * universal interval — and describes component care only, with no health
+ * outcome claims.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Faq from '../components/Faq.astro';
+import Figure from '../components/Figure.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/limpeza-ar-condicionado-joinville/',
+  title: 'Limpeza de ar-condicionado em Joinville | Luscar',
+  description:
+    'Limpeza e cuidado de ar-condicionado em Joinville. A necessidade varia com o uso e o ambiente. Converse com a Luscar para avaliar seu equipamento.',
+  h1: 'Limpeza de ar-condicionado em Joinville.',
+  breadcrumb: [{ name: 'Limpeza de ar-condicionado', route: '/limpeza-ar-condicionado-joinville/' }],
+};
+
+export const service = {
+  name: 'Limpeza de ar-condicionado',
+  description:
+    'Limpeza e cuidado dos componentes de ar-condicionado em Joinville e região, com necessidade avaliada conforme uso, ambiente e orientação do fabricante.',
+  route: '/limpeza-ar-condicionado-joinville/',
+};
+
+const faqItems = [
+  {
+    q: 'De quanto em quanto tempo devo limpar o aparelho?',
+    a: 'Não existe um intervalo universal. A necessidade varia com o uso, o ambiente e a orientação do fabricante. O que define a frequência é a condição real do equipamento, avaliada caso a caso.',
+  },
+  {
+    q: 'Limpar o filtro resolve qualquer problema?',
+    a: 'O filtro é um dos componentes que pedem cuidado regular, mas a limpeza do aparelho envolve outros componentes. Se o desempenho mudou, o caminho é relatar o sintoma para avaliação.',
+    link: { text: 'Guia: ar-condicionado não gela.', href: routes.guiaNaoGela },
+  },
+  {
+    q: 'A limpeza elimina fungos e bactérias?',
+    a: 'A limpeza cuida dos componentes do aparelho. Não é correto prometer eliminação de vírus, fungos ou prevenção de doenças — o serviço é de cuidado do equipamento.',
+  },
+  {
+    q: 'Como inicio o atendimento?',
+    a: 'Envie o modelo do aparelho, há quanto tempo não passa por limpeza, o ambiente onde ele fica e o que você observou no funcionamento. Com isso a avaliação começa com contexto.',
+  },
+];
+
+const rail = {
+  heading: 'Avalie o cuidado do aparelho',
+  text: 'Conte o modelo do aparelho, o ambiente onde ele fica e há quanto tempo não passa por limpeza. Com isso a conversa sobre o serviço começa com contexto.',
+  message: whatsappIntents.manutencao,
+  ctaLabel: 'Conversar sobre limpeza',
+  related: [
+    { text: 'Manutenção e consertos', href: routes.manutencao },
+    { text: 'Guia: ar-condicionado não gela', href: routes.guiaNaoGela },
+    { text: 'Fale com a Luscar', href: routes.contact },
+    { text: 'Serviços de climatização', href: routes.servicos },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.manutencao}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Limpeza e cuidado"
+    h1={meta.h1}
+    lead="A limpeza do ar-condicionado é cuidado com os componentes do aparelho. A necessidade varia com o uso, o ambiente e a orientação do fabricante."
+    photo="instrumentosServico"
+    photoCaption="Instrumentos em serviço"
+  />
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Cuidado com os componentes do aparelho</h2>
+        <p>
+          O ar-condicionado tem componentes que acumulam sujeira com o uso: filtros,
+          serpentinas, bandeja e ventilador. O cuidado com esses componentes faz parte da
+          manutenção do equipamento e influencia o desempenho e a durabilidade.
+        </p>
+        <p>
+          A limpeza é um serviço sobre o equipamento, não uma promessa de saúde. Ela não
+          elimina vírus nem previne doenças — o que ela faz é manter os componentes em
+          condição adequada de funcionamento.
+        </p>
+
+        <h2>Quando avaliar a necessidade de limpeza</h2>
+        <p>
+          Alguns sinais indicam que vale avaliar: o aparelho demora mais para gelar, o
+          fluxo de ar diminuiu, há cheiro ao ligar ou o consumo aumentou. Esses sinais não
+          confirmam sujeira — eles pedem avaliação, que pode apontar para limpeza ou para
+          outro tipo de serviço.
+        </p>
+        <p>
+          Se o aparelho já está com desempenho alterado, o caminho é relatar o sintoma.
+          A limpeza pode fazer parte da resposta, mas a avaliação vem antes.
+        </p>
+
+        <h2>Uso e ambiente influenciam a manutenção</h2>
+        <p>
+          Um aparelho que funciona muitas horas por dia em um ambiente com poeira ou
+          gordura pede cuidado mais frequente do que um aparelho de uso ocasional em
+          ambiente limpo. A orientação do fabricante também entra nessa conta.
+        </p>
+        <p>
+          Por isso não existe um intervalo universal de limpeza. O que define a frequência
+          é a combinação de uso, ambiente e recomendação do fabricante, avaliada caso a
+          caso.
+        </p>
+
+        <h2>Como iniciar o atendimento</h2>
+        <p>
+          Para iniciar a conversa, envie pelo WhatsApp:
+        </p>
+        <ul>
+          <li>O modelo do aparelho e o ambiente onde ele fica.</li>
+          <li>Há quanto tempo não passa por limpeza.</li>
+          <li>O que você observou no funcionamento.</li>
+          <li>A orientação do fabricante, se você tiver o manual.</li>
+        </ul>
+        <p>
+          Com essas informações, o técnico orienta o serviço. A disponibilidade para o seu
+          endereço é confirmada nessa conversa.
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="foto-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="foto-title">O serviço à vista</h2>
+        <p class="lead">
+          Registro publicado pela empresa de técnico utilizando instrumentos durante
+          serviço de climatização, ao lado da avaliação que antecede o atendimento.
+        </p>
+      </div>
+      <div class="human">
+        <figure class="human__media">
+          <Figure
+            photo="tecnicoInstrumentos"
+            sizes={sizes.humanFigure}
+          />
+        </figure>
+        <div>
+          <p class="lead">
+            Quando o aparelho não gela, o caminho começa pelo relato do sintoma. O guia
+            abaixo reúne o que observar antes de chamar o técnico.
+          </p>
+          <p><a class="link-more" href={routes.guiaNaoGela}>Guia: ar-condicionado não gela</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="limpeza-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="limpeza-faq-title">Perguntas sobre limpeza</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Quer avaliar o cuidado do seu aparelho?"
+    text="Conte o modelo, o ambiente e há quanto tempo não passa por limpeza. O técnico avalia e orienta o serviço."
+    message={whatsappIntents.manutencao}
+    primaryLabel="Conversar sobre limpeza"
+  />
+</Base>

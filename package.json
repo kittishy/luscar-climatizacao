@@ -1,0 +1,30 @@
+{
+  "name": "luscar-climatizacao",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site institucional da Luscar Climatização (Joinville/SC) — redesign completo com SEO e saída estática.",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "images": "node scripts/generate-images.mjs",
+    "config": "node scripts/gen-vercel-config.mjs",
+    "routes": "node scripts/generate-routes.mjs",
+    "fonts": "node scripts/fetch-fonts.mjs",
+    "typecheck": "astro check && tsc --noEmit -p tsconfig.json",
+    "build": "npm run images && npm run config && astro check && astro build && npm run routes",
+    "preview": "astro preview --host 127.0.0.1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:browser": "node tests/browser.mjs",
+    "verify": "npm run build && npm run test && npm run test:browser"
+  },
+  "dependencies": {
+    "astro": "^5.16.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@types/node": "^22.15.3",
+    "playwright": "^1.56.0",
+    "sharp": "^0.34.4",
+    "typescript": "^5.9.3"
+  }
+}

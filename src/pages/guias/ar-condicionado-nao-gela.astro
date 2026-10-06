@@ -1,0 +1,153 @@
+---
+/**
+ * Guide: when an air-conditioner stops cooling, what to report.
+ *
+ * Intent: "ar condicionado não gela" (informational).
+ *
+ * Two hard limits shape this page:
+ *  1. It is NOT a diagnosis guide. Different faults present the same way, so
+ *     the page routes symptoms to an evaluation rather than naming causes.
+ *  2. It contains NO repair instruction: no opening equipment, no electrical
+ *     work, no refrigerant handling. The only hands-on advice is checking
+ *     the settings the visitor's own manual describes, plus explicit
+ *     stop-and-seek-help conditions.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Figure from '../../components/Figure.astro';
+import Rail from '../../components/Rail.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { routes, sizes, whatsappIntents } from '../../data/site.js';
+
+export const meta = {
+  route: '/guias/ar-condicionado-nao-gela/',
+  title: 'Ar-condicionado não gela: quando avaliar | Luscar',
+  description:
+    'Seu ar-condicionado não está gelando? Entenda quais sintomas relatar e quando buscar avaliação técnica, sem intervenções arriscadas no equipamento.',
+  h1: 'Ar-condicionado não gela: o que relatar ao técnico.',
+  type: 'article' as const,
+  publishedTime: '2026-10-06',
+  modifiedTime: '2026-10-06',
+  breadcrumb: [
+    { name: 'Guias', route: '/guias/ar-condicionado-nao-gela/' },
+    { name: 'Aparelho que não gela', route: '/guias/ar-condicionado-nao-gela/' },
+  ],
+};
+
+const rail = {
+  heading: 'Relate os sintomas',
+  text: 'Descrever o que mudou ajuda a avaliação a começar com contexto, em vez de uma tentativa às cegas.',
+  message: whatsappIntents.manutencao,
+  ctaLabel: 'Relatar o problema',
+  related: [
+    { text: 'Manutenção e consertos', href: routes.manutencao },
+    { text: 'Limpeza de ar-condicionado', href: routes.limpeza },
+    { text: 'Falar com a Luscar', href: routes.contact },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+  ],
+};
+---
+
+<Base meta={meta} barMessage={whatsappIntents.manutencao}>
+  <Breadcrumb crumbs={meta.breadcrumb ?? []} />
+
+  <article class="page-head">
+    <div class="container page-head__grid">
+      <div>
+        <p class="eyebrow">Guia prático</p>
+        <h1>{meta.h1}</h1>
+        <p class="lead">
+          Um aparelho que não está gelando bem pode ter causas muito diferentes entre si, e
+          muitas delas produzem sintomas parecidos. Por isso esta página não serve para
+          diagnosticar: serve para organizar o que você observou e o que deve ser relatado ao
+          técnico.
+        </p>
+      </div>
+      <figure class="altitude__media">
+        <Figure
+          photo="tecnicoInstrumentos"
+          sizes={sizes.pageHead}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption class="hero__caption">
+          A avaliação começa pela leitura do comportamento do aparelho
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Observe o que mudou no funcionamento</h2>
+        <p>
+          Antes de falar com um técnico, vale observar o aparelho por alguns dias e anotar o
+          que mudou. Essas anotações são a informação mais útil que você pode levar à conversa:
+          elas dizem ao técnico quando o problema começou e como ele se manifesta.
+        </p>
+        <ul>
+          <li>O ar sai, mas não fica frio o suficiente?</li>
+          <li>O aparelho ventila normalmente e apenas não resfria?</li>
+          <li>A unidade externa liga e desliga em intervalos incomuns?</li>
+          <li>Existe ruído diferente do habitual, ou algum chiado novo?</li>
+          <li>Há água pingando de alguma parte da unidade?</li>
+          <li>Isso começou de repente ou foi acontecendo gradualmente?</li>
+        </ul>
+        <p>
+          Registrar quando o problema começou é especialmente útil: se o aparelho ficou sem
+          manutenção ou limpeza por um período longo, essa informação muda a avaliação.
+        </p>
+
+        <h2>Configurações e orientação do manual</h2>
+        <p>
+          Antes de considerar qualquer outra coisa, confira as configurações basics descritas no
+          manual do próprio aparelho: o modo selecionado, a temperatura ajustada e o
+          funcionamento do ventilador. Um aparelho que foi remanejado ou desligado no
+          painel pode estar simplesmente fora do modo correto.
+        </p>
+        <p>
+          Esse é o único tipo de verificação que faz sentido fazer por conta própria, e apenas
+          no painel. Não abra a unidade interna nem a externa, não mexa em circuitos elétricos
+          e não manuseie nada interno: esse trabalho é do técnico, com equipamento próprio.
+        </p>
+
+        <h2>Quando parar de usar e buscar avaliação</h2>
+        <p>
+          existem situações em que a recomendação é clara: pare de usar o aparelho e procure
+          assistência. São elas:
+        </p>
+        <ul>
+          <li>Cheiro de queimado, vindo do aparelho ou da unidade externa.</li>
+          <li>Ruído anormal e forte, diferente do funcionamento de sempre.</li>
+          <li>Risco elétrico visível, como marca de queimado, fio exposto ou tomada danificada.</li>
+          <li>Vazamento de água em quantidade inesperada.</li>
+        </ul>
+        <p>
+          Nesses casos, desligar o aparelho no painel e não tentar reparar é o caminho seguro.
+        </p>
+
+        <h2>Converse sobre manutenção</h2>
+        <p>
+          Se o problema não se enquadra entre os casos de risco, ainda assim vale avaliar. Um
+          aparelho que perdeu desempenho pode precisar de manutenção, de limpeza dos componentes
+          ou de outro tipo de intervenção, e a decisão depende de examinar o equipamento.
+        </p>
+        <p>
+          Vale notar também o contrário: nem toda perda de desempenho significa troca de
+          aparelho. Reparar ou ajustar pode resolver, e essa é uma das razões para avaliar
+          antes de decidir por uma substituição.
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Descreva o que o aparelho está fazendo"
+    text="Relate os sintomas, há quanto tempo aparecem e se houve alguma mudança. O técnico avalia a partir disso."
+    message={whatsappIntents.manutencao}
+    primaryLabel="Relatar o problema"
+  />
+</Base>

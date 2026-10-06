@@ -1,0 +1,57 @@
+---
+/**
+ * The single responsive-image primitive.
+ *
+ * Every photograph on the site renders through here so that no page can
+ * accidentally ship an image without explicit dimensions, an alt, a
+ * constrained sizes() or a full srcset.
+ *
+ * Emits <picture> with AVIF + WebP + JPEG. The three sources share one alt,
+ * because a duplicated alt across formats is a duplicated description for
+ * assistive tech, not extra information.
+ */
+import { photos, photoSrc, photoFallback, type PhotoKey } from '../data/site.js';
+
+interface Props {
+  photo: PhotoKey;
+  /** Layout hint for the browser's source selection. Never omitted. */
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  decoding?: 'sync' | 'async';
+  class?: string;
+}
+
+const {
+  photo: key,
+  sizes,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  decoding = 'async',
+  class: className,
+} = Astro.props;
+
+const photo = photos[key];
+if (!photo) throw new Error(`Unknown photo key: ${key}`);
+
+const avifSet = photo.widths.map((w) => `${photoSrc(photo, w, 'avif')} ${w}w`).join(', ');
+const webpSet = photo.widths.map((w) => `${photoSrc(photo, w, 'webp')} ${w}w`).join(', ');
+const jpgSet = photo.widths.map((w) => `${photoSrc(photo, w, 'jpg')} ${w}w`).join(', ');
+---
+
+<picture>
+  <source type="image/avif" srcset={avifSet} sizes={sizes} />
+  <source type="image/webp" srcset={webpSet} sizes={sizes} />
+  <img
+    src={photoFallback(photo)}
+    srcset={jpgSet}
+    sizes={sizes}
+    alt={photo.alt}
+    width={photo.width}
+    height={photo.height}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+    class={className}
+  />
+</picture>

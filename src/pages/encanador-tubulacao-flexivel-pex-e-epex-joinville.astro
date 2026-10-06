@@ -1,0 +1,124 @@
+---
+/**
+ * Flexible PEX/EPEX piping service page.
+ *
+ * Intent: "encanador tubulação flexível PEX EPEX Joinville". Explains that
+ * the application depends on the project and the system specification, and
+ * points to the services hub, installation and contact pages.
+ *
+ * The three PEX images are B&W reference illustrations from the archive,
+ * not photographs of the company's own confirmed work. They are rendered
+ * as honestly labelled technical modules, never as hero or gallery.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Figure from '../components/Figure.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents } from '../data/site.js';
+
+export const meta = {
+  route: '/encanador-tubulacao-flexivel-pex-e-epex-joinville/',
+  title: 'Tubulação flexível PEX/EPEX em Joinville | Luscar',
+  description:
+    'Serviços com tubulação flexível PEX/EPEX em Joinville. A aplicação depende do projeto e da especificação do sistema. Converse com a Luscar.',
+  h1: 'Tubulação flexível PEX/EPEX em Joinville.',
+  breadcrumb: [{ name: 'Tubulação PEX/EPEX', route: '/encanador-tubulacao-flexivel-pex-e-epex-joinville/' }],
+};
+
+export const service = {
+  name: 'Tubulação flexível PEX/EPEX',
+  description:
+    'Serviços com tubulação flexível PEX/EPEX em Joinville e região, com avaliação da aplicação adequada ao projeto e das especificações do sistema.',
+  route: '/encanador-tubulacao-flexivel-pex-e-epex-joinville/',
+};
+
+const rail = {
+  heading: 'Vamos conversar sobre o projeto',
+  text: 'Conte o tipo de sistema, o que já foi especificado e o que você precisa resolver. Com isso a conversa sobre a aplicação da tubulação começa com contexto.',
+  message: whatsappIntents.pex,
+  ctaLabel: 'Conversar sobre tubulação',
+  related: [
+    { text: 'Serviços de climatização', href: routes.servicos },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+    { text: 'Contato e orçamento', href: routes.contact },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.pex}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Tubulação"
+    h1={meta.h1}
+    lead="A Luscar trabalha com tubulação flexível PEX/EPEX em Joinville e região. A aplicação é avaliada caso a caso, conforme o sistema e o projeto."
+  />
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Tubulação flexível e avaliação do projeto</h2>
+        <p>
+          A tubulação flexível PEX/EPEX aparece em projetos de climatização e de
+          instalações hidráulicas, mas não é uma escolha automática. Antes de
+          definir o material, o sistema, o trajeto e as especificações do
+          fabricante precisam ser avaliados.
+        </p>
+        <p>
+          Por isso o serviço começa com uma conversa sobre o projeto: o que já
+          foi especificado, o que ainda está em aberto e quais são as condições
+          do local.
+        </p>
+
+        <h2>Compatibilidade depende da especificação</h2>
+        <p>
+          A aplicação depende do sistema, das especificações do fabricante e da
+          avaliação técnica. PEX/EPEX não é um substituto universal para
+          tubulação de cobre, nem serve para qualquer gás ou qualquer circuito.
+          A compatibilidade é definida pelo projeto e pelas especificações do
+          sistema, não pelo material em si.
+        </p>
+
+        <h2>Informações para conversar sobre o serviço</h2>
+        <p>
+          Para iniciar a conversa pelo WhatsApp, ajuda enviar:
+        </p>
+        <ul>
+          <li>O tipo de sistema e o que já foi especificado para ele.</li>
+          <li>Fotos do local ou do trecho onde a tubulação será aplicada.</li>
+          <li>O endereço da obra, para verificar a disponibilidade.</li>
+          <li>Se o serviço é residencial, comercial ou industrial.</li>
+        </ul>
+        <p>
+          Com essas informações, a conversa sobre escopo e orçamento começa com
+          contexto. A disponibilidade para o seu endereço é confirmada nessa
+          conversa.
+        </p>
+
+        <figure class="tech-module tech-module--row">
+          <Figure photo="pexTubos" sizes="295px" />
+          <figcaption>Ilustração de tubulação flexível do acervo</figcaption>
+        </figure>
+
+        <figure class="tech-module tech-module--row">
+          <Figure photo="pexInstalacao" sizes="295px" />
+          <figcaption>Ilustração de tubulação flexível do acervo</figcaption>
+        </figure>
+
+        <figure class="tech-module tech-module--row">
+          <Figure photo="pexAplicacao" sizes="295px" />
+          <figcaption>Ilustração de tubulação flexível do acervo</figcaption>
+        </figure>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Quer conversar sobre tubulação flexível?"
+    text="Envie o tipo de sistema, fotos do local e o endereço. A conversa sobre a aplicação e o orçamento começa por aí."
+    message={whatsappIntents.pex}
+    primaryLabel="Conversar sobre tubulação"
+  />
+</Base>

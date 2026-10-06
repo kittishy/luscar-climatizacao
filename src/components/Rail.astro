@@ -1,0 +1,67 @@
+---
+/**
+ * Contextual rail that sits beside long-form page content.
+ *
+ * Holds the service's own WhatsApp message, the related pages and a small
+ * navigation escape. It is the first thing a visitor sees after the H1 on a
+ * wide screen, which is why the primary action lives here rather than being
+ * repeated down the page.
+ */
+import { contacts, whatsappLink } from '../data/site.js';
+
+interface Link {
+  text: string;
+  href: string;
+}
+
+interface Props {
+  heading: string;
+  text: string;
+  message: string;
+  ctaLabel?: string;
+  relatedHeading?: string;
+  related?: readonly Link[];
+}
+
+const {
+  heading,
+  text,
+  message,
+  ctaLabel = 'Falar com o técnico',
+  relatedHeading = 'Veja também',
+  related = [],
+} = Astro.props;
+
+const href = whatsappLink(message);
+---
+
+<aside class="rail" aria-labelledby="rail-heading">
+  <div>
+    <h2 id="rail-heading">{heading}</h2>
+    <p style="color:var(--ink-2);font-size:var(--step-small)">{text}</p>
+    <a
+      class="btn btn--primary btn--block"
+      href={href}
+      rel="noopener"
+      style="margin-top:1rem"
+      aria-label={`${ctaLabel}, ${contacts.phoneDisplay}`}
+    >
+      {ctaLabel}
+    </a>
+  </div>
+
+  {
+    related.length > 0 && (
+      <div>
+        <h2>{relatedHeading}</h2>
+        <ul class="related" role="list">
+          {related.map((link) => (
+            <li>
+              <a href={link.href}>{link.text}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</aside>

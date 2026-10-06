@@ -1,0 +1,51 @@
+---
+/**
+ * Inner page header: breadcrumb, H1, lead and the page's own photograph.
+ *
+ * Every commercial page gets this same shape but a different photograph and
+ * different copy, so the pages read as one system without repeating one
+ * layout verbatim.
+ */
+import Breadcrumb from './Breadcrumb.astro';
+import Figure from './Figure.astro';
+import { sizes, type PhotoKey } from '../data/site.js';
+
+interface Crumb {
+  name: string;
+  route: string;
+}
+
+interface Props {
+  crumbs: readonly Crumb[];
+  eyebrow: string;
+  h1: string;
+  lead: string;
+  photo?: PhotoKey;
+  /** Defaults to the measured inner-page header curve. */
+  photoSizes?: string;
+  /** Optional factual line under the photograph. */
+  photoCaption?: string;
+}
+
+const { crumbs, eyebrow, h1, lead, photo, photoSizes = sizes.pageHead, photoCaption } = Astro.props;
+---
+
+<Breadcrumb crumbs={crumbs} />
+
+<section class="page-head">
+  <div class="container page-head__grid">
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{h1}</h1>
+      <p class="lead">{lead}</p>
+    </div>
+    {
+      photo && (
+        <figure class="altitude__media">
+          <Figure photo={photo} sizes={photoSizes} loading="eager" fetchpriority="high" />
+          {photoCaption && <figcaption class="hero__caption">{photoCaption}</figcaption>}
+        </figure>
+      )
+    }
+  </div>
+</section>

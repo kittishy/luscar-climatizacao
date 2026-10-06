@@ -1,0 +1,1333 @@
+/* ==========================================================================
+   Components
+   Header, hero, editorial service list, gallery, FAQ, contact bar, footer.
+   No card grid is repeated blindly: each section gets the layout its content
+   actually wants. Corners stay discreet, borders are used to divide rather
+   than to decorate, and shadow appears only where something is lifted.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3rem; /* 48px: primary action */
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.btn--primary {
+  background: var(--action);
+  color: var(--white); /* 6.71 on action */
+}
+
+.btn--primary:hover {
+  background: var(--action-hover);
+  color: var(--white);
+}
+
+/* On the deep blue the action colour fails contrast (2.19), so the primary
+   CTA inverts to deep text on white instead of fighting the section. */
+.btn--on-deep {
+  background: var(--white);
+  color: var(--deep); /* 14.70 */
+}
+
+.btn--on-deep:hover {
+  background: var(--ice);
+  color: var(--deep);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--action);
+  border-color: var(--line-strong);
+}
+
+.btn--ghost:hover {
+  border-color: var(--action);
+  background: rgb(7 89 184 / 0.05);
+  color: var(--action-hover);
+}
+
+.btn--ghost-on-deep {
+  background: transparent;
+  color: var(--white);
+  border-color: rgb(255 255 255 / 0.45);
+}
+
+.btn--ghost-on-deep:hover {
+  border-color: var(--white);
+  background: rgb(255 255 255 / 0.08);
+  color: var(--white);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Secondary link that must not compete with the primary CTA.
+   The hit area is padded to 44px min-height with a negative vertical margin
+   so the extra touch target does NOT push surrounding paragraphs apart. */
+.link-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  /* Compensate the padding so line rhythm stays exactly as designed. */
+  margin-block: -0.5rem;
+  padding-block: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--action);
+}
+
+.link-more::after {
+  content: '→';
+  transition: transform 0.16s ease;
+}
+
+.link-more:hover::after,
+.link-more:focus-visible::after {
+  transform: translateX(3px);
+}
+
+.section--deep .link-more {
+  color: var(--cyan);
+}
+
+.section--deep .link-more:hover {
+  color: #6fd0f2;
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--deep);
+  color: var(--on-deep);
+}
+
+/* A hairline that only reads on the pale ice sections below. */
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 0.12);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: var(--on-deep);
+  flex-shrink: 0;
+}
+
+.brand img {
+  /* Native logo is 274x115; the brief caps display at ~200px. */
+  width: clamp(112px, 30vw, 168px);
+  height: auto;
+}
+
+.brand__text {
+  display: none;
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--on-deep);
+  cursor: pointer;
+}
+
+.nav-toggle:hover {
+  border-color: rgb(255 255 255 / 0.7);
+}
+
+.nav-toggle__bars {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 14px;
+}
+
+.nav-toggle__bars::before,
+.nav-toggle__bars::after,
+.nav-toggle__bars span {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.nav-toggle__bars::before {
+  top: 0;
+}
+.nav-toggle__bars span {
+  top: 6px;
+}
+.nav-toggle__bars::after {
+  top: 12px;
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle__bars::before {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav-toggle[aria-expanded='true'] .nav-toggle__bars span {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded='true'] .nav-toggle__bars::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.site-nav {
+  display: none;
+}
+
+.site-nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.75rem);
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.15rem;
+  color: var(--on-deep);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.site-nav a:hover {
+  color: var(--white);
+  border-bottom-color: var(--cyan);
+}
+
+.site-nav a[aria-current='page'] {
+  border-bottom-color: var(--cyan);
+}
+
+.header-cta {
+  display: none;
+}
+
+/* Compact menu: a real panel that can scroll internally when the viewport is
+   short in landscape, and that closes on Escape while returning focus. */
+.nav-panel {
+  position: fixed;
+  inset: var(--header-h) 0 0;
+  z-index: 55;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--deep);
+  padding: var(--space-lg) var(--gutter) calc(var(--bar-h) + var(--bar-safe-b) + var(--space-xl));
+  display: none;
+}
+
+.nav-panel[data-open='true'] {
+  display: block;
+}
+
+.nav-panel ul {
+  list-style: none;
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+}
+
+.nav-panel a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: 56px;
+  padding-block: var(--space-sm);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  color: var(--on-deep);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-panel a:hover {
+  color: var(--cyan);
+}
+
+.nav-panel a[aria-current='page'] {
+  color: var(--cyan);
+}
+
+.nav-panel__cta {
+  max-width: var(--container-narrow);
+  margin: var(--space-lg) auto 0;
+}
+
+/* Landscape phones have very little vertical room. The panel scrolls, and its
+   own bottom padding guarantees the CTA can always be scrolled clear. The
+   contact-bar override for this case lives with the contact-bar rules below,
+   because a `display` declaration placed earlier in the file would lose to
+   the later `.contact-bar` base rule on equal specificity. */
+@media (max-height: 560px) and (max-width: 1023px) {
+  .nav-panel {
+    padding-block: var(--space-md) calc(var(--space-2xl));
+  }
+
+  .nav-panel a {
+    min-height: 48px;
+    font-size: 1.25rem;
+    padding-block: var(--space-xs);
+  }
+
+  .nav-panel__cta {
+    margin-top: var(--space-md);
+  }
+}
+
+/* --- desktop navigation ------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  .nav-toggle,
+  .nav-panel {
+    display: none !important;
+  }
+
+  .site-nav,
+  .header-cta {
+    display: block;
+  }
+
+  .brand img {
+    width: 168px;
+  }
+
+  .brand__text {
+    display: block;
+    font-size: var(--step-micro);
+    line-height: 1.25;
+    color: var(--on-deep-2);
+    max-width: 11ch;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hero — desktop gets an asymmetric split, mobile a clear vertical read
+   -------------------------------------------------------------------------- */
+
+.hero {
+  background: var(--white);
+  padding-block: clamp(2rem, 1.2rem + 3vw, 4.5rem) clamp(2.5rem, 1.6rem + 4vw, 5rem);
+}
+
+/*
+ * The hero runs in a deliberately narrower measure than the site container.
+ *
+ * Inside the full 1240px container the flexible text track was ~700px while
+ * the readable measure is ~455px, which left a 300px+ empty gutter between
+ * the words and the photograph. A tighter hero container makes the
+ * asymmetric split look composed instead of unbalanced.
+ */
+.hero .container {
+  max-width: calc(990px + var(--gutter) * 2);
+}
+
+.hero__grid {
+  display: grid;
+  gap: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  align-items: start;
+}
+
+.hero__copy {
+  max-width: 34ch;
+}
+
+.hero__title {
+  margin-bottom: var(--space-md);
+  /* "Ar-condicionado" must not split at its hyphen. */
+  hyphens: none;
+  overflow-wrap: normal;
+}
+
+.hero__lead {
+  margin-bottom: var(--space-lg);
+  max-width: 52ch;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  align-items: center;
+}
+
+.hero__meta {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line);
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+.hero__meta dl {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: 0;
+}
+
+.hero__meta div {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.hero__meta dt {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* The photograph: vertical source, never stretched to fill a wide monitor. */
+.hero__figure {
+  margin: 0;
+  position: relative;
+}
+
+.hero__media {
+  position: relative;
+  background: var(--ice);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Keeps face, ropes and condenser together at every crop. */
+  object-position: 50% 22%;
+}
+
+.hero__caption {
+  margin-top: var(--space-sm);
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+@media (min-width: 900px) {
+  .hero__grid {
+    /*
+     * Text takes the flexible track; the photograph gets an explicit column.
+     *
+     * An earlier version used 1.15fr / 0.85fr with a `max-width` in ch on the
+     * copy. At 1366x768 that produced a narrow text measure beside a wide
+     * empty gutter, breaking "Ar-condicionado" onto its own line and pushing
+     * the CTA below the fold. Fixing the photo column instead of capping the
+     * text keeps the measure readable AND fills the row.
+     */
+    /*
+     * Both tracks are bounded, so the text track matches the readable measure
+     * and the photograph sits where the layout intends. An earlier version
+     * gave the text a flexible `1fr` track with a `max-width` in ch, which
+     * left a 200-360px empty gutter between the words and the photograph at
+     * every desktop width.
+     */
+    grid-template-columns: minmax(0, 440px) clamp(340px, 32vw, 480px);
+    justify-content: space-between;
+    gap: clamp(2rem, 1.2rem + 3.5vw, 4.5rem);
+    align-items: center;
+  }
+
+  .hero__copy {
+    max-width: 42ch;
+  }
+
+  /* Cap the photo at a real column instead of letting it run the full width:
+     the source is 960px and must not be blown up. */
+  .hero__media {
+    aspect-ratio: 4 / 5;
+    max-height: 620px;
+  }
+
+  .hero__meta {
+    margin-top: var(--space-2xl);
+  }
+}
+
+@media (min-width: 1120px) {
+  .hero__copy {
+    max-width: 40ch;
+  }
+}
+
+/*
+ * Short viewports (a 1366x768 laptop is the case the brief names explicitly).
+ * The hero is the one place allowed to react to available height, because it
+ * is the only section whose content must fit above the fold: the title, the
+ * lead and both calls to action.
+ */
+@media (min-width: 900px) and (max-height: 860px) {
+  :root {
+    --step-display: clamp(2rem, 1.3rem + 2.2vw, 2.75rem);
+  }
+
+  .hero {
+    padding-block: clamp(1.5rem, 1rem + 1.5vw, 2.25rem) clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  .hero__media {
+    max-height: 500px;
+  }
+
+  .hero__meta {
+    margin-top: var(--space-lg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Service list — editorial rows with purpose, not repeated icon cards
+   -------------------------------------------------------------------------- */
+
+.services-grid {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  grid-template-areas: 'intro';
+}
+
+.service-group {
+  padding-top: var(--space-md);
+  border-top: 2px solid var(--line);
+}
+
+.service-group__title {
+  margin-bottom: var(--space-xs);
+}
+
+.service-group__lead {
+  margin-bottom: var(--space-sm);
+  font-size: var(--step-lead);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.service-group__detail {
+  color: var(--ink-2);
+  margin-bottom: var(--space-sm);
+}
+
+.service-hub-link {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--line);
+}
+
+.service-hub-link a {
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'a b'
+      'c d';
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+
+  .service-group:nth-child(1) {
+    grid-area: a;
+  }
+  .service-group:nth-child(2) {
+    grid-area: b;
+  }
+  .service-group:nth-child(3) {
+    grid-area: c;
+  }
+  .service-group:nth-child(4) {
+    grid-area: d;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Altitude feature — the deep blue moment
+   -------------------------------------------------------------------------- */
+
+.altitude {
+  display: grid;
+  gap: clamp(1.75rem, 1.2rem + 2.4vw, 3.5rem);
+  align-items: center;
+}
+
+.altitude__media {
+  margin: 0;
+}
+
+.altitude__media img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+
+.altitude__copy h2 {
+  margin-bottom: var(--space-md);
+}
+
+@media (min-width: 900px) {
+  .altitude {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  }
+
+  .altitude__media {
+    order: -1; /* photo leads the eye, text answers it */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Gallery — two scales, so the page is not a uniform tile wall
+   -------------------------------------------------------------------------- */
+
+.gallery {
+  display: grid;
+  gap: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gallery__item {
+  margin: 0;
+}
+
+.gallery__btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+}
+
+.gallery__btn:hover {
+  border-color: var(--line-strong);
+}
+
+.gallery__btn img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.gallery__item--wide {
+  grid-column: 1 / -1;
+}
+
+.gallery__item--wide .gallery__btn img {
+  aspect-ratio: 16 / 9;
+  object-position: 50% 58%;
+}
+
+.gallery__caption {
+  display: block;
+  padding: var(--space-sm) var(--space-sm) var(--space-md);
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+@media (min-width: 900px) {
+  .gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /*
+    Span is driven ONLY by the .gallery__item--wide class that Gallery.astro
+    applies from its wideIndices prop.
+
+    An earlier version auto-widened :nth-child(1) and :nth-child(5) in CSS.
+    That silently disagreed with the component's sizes attribute: a tile could
+    be laid out two columns wide (753px) while the browser was told to expect
+    a one-column tile (380px), so it fetched a file too small and upscaled it.
+    Layout and resource hints must come from the same source of truth.
+  */
+  .gallery__item--wide {
+    grid-column: span 2;
+  }
+
+  .gallery__item--wide .gallery__btn img {
+    aspect-ratio: 16 / 9;
+    object-position: 50% 58%;
+  }
+}
+
+/* Lightbox: keyboard operable, Escape closes, focus returns to the trigger. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 3rem);
+  background: rgb(9 42 69 / 0.94);
+  border: 0;
+}
+
+/* A closed dialog must not occupy the page. `hidden` is deliberately NOT used
+   on the element: it would override [open] and hide the modal after
+   showModal(). */
+.lightbox:not([open]) {
+  display: none;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.lightbox__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: min(100%, 900px);
+  margin-top: var(--space-md);
+  color: var(--on-deep);
+}
+
+.lightbox__caption {
+  font-size: var(--step-small);
+  color: var(--on-deep-2);
+}
+
+.lightbox__close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox__close:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Steps — guidance, not a promise
+   -------------------------------------------------------------------------- */
+
+.steps {
+  counter-reset: step;
+  list-style: none;
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.steps li {
+  position: relative;
+  padding-left: 3rem;
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  background: var(--deep);
+  color: var(--white);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.steps h3 {
+  margin-bottom: var(--space-2xs);
+}
+
+.steps p {
+  color: var(--ink-2);
+}
+
+@media (min-width: 768px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Human block
+   -------------------------------------------------------------------------- */
+
+.human {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  align-items: center;
+}
+
+.human__media {
+  margin: 0;
+}
+
+.human__media img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  /* Face sits high in the source; keep it there. */
+  object-position: 50% 25%;
+}
+
+.human__facts {
+  list-style: none;
+  margin-top: var(--space-md);
+  display: grid;
+  gap: var(--space-xs);
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+.human__facts li {
+  display: flex;
+  gap: var(--space-sm);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--line);
+}
+
+.human__facts strong {
+  color: var(--ink);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .human {
+    grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1.4fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FAQ — native details/summary, keyboard and screen-reader safe for free
+   -------------------------------------------------------------------------- */
+
+.faq {
+  border-top: 1px solid var(--line);
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq__item > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  min-height: 3rem;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__item > summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: 0.4rem;
+  border-right: 2px solid var(--action);
+  border-bottom: 2px solid var(--action);
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
+}
+
+.faq__item[open] > summary::after {
+  transform: rotate(-135deg);
+  margin-top: 0.55rem;
+}
+
+.faq__item > summary:hover {
+  color: var(--action);
+}
+
+.faq__answer {
+  padding-bottom: var(--space-lg);
+  color: var(--ink-2);
+  max-width: 68ch;
+}
+
+.faq__answer a {
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Related links — a quiet list, not a card grid
+   -------------------------------------------------------------------------- */
+
+.related {
+  list-style: none;
+  display: grid;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--line);
+}
+
+.related a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-sm);
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.related a::after {
+  content: '→';
+  color: var(--action);
+  flex-shrink: 0;
+}
+
+.related a:hover {
+  color: var(--action-hover);
+}
+
+/* --------------------------------------------------------------------------
+   Breadcrumb
+   -------------------------------------------------------------------------- */
+
+.breadcrumb {
+  padding-block: var(--space-md);
+  border-bottom: 1px solid var(--line);
+}
+
+.breadcrumb ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.breadcrumb li + li::before {
+  content: '/';
+  color: var(--line-strong);
+}
+
+.breadcrumb a {
+  color: var(--ink-2);
+}
+
+.breadcrumb a:hover {
+  color: var(--action);
+}
+
+.breadcrumb [aria-current='page'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Inner page header
+   -------------------------------------------------------------------------- */
+
+.page-head {
+  padding-block: clamp(1.75rem, 1.2rem + 2vw, 3.25rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.page-head__grid {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  align-items: start;
+}
+
+.page-head h1 {
+  margin-bottom: var(--space-md);
+  max-width: 22ch;
+}
+
+@media (min-width: 900px) {
+  .page-head__grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+    align-items: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Two-column body: content plus a sticky contextual rail
+   -------------------------------------------------------------------------- */
+
+.body-split {
+  display: grid;
+  gap: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  align-items: start;
+}
+
+.rail {
+  display: grid;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--ice);
+  border-radius: var(--radius-lg);
+}
+
+.rail h2 {
+  font-size: var(--step-h3);
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+  .body-split {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  }
+
+  .rail {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-lg));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Technical module — small reference illustration, honestly labelled
+   -------------------------------------------------------------------------- */
+
+.tech-module {
+  display: grid;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+
+.tech-module img {
+  width: 100%;
+  max-width: 295px; /* native width of the reference files */
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+.tech-module figcaption {
+  font-size: var(--step-small);
+  color: var(--ink-2);
+}
+
+@media (min-width: 640px) {
+  .tech-module--row {
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .tech-module--row img {
+    max-width: 180px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Contact channels
+   -------------------------------------------------------------------------- */
+
+.channels {
+  list-style: none;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.channel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--line);
+}
+
+.channel__label {
+  font-size: var(--step-micro);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: block;
+}
+
+.channel__value {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a.channel__value:hover {
+  color: var(--action);
+}
+
+/* --------------------------------------------------------------------------
+   Closing CTA
+   -------------------------------------------------------------------------- */
+
+.closing {
+  background: var(--deep);
+  color: var(--on-deep);
+  padding-block: var(--section-y-lg);
+}
+
+.closing__grid {
+  display: grid;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.closing h2 {
+  color: var(--white);
+  max-width: 20ch;
+}
+
+.closing p {
+  color: var(--on-deep-2);
+}
+
+.closing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 900px) {
+  .closing__grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(2rem, 1.2rem + 3vw, 4rem);
+  }
+
+  .closing__actions {
+    justify-content: flex-end;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Fixed contact bar — small viewports only.
+   One contact affordance at a time: the header button and in-page CTAs are
+   hidden from the bar's competitors, and no floating bubble duplicates it.
+   -------------------------------------------------------------------------- */
+
+.contact-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--bar-h);
+  padding-bottom: var(--bar-safe-b);
+  background: var(--deep);
+  box-shadow: 0 -1px 0 rgb(255 255 255 / 0.14), 0 -12px 28px -22px rgb(9 42 69 / 0.6);
+}
+
+.contact-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: var(--bar-h);
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contact-bar a:hover {
+  background: var(--deep-2);
+}
+
+/* Reserve the bar's real height so it can never sit on top of content. */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: calc(var(--bar-h) + var(--bar-safe-b));
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-bar {
+    display: none;
+  }
+}
+
+/*
+ * Landscape phones (e.g. 844x390): there is not enough height for both the
+ * open navigation panel's own primary action and a fixed contact bar, and two
+ * stacked bars would fight for the same space. The panel already carries a
+ * WhatsApp button, so the fixed bar stands down here and the reserved body
+ * padding is released with it.
+ */
+@media (max-height: 560px) and (max-width: 1023px) {
+  .contact-bar {
+    display: none;
+  }
+
+  body {
+    padding-bottom: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--deep);
+  color: var(--on-deep-2);
+  padding-block: var(--space-2xl) var(--space-xl);
+  font-size: var(--step-small);
+}
+
+.footer__grid {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.footer__brand img {
+  width: 168px;
+  height: auto;
+}
+
+.footer__tagline {
+  margin-top: var(--space-md);
+  max-width: 34ch;
+}
+
+.footer h2 {
+  font-family: var(--font-body);
+  font-size: var(--step-micro);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: var(--space-sm);
+}
+
+.footer ul {
+  list-style: none;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.footer li a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--on-deep);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer li a:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+}
+
+.footer__bottom {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  display: grid;
+  gap: var(--space-xs);
+  font-size: var(--step-micro);
+}
+
+@media (min-width: 720px) {
+  .footer__grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+
+  .footer__bottom {
+    grid-template-columns: auto 1fr;
+    justify-content: space-between;
+  }
+}

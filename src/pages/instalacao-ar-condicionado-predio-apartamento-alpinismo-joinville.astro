@@ -1,0 +1,200 @@
+---
+/**
+ * Apartments and buildings served by rope access.
+ *
+ * Intent: "alpinismo industrial Joinville ar condicionado".
+ *
+ * This is the page that carries the Luscar's real differentiator, so it leads
+ * with photographs of work at height and explains the difference between
+ * *reaching the spot* and *installing the unit*.
+ *
+ * It makes two deliberate refusals: it does not promise execution on any
+ * facade, and it does not declare zero risk. Both would be claims the
+ * evidence cannot support.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Faq from '../components/Faq.astro';
+import Gallery from '../components/Gallery.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/',
+  title: 'Ar-condicionado com alpinismo em Joinville | Luscar',
+  description:
+    'Serviços de ar-condicionado em prédios e apartamentos com acesso por cordas em Joinville. Veja registros do trabalho e fale com a Luscar.',
+  h1: 'Ar-condicionado e acesso por cordas em Joinville.',
+  breadcrumb: [
+    { name: 'Serviços', route: '/servicos-de-climatizacao-ar-condicionado-joinville/' },
+    { name: 'Acesso por cordas', route: '/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/' },
+  ],
+};
+
+export const service = {
+  name: 'Ar-condicionado com acesso por cordas',
+  description:
+    'Serviços de ar-condicionado em prédios e apartamentos que exigem acesso por cordas em Joinville, com avaliação das condições do imóvel e da fachada antes da execução.',
+  route: '/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/',
+};
+
+const faqItems = [
+  {
+    q: 'Toda fachada permite esse tipo de serviço?',
+    a: 'Não. O acesso depende das condições reais do imóvel: geometria da fachada, pontos de ancoragem, espaço para o equipamento e proximidade de vidro ou outros elementos frágeis. Essa avaliação é feita antes de qualquer decisão.',
+    link: { text: 'Ver como prédios são avaliados.', href: routes.predios },
+  },
+  {
+    q: 'O acesso por cordas é mais caro?',
+    a: 'Costuma refletir o esforço adicional de chegar ao ponto. O valor depende do que será feito, de quanto tempo de trabalho em altura é necessário e das condições do imóvel, e é tratado na avaliação.',
+  },
+  {
+    q: 'Vocês fazem manutenção também com acesso por cordas?',
+    a: 'Sim. A mesma condição de acesso se aplica a manutenção e a reparos de unidades externas já instaladas em fachadas.',
+    link: { text: 'Ver manutenção e consertos.', href: routes.manutencao },
+  },
+  {
+    q: 'O condomínio precisa aprovar?',
+    a: 'As regras do condomínio e a posição permitida precisam ser consideradas. A Luscar não resolve autorizações por você, mas as informações da convenção ajudam na avaliação.',
+    link: { text: 'Guia: preparar a instalação no apartamento.', href: routes.guiaApartamento },
+  },
+];
+
+const rail = {
+  heading: 'Avalie seu prédio',
+  text: 'Envie fotos da fachada e do ponto onde a unidade externa seria instalada. Com isso é possível entender o tipo de acesso que o local pede.',
+  message: whatsappIntents.altura,
+  ctaLabel: 'Enviar fotos do local',
+  related: [
+    { text: 'Instalação em prédios e condomínios', href: routes.predios },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+    { text: 'Trabalhos da Luscar', href: routes.projects },
+    { text: 'Manutenção e consertos', href: routes.manutencao },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.altura}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Alpinismo industrial"
+    h1={meta.h1}
+    lead="A diferença entre a Luscar e um serviço comum de ar-condicionado está no caminho. Em prédios e apartamentos, chegar até a unidade externa pode ser a parte mais difícil do trabalho."
+    photo="heroTecnico"
+    photoSizes={sizes.pageHead}
+    photoCaption="Climatização com acesso por cordas"
+  />
+
+  <section class="section section--deep on-deep" aria-labelledby="quando-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow eyebrow--on-dark">Quando o acesso importa</p>
+        <h2 id="quando-title">Quando o local exige acesso por cordas</h2>
+        <p class="lead">
+          A maioria dos serviços é feita por meios usuais. O acesso por cordas entra quando o
+          ponto de instalação da unidade externa está em local de difícil alcance: andares
+          altos, fachadas com recuos, áreas sem apoio para escada de mão.
+        </p>
+      </div>
+      <div class="altitude">
+        <figure class="altitude__media">
+          <img
+            src="/media/height/alpinismo-fachada-900.jpg"
+            srcset="/media/height/alpinismo-fachada-480.jpg 480w, /media/height/alpinismo-fachada-720.jpg 720w, /media/height/alpinismo-fachada-900.jpg 900w"
+            sizes={sizes.feature}
+            alt="Trabalho com acesso por cordas em fachada"
+            width="1280"
+            height="960"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="altitude__copy">
+          <p>
+            Em muitos apartamentos, a unidade externa precisa ficar na fachada, e a fachada é
+            vertical, lisa e sem pontos de apoio. É aí que a diferença entre acessar o local e
+            instalar o aparelho deixa de ser um detalhe de logística.
+          </p>
+          <p>
+            Uma coisa é chegar ao ponto. Outra é instalar o aparelho, passar a tubulação,
+            fixar a unidade e testar o funcionamento com segurança. São etapas diferentes, e
+            ambas fazem parte do serviço.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="avaliacao-title">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Instalações em prédios e apartamentos</h2>
+        <p>
+          O atendimento cobre tanto apartamentos em que o acesso é difícil quanto casos em que a
+          instalação é feita pelos meios usuais dentro de um prédio. O que define o serviço é a
+          condição do imóvel, avaliada antes.
+        </p>
+        <p>
+          Em condomínios, duas questões aparecem cedo: qual a convenção permite para o tipo de
+          equipamento em cada fachada, e se há profissional ou empresa homologada exigida pela
+          administração. A Luscar não substitui essa verificação, mas discussões de convenção
+          e photographs de fachada ajudam na avaliação.
+        </p>
+
+        <h2>Avaliação das condições de acesso</h2>
+        <p>
+          A avaliação considera a geometria da fachada, os pontos de ancoragem disponíveis, a
+          proximidade de vidro ou elementos frágeis, o espaço necessário para manusear o
+          equipamento e o caminho até o ponto. É esse conjunto que define se o serviço é
+          viável e como ele é conduzido.
+        </p>
+        <p>
+          A mesma condição aparece na manutenção. Uma unidade externa já instalada em fachada
+          que precisa de reparo ou limpeza está na mesma situação de acesso da instalação.
+        </p>
+
+        <h2>Registros do trabalho da Luscar</h2>
+        <p>
+          As fotografias abaixo foram publicadas pela empresa. Elas mostram situações de
+          instalação e de atendimento em altura, sem identificação de clientes ou endereços.
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="registros-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="registros-title">Trabalho em altura</h2>
+        <p class="lead">
+          Registros publicados pela empresa de acesso por cordas, instalação em fachada e uso de
+          equipamento.
+        </p>
+      </div>
+      <Gallery
+        items={['rapelServico', 'condensadorFachada', 'predioInstalacoes', 'heroTecnico']}
+        wideIndices={[0, 2]}
+        sizes={sizes.galleryTile}
+      />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="altura-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="altura-faq-title">Perguntas sobre acesso por cordas</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Seu prédio permite esse tipo de instalação?"
+    text="Envie fotos da fachada e do ponto pretendido. O técnico avalia as condições de acesso e conversa sobre o serviço."
+    message={whatsappIntents.altura}
+    primaryLabel="Enviar fotos"
+  />
+</Base>

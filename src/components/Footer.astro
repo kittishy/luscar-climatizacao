@@ -1,0 +1,67 @@
+---
+/**
+ * Site footer: identity, the full service map, and the two verified channels.
+ *
+ * No address, no e-mail, no opening hours and no social mirrors are rendered —
+ * none of those were ever confirmed. The footer states the verified region
+ * instead of implying a premises that does not exist in the evidence.
+ */
+import { contacts, logoUrl, routes, serviceGroups, site, whatsappLink, whatsappIntents } from '../data/site.js';
+
+const year = 2026;
+const ctaHref = whatsappLink(whatsappIntents.geral);
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src={logoUrl} alt={site.name} width="274" height="115" loading="lazy" decoding="async" />
+        <p class="footer__tagline">
+          Instalação, manutenção e limpeza de ar-condicionado em {site.regionFull}, com
+          atendimento em prédios e apartamentos e acesso por cordas quando o local exige.
+        </p>
+      </div>
+
+      <nav aria-label="Serviços">
+        <h2>Serviços</h2>
+        <ul>
+          {
+            serviceGroups.map((group) => (
+              <li>
+                <a href={group.route}>{group.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Informações">
+        <h2>Informações</h2>
+        <ul>
+          <li><a href={routes.servicos}>Todos os serviços</a></li>
+          <li><a href={routes.projects}>Trabalhos</a></li>
+          <li><a href={routes.about}>Sobre a Luscar</a></li>
+          <li><a href={routes.guiaApartamento}>Guia: instalar no apartamento</a></li>
+          <li><a href={routes.guiaNaoGela}>Guia: ar-condicionado não gela</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <p>
+        Atendimento em {site.regionFull}.
+        <a href={routes.contact}>Consulte a disponibilidade para o seu endereço.</a>
+      </p>
+      <p>
+        <a href={ctaHref} rel="noopener">WhatsApp {contacts.phoneDisplay}</a>
+        ·
+        <a href={contacts.instagram} rel="noopener" target="_blank">
+          Instagram {contacts.instagramHandle}
+        </a>
+        ·
+        © {year} {site.name}
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,42 @@
+---
+/**
+ * Closing contact block.
+ *
+ * On the deep blue the action colour fails contrast (2.19), so the primary
+ * button inverts to deep text on white. That inversion is a measured
+ * consequence, not a stylistic choice.
+ */
+import { contacts, site, whatsappIntents, whatsappLink } from '../data/site.js';
+
+interface Props {
+  heading?: string;
+  text?: string;
+  message?: string;
+  primaryLabel?: string;
+}
+
+const {
+  heading = 'Vamos conversar sobre o seu espaço?',
+  text = 'Fale pelo WhatsApp e conte se você precisa instalar, cuidar do aparelho ou avaliar um serviço em altura.',
+  message = whatsappIntents.geral,
+  primaryLabel = 'Falar com o técnico',
+} = Astro.props;
+
+const href = whatsappLink(message);
+---
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="container closing__grid">
+    <div>
+      <p class="eyebrow eyebrow--on-deep">Contato</p>
+      <h2 id="closing-title">{heading}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="closing__actions">
+      <a class="btn btn--on-deep" href={href} rel="noopener" aria-label={`${primaryLabel}, ${contacts.phoneDisplay}`}>
+        {primaryLabel}
+      </a>
+      <a class="btn btn--ghost-on-deep" href="/contact/">Ver canais de contato</a>
+    </div>
+  </div>
+</section>

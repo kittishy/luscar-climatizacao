@@ -1,0 +1,132 @@
+---
+/**
+ * Guide: what to prepare before installing air-conditioning in an apartment.
+ *
+ * Intent: "instalar ar condicionado apartamento" (informational).
+ *
+ * Scope discipline: this is a preparation checklist, not a tutorial. It
+ * contains no electrical procedure, no refrigerant handling and no
+ * rope-access instruction. Its job is to help a visitor arrive at the
+ * conversation with the information the technician needs.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Figure from '../../components/Figure.astro';
+import Rail from '../../components/Rail.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { routes, sizes, whatsappIntents } from '../../data/site.js';
+
+export const meta = {
+  route: '/guias/instalacao-ar-condicionado-apartamento/',
+  title: 'Ar-condicionado no apartamento: o que preparar | Luscar',
+  description:
+    'Saiba quais informações reunir antes de solicitar instalação de ar-condicionado em apartamento: condomínio, aparelho, local e condições de acesso.',
+  h1: 'O que preparar antes de instalar ar-condicionado no apartamento.',
+  type: 'article' as const,
+  publishedTime: '2026-10-06',
+  modifiedTime: '2026-10-06',
+  breadcrumb: [
+    { name: 'Guias', route: '/guias/instalacao-ar-condicionado-apartamento/' },
+    { name: 'Instalação no apartamento', route: '/guias/instalacao-ar-condicionado-apartamento/' },
+  ],
+};
+
+const rail = {
+  heading: 'Leve essas informações',
+  text: 'Regras do condomínio, dados do aparelho e fotos do local antecipam a conversa sobre o serviço.',
+  message: whatsappIntents.instalacao,
+  ctaLabel: 'Enviar informações',
+  related: [
+    { text: 'Instalação em prédios e condomínios', href: routes.predios },
+    { text: 'Apartamentos com acesso por cordas', href: routes.altura },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+    { text: 'Falar com a Luscar', href: routes.contact },
+  ],
+};
+---
+
+<Base meta={meta} barMessage={whatsappIntents.instalacao}>
+  <Breadcrumb crumbs={meta.breadcrumb ?? []} />
+
+  <article class="page-head">
+    <div class="container page-head__grid">
+      <div>
+        <p class="eyebrow">Guia prático</p>
+        <h1>{meta.h1}</h1>
+        <p class="lead">
+          Em apartamento, a instalação depende de informações que só o morador tem: as regras do
+          condomínio, a posição permitida e as condições reais da fachada. Reunir isso antes do
+          primeiro contato deixa a conversa mais concreta.
+        </p>
+      </div>
+      <figure class="altitude__media">
+        <Figure
+          photo="instalacaoInterna"
+          sizes={sizes.pageHead}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption class="hero__caption">
+          A posição das unidades é avaliada antes da instalação
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Regras do condomínio e posição permitida</h2>
+        <p>
+          Antes de qualquer conversa técnica, vale confirmar o que a convenção do condomínio
+          permite sobre instalação de ar-condicionado. Em muitos edifícios, a decisão não é
+          apenas sobre a fachada: existe uma posição específica autorizada para a unidade
+          externa, e qualquer instalação fora dela pode ser questionada pela administração.
+        </p>
+        <p>
+          Outros condomínios exigem aviso prévio à administração, ou a contratação de
+          profissional ou empresa homologada para serviço em fachada. Essas são regras do
+          prédio, e a Luscar não resolve essa parte no lugar do morador. O que a empresa pode
+          fazer é avaliar o serviço técnico dentro do que o condomínio permite.
+        </p>
+
+        <h2>Informações sobre o aparelho</h2>
+        <p>
+          Se você já escolheu o equipamento, anote modelo e capacidade. Se ainda não escolheu,
+          vale registrar pelo menos a metragem aproximada do ambiente e quantos aparelhos já
+          existem no apartamento, porque isso influencia a conversa sobre distribuição e o tipo de
+          split adequado.
+        </p>
+
+        <h2>Fotos e condições de acesso</h2>
+        <p>
+          As fotos que mais ajudam são as do ponto onde a unidade interna ficaria e o ponto onde
+          a externa seria instalada, incluindo a fachada vista de fora. Com elas é possível
+          entender se o caso é de instalação pelos meios usuais ou se o acesso por cordas entra
+          na avaliação.
+        </p>
+
+        <h2>Como conversar com o técnico</h2>
+        <p>
+          Com essas informações em mãos, o primeiro contato pelo WhatsApp já começa com contexto:
+          o tipo de apartamento, as restrições conhecidas e o que precisa ser feito. A partir daí
+          o técnico discute escopo, material necessário e orçamento, e confirma a disponibilidade
+          para o seu endereço.
+        </p>
+        <p>
+          Nenhuma dessas etapas substitui a avaliação técnica. Servem para que a primeira conversa seja
+          mais rápida e para descobrir cedo se existe alguma restrição a considerar.
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Reuniu as informações? Vamos conversar."
+    text="Envie o que você tem: dados do aparelho, fotos do local e as restrições do condomínio. O técnico organiza o resto."
+    message={whatsappIntents.instalacao}
+    primaryLabel="Enviar informações"
+  />
+</Base>

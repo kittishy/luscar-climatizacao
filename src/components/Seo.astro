@@ -1,0 +1,57 @@
+---
+/**
+ * Document head. Every page routes its metadata through here so a title,
+ * canonical, robots directive, OG tag or JSON-LD graph cannot drift between
+ * routes or between environments.
+ */
+import { buildSchema, canonicalFor, robotsMeta, getMode, getOrigin, absoluteUrl, type PageMeta, type ServiceSchemaInput } from '../data/seo.js';
+import { photos, photoFallback } from '../data/site.js';
+
+interface Props {
+  meta: PageMeta;
+  service?: ServiceSchemaInput;
+}
+
+const { meta, service } = Astro.props;
+const mode = getMode();
+const canonical = canonicalFor(meta.route);
+const ogImage = absoluteUrl('/media/og/luscar-og.jpg');
+const schema = buildSchema(meta, service);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{meta.title}</title>
+<meta name="description" content={meta.description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robotsMeta()} />
+{mode === 'preview' && <meta name="application-name" content="Demonstração — Luscar Climatização" />}
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href={absoluteUrl(photoFallback(photos.logo))} />
+
+<meta property="og:type" content={meta.type === 'article' ? 'article' : 'website'} />
+<meta property="og:site_name" content="Luscar Climatização" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:title" content={meta.title} />
+<meta property="og:description" content={meta.description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Profissional da Luscar em serviço de climatização com acesso por cordas" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={meta.title} />
+<meta name="twitter:description" content={meta.description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="theme-color" content="#092A45" />
+<meta name="author" content="Luscar Climatização" />
+
+<!-- Only the two faces needed for the first screen are preloaded. Manrope is a
+     variable font (one file for weights 400-700); Barlow Condensed is static. -->
+<link rel="preload" as="font" type="font/woff2" href="/fonts/barlow-condensed-700-latin.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="/fonts/manrope-latin.woff2" crossorigin />
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

@@ -1,0 +1,68 @@
+---
+/**
+ * Real 404.
+ *
+ * Astro emits this file as a static page, and vercel.json is generated to
+ * serve it with a genuine 404 status. It must never answer 200, and it must
+ * never be a catch-all that turns an unknown slug into the home page.
+ */
+import Base from '../layouts/Base.astro';
+import { routes, serviceGroups, whatsappIntents, whatsappLink, contacts } from '../data/site.js';
+
+export const meta = {
+  route: '/404',
+  title: 'Página não encontrada | Luscar Climatização',
+  description:
+    'A página que você procura não existe neste site. Veja os serviços da Luscar Climatização em Joinville e os canais de contato.',
+  h1: 'Página não encontrada',
+};
+
+const href = whatsappLink(whatsappIntents.geral);
+---
+
+<Base meta={meta} barMessage={whatsappIntents.geral}>
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <p class="eyebrow">Erro 404</p>
+        <h1 style="margin-bottom:1rem">{meta.h1}</h1>
+        <p class="lead">
+          O endereço acessado não corresponde a nenhuma página deste site. Ele pode ter mudado
+          de nome ou nunca ter existido.
+        </p>
+        <p>Esses são os caminhos disponíveis:</p>
+        <ul class="related" role="list" style="max-width:32rem">
+          <li><a href={routes.home}>Página inicial</a></li>
+          {
+            serviceGroups.map((group) => (
+              <li>
+                <a href={group.route}>{group.title}</a>
+              </li>
+            ))
+          }
+          <li><a href={routes.projects}>Trabalhos da Luscar</a></li>
+          <li><a href={routes.contact}>Contato</a></li>
+        </ul>
+      </div>
+
+      <aside class="rail">
+        <div>
+          <h2>Ainda precisa de ajuda?</h2>
+          <p style="color:var(--ink-2);font-size:var(--step-small)">
+            Fale pelo WhatsApp e descreva o que você procura. A empresa atende em Joinville e
+            região.
+          </p>
+          <a
+            class="btn btn--primary btn--block"
+            href={href}
+            rel="noopener"
+            style="margin-top:1rem"
+            aria-label={`Falar com o técnico, ${contacts.phoneDisplay}`}
+          >
+            Falar com o técnico
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>

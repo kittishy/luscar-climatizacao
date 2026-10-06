@@ -1,0 +1,190 @@
+---
+/**
+ * General installation of split air-conditioning units.
+ *
+ * Intent: "instalação ar condicionado Joinville". Answers what kind of demand
+ * the service covers, what goes into the evaluation, what information helps,
+ * and points to the buildings and maintenance pages where those apply.
+ *
+ * It deliberately does not tell the visitor how to install anything. No
+ * electrical, refrigerant or live-work instruction appears on this site.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Faq from '../components/Faq.astro';
+import Figure from '../components/Figure.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/instalacao-ar-condicionado-joinville/',
+  title: 'Instalação de ar-condicionado em Joinville | Luscar',
+  description:
+    'Instalação de ar-condicionado split em Joinville. Saiba quais informações ajudam na avaliação do espaço e converse com o técnico da Luscar.',
+  h1: 'Instalação de ar-condicionado em Joinville.',
+  breadcrumb: [{ name: 'Instalação de ar-condicionado', route: '/instalacao-ar-condicionado-joinville/' }],
+};
+
+export const service = {
+  name: 'Instalação de ar-condicionado',
+  description:
+    'Instalação de equipamentos split de ar-condicionado em ambientes residenciais, comerciais e industriais em Joinville e região, com avaliação do espaço, da infraestrutura e do acesso.',
+  route: '/instalacao-ar-condicionado-joinville/',
+};
+
+const faqItems = [
+  {
+    q: 'A Luscar instala em ambientes residenciais e comerciais?',
+    a: 'Sim. O atendimento cobre ambientes residenciais, comerciais e industriais. O tipo de ambiente muda o que precisa ser avaliado: espaço disponível, altura do ponto, tipo de parede e destino da instalação elétrica.',
+    link: { text: 'Ver como prédios e apartamentos são avaliados.', href: routes.predios },
+  },
+  {
+    q: 'Preciso saber o modelo do aparelho?',
+    a: 'Não é obrigatório, mas ajuda. Se você já sabe o modelo e a capacidade, essa informação adianta parte da conversa. Se ainda não comprou, o técnico pode orientar o que observar antes de escolher.',
+  },
+  {
+    q: 'A instalação inclui o material necessário?',
+    a: 'O que compõe o serviço depende das condições do local e é definido na avaliação. Por isso o orçamento só fecha depois que a situação do espaço é entendida.',
+  },
+  {
+    q: 'Moro em apartamento. A instalação é possível?',
+    a: 'Em apartamento, a posição permitida, as regras do condomínio e o acesso até a fachada entram na avaliação. Existem casos em que o serviço é feito com acesso por cordas.',
+    link: { text: 'Sobre acesso por cordas em apartamentos.', href: routes.altura },
+  },
+];
+
+const rail = {
+  heading: 'Vamos avaliar a instalação',
+  text: 'Envie o modelo do aparelho se já tiver, fotos do local e o endereço da instalação. Com isso a conversa sobre escopo e orçamento começa com contexto.',
+  message: whatsappIntents.instalacao,
+  ctaLabel: 'Pedir avaliação de instalação',
+  related: [
+    { text: 'Instalação em prédios e condomínios', href: routes.predios },
+    { text: 'Apartamentos com acesso por cordas', href: routes.altura },
+    { text: 'Manutenção e consertos', href: routes.manutencao },
+    { text: 'Guia: preparar o apartamento', href: routes.guiaApartamento },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.instalacao}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Instalação"
+    h1={meta.h1}
+    lead="A Luscar instala equipamentos split em Joinville e região. Antes de qualquer serviço, o espaço, a posição das unidades e a forma de acesso são avaliados."
+    photo="instalacaoInterna"
+    photoCaption="Instalação de split em ambiente interno"
+  />
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Instalação para diferentes ambientes</h2>
+        <p>
+          O serviço atende ambientes residenciais, comerciais e industriais, e o tipo de lugar
+          muda o que precisa ser avaliado. Em uma casa, o ponto mais importante costuma ser
+          onde a unidade externa pode ficar e se o espaço comporta o comprimento de tubulação
+          previsto. Em comércio e indústria, somam-se a altura do ponto, o horário de
+          circulação de pessoas e a organização da obra com quem ocupa o ambiente.
+        </p>
+        <p>
+          Em prédios e apartamentos o serviço ganha um segundo fator: como chegar até a fachada.
+          Quando o caminho não é possível pelos meios usuais, o acesso por cordas entra na
+          avaliação.
+        </p>
+
+        <h2>O que considerar antes de instalar</h2>
+        <p>
+          Alguns pontos ajudam a avaliar sem precisar de visita: onde a unidade interna será
+          posicionada, onde a externa fica, que tipo de parede existe nos dois pontos e se há
+          ponto elétrico próximo. Essas informações não definem o serviço, mas mostram se há
+          algo que precisa ser resolvido antes.
+        </p>
+        <ul>
+          <li>A altura e o tipo da parede onde a unidade externa será fixada.</li>
+          <li>Se há espaço livre para a máquina e para a ventilação dela.</li>
+          <li>Se existe ponto elétrico próximo, ou se ele precisa ser executado.</li>
+          <li>No caso de apartamento ou prédio, a posição que o condomínio permite.</li>
+        </ul>
+        <p>
+          Nada disso substitui a avaliação técnica. Serve apenas para que a primeira conversa
+          seja mais concreta.
+        </p>
+
+        <h2>Informações para solicitar um orçamento</h2>
+        <p>
+          O orçamento depende do aparelho, da infraestrutura disponível e das condições de
+          acesso. Para começar, envie pelo WhatsApp:
+        </p>
+        <ul>
+          <li>Modelo e capacidade do aparelho, se você já tiver escolhido.</li>
+          <li>Fotos do ponto da unidade interna e do ponto da unidade externa.</li>
+          <li>O endereço da instalação, para que a disponibilidade seja verificada.</li>
+          <li>Se o serviço é em casa, comércio, indústria, apartamento ou prédio.</li>
+        </ul>
+        <p>
+          Com essas informações, o técnico discute o escopo e o orçamento. A disponibilidade
+          para o seu endereço é confirmada nessa conversa.
+        </p>
+
+        <h2>Instalações em prédios e locais de difícil acesso</h2>
+        <p>
+          Quando a unidade externa precisa ser posicionada em local de difícil alcance, o
+          acesso deixa de ser um detalhe e passa a fazer parte do serviço. A Luscar atua com
+          acesso por cordas conforme avaliação das condições do imóvel.
+        </p>
+        <p>
+          <a class="link-more" href={routes.altura}>Como funciona o acesso por cordas</a>
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="foto-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="foto-title">O serviço à vista</h2>
+        <p class="lead">
+          Registro publicado pela empresa de instalação de aparelho em ambiente interno, ao lado
+          da avaliação de instrumentos que antecede o serviço.
+        </p>
+      </div>
+      <div class="human">
+        <figure class="human__media">
+          <Figure
+            photo="tecnicoInstrumentos"
+            sizes={sizes.humanFigure}
+          />
+        </figure>
+        <div>
+          <p class="lead">
+            Antes da instalação, a avaliação do aparelho e do local é o que define o serviço.
+            A mesma avaliação aparece quando o aparelho já está instalado e o problema é de
+            funcionamento.
+          </p>
+          <p><a class="link-more" href={routes.manutencao}>Ver manutenção e consertos</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="inst-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="inst-faq-title">Perguntas sobre instalação</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Quer avaliar a instalação do seu aparelho?"
+    text="Envie o modelo do aparelho, fotos do local e o endereço. O técnico conversa sobre o escopo e o orçamento."
+    message={whatsappIntents.instalacao}
+    primaryLabel="Pedir avaliação"
+  />
+</Base>

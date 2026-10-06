@@ -1,0 +1,138 @@
+---
+/**
+ * Documentary gallery with an optional lightbox.
+ *
+ * Accessibility contract:
+ *  - The photograph itself renders in the initial HTML at its tile size, so
+ *    with JavaScript disabled nothing is lost: captions, subjects and the
+ *    surrounding context are all still present and readable. Only the
+ *    enlarge interaction is unavailable.
+ *  - The trigger is a real <button>, so it is keyboard reachable and has a
+ *    role without ARIA.
+ *  - The dialog closes on Escape (native <dialog> behaviour) and returns
+ *    focus to the tile that opened it.
+ *  - Focus moves to the close button on open, and <dialog>.showModal() makes
+ *    the rest of the page inert to pointer input and scroll.
+ *  - The dialog is never given the `hidden` attribute: that would keep it
+ *    display:none even after showModal() adds `open`, so the modal would open
+ *    invisibly. Visibility is controlled by [open] instead.
+ *
+ * Captions describe only what is visible. No client name, address or date is
+ * stated anywhere, because none of that was ever confirmed for these photos.
+ */
+import Figure from './Figure.astro';
+import { photos, sizes as sizePresets, type PhotoKey } from '../data/site.js';
+
+interface Props {
+  items: readonly PhotoKey[];
+  /** Wide tiles get a 16:9 crop; the rest keep 4:5. */
+  wideIndices?: readonly number[];
+  /**
+   * Layout hint for a NARROW tile (one of three columns on desktop).
+   * Measured from the real rendered grid, not guessed: the gallery column
+   * resolves to about 380px at 1440 inside the 1240px container, so 30vw
+   * under-declares and makes the browser pick a file smaller than the box.
+   */
+  sizes?: string;
+  /** Same, for a wide tile spanning two of three columns (~760px at 1440). */
+  wideSizes?: string;
+  heading?: string;
+}
+
+const {
+  items,
+  wideIndices = [],
+  sizes: tileSizes = sizePresets.galleryTile,
+  wideSizes = sizePresets.galleryWide,
+  heading = 'Ver a fotografia em tamanho maior',
+} = Astro.props;
+
+const wide = new Set(wideIndices);
+---
+
+<ul class="gallery" role="list">
+  {
+    items.map((key, index) => {
+      const photo = photos[key];
+      const full = `/media/${photo.dir}/${photo.slug}-${photo.maxRender}.jpg`;
+      const isWide = wide.has(index);
+      return (
+        <li class:list={['gallery__item', isWide && 'gallery__item--wide']}>
+          <button
+            class="gallery__btn"
+            type="button"
+            data-gallery-open
+            data-full={full}
+            data-alt={photo.alt}
+            data-caption={photo.caption ?? ''}
+            data-width={photo.width}
+            data-height={photo.height}
+            aria-label={`${heading}: ${photo.alt}`}
+          >
+            <Figure photo={key} sizes={isWide ? wideSizes : tileSizes} />
+            {photo.caption && <span class="gallery__caption">{photo.caption}</span>}
+          </button>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<dialog class="lightbox" data-lightbox aria-label="Fotografia em tamanho maior">
+    <div>
+      {/*
+        src is intentionally ABSENT rather than empty.
+
+        An `src=""` resolves against the document URL, so the browser requests
+        the HTML page as if it were an image, reports the image as broken, and
+        any "all images loaded" check fails on it forever. With no src at all
+        the element is simply not yet an image; width/height still reserve the
+        dialog's space and alt is set per photo before the dialog opens.
+      */}
+      <img data-lightbox-img alt="" width="1280" height="960" decoding="async" />
+    <div class="lightbox__bar">
+      <p class="lightbox__caption" data-lightbox-caption></p>
+      <button class="lightbox__close" type="button" data-lightbox-close>
+        Fechar<span class="visually-hidden"> (Esc)</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  const img = dialog?.querySelector<HTMLImageElement>('[data-lightbox-img]');
+  const caption = dialog?.querySelector<HTMLElement>('[data-lightbox-caption]');
+  const closeBtn = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+  let opener: HTMLElement | null = null;
+
+  if (dialog && img && caption && closeBtn) {
+    dialog.querySelector('div')?.addEventListener('click', (event) => {
+      // Clicking the backdrop (outside the figure wrapper) dismisses.
+      if (event.target === event.currentTarget) dialog.close();
+    });
+
+    closeBtn.addEventListener('click', () => dialog.close());
+
+    document.querySelectorAll<HTMLButtonElement>('[data-gallery-open]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        opener = btn;
+        img.src = btn.dataset.full ?? '';
+        img.alt = btn.dataset.alt ?? '';
+        // Carry the real pixel dimensions through so the dialog never
+        // reserves the wrong space while the larger photograph loads.
+        img.width = Number(btn.dataset.width) || img.width;
+        img.height = Number(btn.dataset.height) || img.height;
+        caption.textContent = btn.dataset.caption ?? '';
+        dialog.showModal();
+        closeBtn.focus();
+      });
+    });
+
+    // Escape is handled natively by <dialog>, but focus must return.
+    dialog.addEventListener('close', () => {
+      opener?.focus();
+      opener = null;
+    });
+  }
+</script>

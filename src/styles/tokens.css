@@ -1,0 +1,107 @@
+/* ==========================================================================
+   Luscar Climatização — design tokens
+   ==========================================================================
+
+   COLOUR CONTRACT
+   Every ratio below was measured, not eyeballed. The rules that follow are
+   consequences of those measurements and are enforced by tests/contrast.test.ts:
+
+     ink        on white  14.81   body text            PASS
+     ink        on ice    13.62   body text            PASS
+     ink-2      on white   7.12   secondary text       PASS
+     ink-2      on ice     6.55   secondary text       PASS
+     white      on deep   14.70   header/footer text   PASS
+     white      on action  6.71   primary button       PASS
+     action     on white   6.71   links on light       PASS
+     action     on ice     6.17   links on ice         PASS
+     cyan       on deep     5.81   accent text on dark  PASS
+     line-strong on white   3.93   control borders      PASS (>=3)
+     line-strong on ice     3.62   control borders      PASS (>=3)
+
+   MEASURED FAILURES — these combinations are banned, not merely unused:
+     white on cyan   2.53  -> cyan never carries white text
+     action on deep  2.19  -> the action blue is never a button on dark
+     cyan on light   ~2.5  -> cyan is never body text on a light surface
+
+   Consequently cyan exists only as an accent: rules, marks and short emphasis
+   on the deep blue. Primary CTAs on dark sections invert to deep-on-white.
+   ========================================================================== */
+
+:root {
+  /* --- brand ------------------------------------------------------------ */
+  --deep: #092a45; /* header, footer, altitude section */
+  --deep-2: #0d3554; /* lifted surface inside a deep section */
+  --action: #0759b8; /* primary CTA + links, light surfaces only */
+  --action-hover: #054a99;
+  --cyan: #20afe3; /* ACCENT ONLY — never white text, never text on light */
+  --ice: #f2f6f8; /* gallery + breathing surfaces */
+  --white: #ffffff;
+
+  /* --- ink -------------------------------------------------------------- */
+  --ink: #142a38;
+  --ink-2: #435b6b;
+  --on-deep: #ffffff;
+  --on-deep-2: #c9dce5; /* 10.40 on deep */
+
+  /* --- lines ------------------------------------------------------------ */
+  --line: #d4e0e6; /* decorative dividers only (1.35 — never a control edge) */
+  --line-strong: #6b8492; /* control borders: 3.93 white / 3.62 ice */
+
+  /* --- type ------------------------------------------------------------- */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Fluid scale with real min/max. Condensed display needs a larger floor
+     because it carries less weight per glyph. */
+  --step-display: clamp(2.125rem, 1.35rem + 3.3vw, 3.75rem);
+  --step-h2: clamp(1.5rem, 1.18rem + 1.4vw, 2.125rem);
+  --step-h3: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+  --step-lead: clamp(1.0625rem, 1.01rem + 0.3vw, 1.25rem);
+  --step-body: clamp(1rem, 0.975rem + 0.14vw, 1.0625rem);
+  --step-small: 0.9375rem;
+  --step-micro: 0.8125rem;
+
+  --leading-body: 1.65;
+  --leading-tight: 1.14;
+  --leading-snug: 1.3;
+
+  /* --- space ------------------------------------------------------------ */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 2.5rem;
+  --space-3xl: 3rem;
+  --space-4xl: 4rem;
+
+  /* Section rhythm: tighter on a phone, generous on a desktop. */
+  --section-y: clamp(3rem, 1.9rem + 4.6vw, 6.5rem);
+  --section-y-lg: clamp(3.5rem, 2.1rem + 5.6vw, 7.5rem);
+
+  /* --- layout ----------------------------------------------------------- */
+  --container: 1240px; /* within the briefed 1200-1280 band */
+  --container-narrow: 760px; /* ~62-72 characters at --step-body */
+  --container-wide: 1440px;
+  --gutter: clamp(1.25rem, 0.7rem + 2.2vw, 3rem);
+  --header-h: 60px;
+
+  /* --- shape ------------------------------------------------------------ */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* --- elevation: only where it communicates lift ------------------------ */
+  --shadow-lift: 0 1px 2px rgb(9 42 69 / 0.06), 0 8px 24px -12px rgb(9 42 69 / 0.18);
+  --shadow-menu: 0 18px 40px -24px rgb(9 42 69 / 0.4);
+
+  --focus-ring: 0 0 0 3px var(--ice), 0 0 0 5px var(--action);
+  --focus-ring-dark: 0 0 0 3px var(--deep), 0 0 0 5px var(--cyan);
+
+  /* Fixed contact bar height is reserved as a variable so content can make
+     room for it without any hard-coded magic number per component. */
+  --bar-h: 3.5rem;
+  --bar-safe-b: env(safe-area-inset-bottom, 0px);
+}

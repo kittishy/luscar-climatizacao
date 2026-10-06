@@ -1,0 +1,182 @@
+---
+/**
+ * Maintenance and repair of air-conditioning units.
+ *
+ * Intent: "manutenção ar condicionado Joinville". Frames symptoms as things
+ * to report for evaluation, never as a ready-made diagnosis, and never
+ * promises parts replacement or same-day service.
+ *
+ * NOTE: the URL path spells "concertos" (legacy WordPress slug kept for
+ * continuity), but every visible text on this page uses the correct
+ * spelling "consertos". This mismatch is deliberate.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Faq from '../components/Faq.astro';
+import Figure from '../components/Figure.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/concertos-e-manutencao-ar-condicionado-joinville/',
+  title: 'Manutenção de ar-condicionado em Joinville | Luscar',
+  description:
+    'Seu ar-condicionado mudou de desempenho? Converse com a Luscar sobre manutenção e consertos em Joinville e informe os sintomas do aparelho.',
+  h1: 'Manutenção e consertos de ar-condicionado em Joinville.',
+  breadcrumb: [{ name: 'Manutenção e consertos', route: '/concertos-e-manutencao-ar-condicionado-joinville/' }],
+};
+
+export const service = {
+  name: 'Manutenção e consertos de ar-condicionado',
+  description:
+    'Avaliação, manutenção preventiva e corretiva de ar-condicionado em Joinville e região, a partir do relato de sintomas do funcionamento do aparelho.',
+  route: '/concertos-e-manutencao-ar-condicionado-joinville/',
+};
+
+const faqItems = [
+  {
+    q: 'Meu aparelho não gela. É defeito?',
+    a: 'Pode ter várias causas, e só a avaliação define. Informe o que mudou no funcionamento: desde quando, em que horário, se o ruído ou o fluxo de ar mudaram. O relato orienta a avaliação, não substitui o diagnóstico.',
+    link: { text: 'Guia: ar-condicionado não gela.', href: routes.guiaNaoGela },
+  },
+  {
+    q: 'A manutenção preventiva evita consertos?',
+    a: 'A manutenção preventiva cuida dos componentes e ajuda a identificar desgaste antes que vire problema. Ela não elimina a possibilidade de defeito, mas mantém o equipamento em condição de uso adequada.',
+  },
+  {
+    q: 'Vocês trocam peças na hora?',
+    a: 'A necessidade de troca de peças é definida na avaliação, conforme o diagnóstico do aparelho. Não é possível prometer substituição antes de entender o que está acontecendo.',
+  },
+  {
+    q: 'O que devo informar ao técnico?',
+    a: 'O modelo do aparelho, há quanto tempo o sintoma aparece, o que mudou no desempenho, se houve queda de energia ou mudança de ambiente, e fotos ou vídeos do funcionamento ajudam a iniciar a conversa.',
+  },
+];
+
+const rail = {
+  heading: 'Descreva o sintoma',
+  text: 'Conte o que mudou no funcionamento do aparelho: desde quando, em que condições e o que você observou. Com esse relato a avaliação começa com contexto.',
+  message: whatsappIntents.manutencao,
+  ctaLabel: 'Relatar o problema',
+  related: [
+    { text: 'Limpeza de ar-condicionado', href: routes.limpeza },
+    { text: 'Guia: ar-condicionado não gela', href: routes.guiaNaoGela },
+    { text: 'Fale com a Luscar', href: routes.contact },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.manutencao}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Manutenção e consertos"
+    h1={meta.h1}
+    lead="Quando o aparelho muda de desempenho, o primeiro passo é relatar o que mudou. A Luscar avalia o funcionamento e orienta o serviço a partir desse relato."
+    photo="tecnicoInstrumentos"
+    photoCaption="Avaliação técnica antes do serviço"
+  />
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Quando solicitar uma avaliação</h2>
+        <p>
+          Qualquer mudança perceptível no funcionamento do aparelho é motivo para relatar:
+          o ar que não gela como antes, ruído diferente, gotejamento, cheiro, desligamento
+          sozinho ou aumento no consumo. Esses sinais não são um diagnóstico pronto — são
+          informações para a avaliação.
+        </p>
+        <p>
+          Quanto mais concreto o relato, mais objetiva a conversa. Dizer desde quando o
+          sintoma aparece, em que horário e em que condições ajuda o técnico a entender o
+          que pode estar acontecendo antes mesmo da visita.
+        </p>
+
+        <h2>Manutenção preventiva e corretiva</h2>
+        <p>
+          A manutenção preventiva cuida dos componentes do aparelho em intervalos
+          compatíveis com o uso e o ambiente. Ela não promete eliminar defeitos, mas
+          mantém o equipamento em condição adequada de funcionamento e permite identificar
+          desgaste antes que ele vire parada.
+        </p>
+        <p>
+          A manutenção corretiva parte do sintoma relatado. O técnico avalia o aparelho,
+          identifica a causa e define o serviço necessário. A troca de peças, quando
+          necessária, é consequência dessa avaliação — não uma promessa feita antes dela.
+        </p>
+
+        <h2>O que informar ao técnico</h2>
+        <p>
+          Para iniciar o atendimento, envie pelo WhatsApp:
+        </p>
+        <ul>
+          <li>O modelo do aparelho e há quanto tempo o sintoma aparece.</li>
+          <li>O que mudou no desempenho: refrigeração, ruído, fluxo de ar, gotejamento.</li>
+          <li>Se houve queda de energia, mudança de ambiente ou outro evento recente.</li>
+          <li>Fotos ou vídeos do funcionamento, quando possível.</li>
+        </ul>
+        <p>
+          Com esse relato, o técnico orienta os próximos passos. A disponibilidade para o
+          seu endereço é confirmada nessa conversa.
+        </p>
+
+        <h2>Limpeza e cuidado do equipamento</h2>
+        <p>
+          Parte do cuidado com o aparelho é a limpeza dos componentes, cuja necessidade
+          varia com o uso, o ambiente e a orientação do fabricante. Não existe um intervalo
+          universal: o que define a frequência é a condição real do equipamento.
+        </p>
+        <p>
+          <a class="link-more" href={routes.limpeza}>Ver limpeza de ar-condicionado</a>
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="foto-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="foto-title">O serviço à vista</h2>
+        <p class="lead">
+          Registro publicado pela empresa de instrumentos utilizados em serviço de
+          climatização, ao lado da avaliação que antecede o atendimento.
+        </p>
+      </div>
+      <div class="human">
+        <figure class="human__media">
+          <Figure
+            photo="instrumentosServico"
+            sizes={sizes.humanFigure}
+          />
+        </figure>
+        <div>
+          <p class="lead">
+            Quando o aparelho não gela, o caminho começa pelo relato do sintoma. O guia
+            abaixo reúne o que observar antes de chamar o técnico.
+          </p>
+          <p><a class="link-more" href={routes.guiaNaoGela}>Guia: ar-condicionado não gela</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="manut-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="manut-faq-title">Perguntas sobre manutenção</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Quer relatar um problema no aparelho?"
+    text="Conte o que mudou no funcionamento, desde quando e em que condições. O técnico avalia e orienta o serviço."
+    message={whatsappIntents.manutencao}
+    primaryLabel="Relatar o problema"
+  />
+</Base>

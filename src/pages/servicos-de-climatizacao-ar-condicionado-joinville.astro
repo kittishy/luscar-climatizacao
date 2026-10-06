@@ -1,0 +1,152 @@
+---
+/**
+ * Services hub.
+ *
+ * Its job is navigation, not competition with the home page for the same
+ * terms. Each group is listed once with a short factual lead, and the page
+ * exists to route a visitor to the specific page that answers their intent.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import Faq from '../components/Faq.astro';
+import { serviceGroups, routes, whatsappIntents } from '../data/site.js';
+
+export const meta = {
+  route: '/servicos-de-climatizacao-ar-condicionado-joinville/',
+  title: 'Serviços de climatização em Joinville | Luscar',
+  description:
+    'Conheça os serviços da Luscar em Joinville: instalação, manutenção, limpeza, acesso por cordas e tubulação flexível PEX/EPEX.',
+  h1: 'Serviços de climatização em Joinville.',
+  breadcrumb: [{ name: 'Serviços', route: '/servicos-de-climatizacao-ar-condicionado-joinville/' }],
+};
+
+const faqItems = [
+  {
+    q: 'Qual serviço eu devo procurar?',
+    a: 'Se o aparelho ainda não foi instalado, o caminho é a instalação. Se já existe e o desempenho mudou, a página de manutenção e consertos é a indicada. Se o problema é apenas o acúmulo de sujeira nos componentes, veja a página de limpeza.',
+    link: { text: 'Ver manutenção e consertos.', href: routes.manutencao },
+  },
+  {
+    q: 'A Luscar atende apartamento em prédio?',
+    a: 'Sim. Instalações em prédios e apartamentos fazem parte do atendimento, incluindo os casos em que o acesso até a unidade externa exige trabalho em altura.',
+    link: { text: 'Entender o acesso por cordas.', href: routes.altura },
+  },
+  {
+    q: 'Vocês fazem serviço de tubulação flexível?',
+    a: 'Sim, com avaliação do projeto. A aplicação de PEX/EPEX depende das características do sistema e da especificação prevista para ele, então a conversa começa pelo projeto e não pelo material.',
+    link: { text: 'Sobre tubulação PEX/EPEX.', href: routes.pex },
+  },
+  {
+    q: 'Como sei qual página é a do meu caso?',
+    a: 'Se ainda não tiver certeza, descreva a situação pelo WhatsApp. A partir da sua informação o técnico indica o tipo de serviço adequado.',
+    link: { text: 'Falar com o técnico.', href: '/contact/' },
+  },
+];
+---
+
+<Base meta={meta} barMessage={whatsappIntents.geral}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Navegação de soluções"
+    h1={meta.h1}
+    lead="A Luscar trabalha com cinco frentes de climatização em Joinville e região. Cada uma tem uma página própria com o que costuma ser perguntado, o que é avaliado e que informações ajudam a iniciar a conversa."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="services-grid">
+        {
+          serviceGroups.map((group) => (
+            <article class="service-group">
+              <h2 class="service-group__title">{group.title}</h2>
+              <p class="service-group__lead">{group.lead}</p>
+              <p class="service-group__detail">{group.detail}</p>
+              <a class="link-more" href={group.route}>
+                Ver detalhes
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <ul class="service-hub-link" role="list">
+        <li><a href={routes.limpeza}>Limpeza de ar-condicionado</a></li>
+        <li><a href={routes.predios}>Instalação em prédios</a></li>
+        <li><a href={routes.guiaApartamento}>Guia: instalar no apartamento</a></li>
+        <li><a href={routes.guiaNaoGela}>Guia: aparelho que não gela</a></li>
+        <li><a href={routes.projects}>Ver trabalhos publicados</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="escolha-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="escolha-title">Resumo de cada serviço</h2>
+        <p class="lead">
+          Um resumo prático para encontrar rápido o tipo de atendimento que você procura.
+        </p>
+      </div>
+
+      <div class="body-split">
+        <div class="prose">
+          <h2>Instalação</h2>
+          <p>
+            Equipamento split ainda não instalado, ou troca de aparelho em ambiente residencial,
+            comercial ou industrial. A posição das unidades, o espaço e a infraestrutura entram na
+            avaliação.
+          </p>
+
+          <h2>Manutenção e consertos</h2>
+          <p>
+            O aparelho existe, mas mudou de funcionamento: não gela direito, faz ruído ou
+            goteja. A página descreve como descrever o problema para o técnico.
+          </p>
+
+          <h2>Limpeza</h2>
+          <p>
+            Cuidado dos componentes do aparelho. A necessidade varia conforme uso, ambiente e
+            orientação do fabricante, e a avaliação define o intervalo adequado.
+          </p>
+
+          <h2>Instalações em altura</h2>
+          <p>
+            Prédios e apartamentos em que o acesso até a unidade externa é o próprio serviço.
+            A condição do imóvel é avaliada antes de qualquer execução.
+          </p>
+
+          <h2>Tubulação PEX/EPEX</h2>
+          <p>
+            Projeto com tubulação flexível. A aplicação depende das especificações do sistema e
+            da avaliação técnica do projeto.
+          </p>
+        </div>
+
+        <div class="rail">
+          <div>
+            <h2>Não sabe qual escolher?</h2>
+            <p style="color:var(--ink-2);font-size:var(--step-small)">
+              Descreva a situação pelo WhatsApp. Com a sua informação, o técnico indica o tipo
+              de serviço adequado.
+            </p>
+            <a class="btn btn--primary btn--block" href="/contact/" style="margin-top:1rem">
+              Ver canais de contato
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="hub-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="hub-faq-title">Dúvidas sobre os serviços</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

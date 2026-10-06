@@ -1,0 +1,188 @@
+---
+/**
+ * Installation of air-conditioning in buildings and condominiums.
+ *
+ * Intent: "instalação ar condicionado prédios Joinville". Explains that each
+ * building needs its own evaluation: facade, condominium rules and access
+ * conditions all shape the service.
+ *
+ * It deliberately does not promise execution on any facade, does not handle
+ * authorisations on the client's behalf, and does not teach work at height.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Rail from '../components/Rail.astro';
+import Faq from '../components/Faq.astro';
+import Figure from '../components/Figure.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { routes, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/instalacao-de-ar-condicionado-predios-joinville/',
+  title: 'Ar-condicionado em prédios em Joinville | Luscar',
+  description:
+    'Instalação de ar-condicionado em prédios de Joinville. Condições de acesso, fachada e condomínio entram na avaliação. Fale com a Luscar.',
+  h1: 'Instalação de ar-condicionado em prédios de Joinville.',
+  breadcrumb: [{ name: 'Prédios e condomínios', route: '/instalacao-de-ar-condicionado-predios-joinville/' }],
+};
+
+export const service = {
+  name: 'Instalação de ar-condicionado em prédios',
+  description:
+    'Instalação de ar-condicionado em prédios e condomínios em Joinville e região, com avaliação da fachada, das regras do condomínio e das condições de acesso.',
+  route: '/instalacao-de-ar-condicionado-predios-joinville/',
+};
+
+const faqItems = [
+  {
+    q: 'A Luscar instala em qualquer prédio?',
+    a: 'Cada prédio é avaliado antes. A geometria da fachada, os pontos de fixação disponíveis, o espaço para a unidade externa e o caminho até o ponto definem se o serviço é viável e como ele é conduzido.',
+  },
+  {
+    q: 'O condomínio precisa autorizar a instalação?',
+    a: 'As regras do condomínio e a posição permitida para o equipamento precisam ser consideradas. A Luscar não resolve autorizações em nome do cliente, mas as informações da convenção ajudam na avaliação.',
+    link: { text: 'Guia: preparar a instalação no apartamento.', href: routes.guiaApartamento },
+  },
+  {
+    q: 'E quando o acesso à fachada é difícil?',
+    a: 'Quando o caminho pelos meios usuais não é possível, o acesso por cordas entra na avaliação. A decisão depende das condições reais do imóvel.',
+    link: { text: 'Sobre acesso por cordas em apartamentos.', href: routes.altura },
+  },
+  {
+    q: 'O que devo enviar para começar?',
+    a: 'Fotos da fachada e do ponto onde a unidade externa ficaria, o andar, o modelo do aparelho se já tiver escolhido e as regras do condomínio sobre posição do equipamento.',
+  },
+];
+
+const rail = {
+  heading: 'Avalie seu prédio',
+  text: 'Envie fotos da fachada, do ponto pretendido para a unidade externa e as regras do condomínio. Com isso a conversa sobre o serviço começa com contexto.',
+  message: whatsappIntents.altura,
+  ctaLabel: 'Enviar fotos do prédio',
+  related: [
+    { text: 'Apartamentos com acesso por cordas', href: routes.altura },
+    { text: 'Instalação de ar-condicionado', href: routes.instalacao },
+    { text: 'Guia: preparar o apartamento', href: routes.guiaApartamento },
+    { text: 'Manutenção e consertos', href: routes.manutencao },
+  ],
+};
+---
+
+<Base meta={meta} service={service} barMessage={whatsappIntents.altura}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Prédios e condomínios"
+    h1={meta.h1}
+    lead="Em prédios, instalar ar-condicionado é também uma questão de acesso, fachada e regras do condomínio. A Luscar avalia essas condições antes de definir o serviço."
+    photo="predioInstalacoes"
+    photoCaption="Equipamentos em fachada de edifício"
+  />
+
+  <section class="section">
+    <div class="container body-split">
+      <div class="prose">
+        <h2>Cada prédio exige uma avaliação</h2>
+        <p>
+          Não existe uma resposta única para instalação em prédios. O que funciona em um
+          edifício pode não funcionar em outro, porque cada fachada tem geometria, pontos de
+          fixação e condições de acesso próprios. Por isso o primeiro passo é sempre a
+          avaliação do imóvel, e não um orçamento fechado de antemão.
+        </p>
+        <p>
+          Nessa avaliação entram o andar, a posição pretendida para a unidade externa, o
+          espaço disponível para o equipamento e a ventilação, o tipo de parede ou laje e o
+          caminho até o ponto. São informações que o cliente consegue reunir com fotos e
+          medidas aproximadas.
+        </p>
+
+        <h2>Fachada e regras do condomínio</h2>
+        <p>
+          Em condomínios, a convenção costuma definir onde a unidade externa pode ficar,
+          qual o tipo de equipamento permitido e se há exigências sobre acabamento ou
+          homologação. Essas regras precisam ser consideradas antes de qualquer decisão.
+        </p>
+        <p>
+          A Luscar não resolve autorizações em nome do cliente. O que ajuda é o cliente
+          trazer as informações da convenção para a conversa, junto com fotos da fachada.
+          Com isso, a avaliação já parte do que o prédio permite.
+        </p>
+
+        <h2>Acesso às unidades externas</h2>
+        <p>
+          Chegar até o ponto onde a unidade externa será instalada pode ser a parte mais
+          difícil do serviço. Em muitos casos o acesso é feito pelos meios usuais do
+          prédio; em outros, quando a fachada não oferece apoio, o acesso por cordas entra
+          na avaliação.
+        </p>
+        <p>
+          A mesma condição vale para manutenção: uma unidade externa já instalada em
+          fachada que precisa de reparo ou limpeza está na mesma situação de acesso.
+        </p>
+        <p>
+          <a class="link-more" href={routes.altura}>Como funciona o acesso por cordas</a>
+        </p>
+
+        <h2>Como apresentar sua necessidade</h2>
+        <p>
+          Para iniciar a conversa, envie pelo WhatsApp:
+        </p>
+        <ul>
+          <li>Fotos da fachada e do ponto onde a unidade externa ficaria.</li>
+          <li>O andar e o tipo de prédio.</li>
+          <li>O modelo e a capacidade do aparelho, se já tiver escolhido.</li>
+          <li>As regras do condomínio sobre posição e tipo de equipamento.</li>
+        </ul>
+        <p>
+          Com essas informações, o técnico discute o escopo e o orçamento. A disponibilidade
+          para o seu endereço é confirmada nessa conversa.
+        </p>
+      </div>
+
+      <Rail {...rail} />
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="foto-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="foto-title">O serviço à vista</h2>
+        <p class="lead">
+          Registro publicado pela empresa de equipamentos instalados em fachada de edifício,
+          ao lado da avaliação de instrumentos que antecede o serviço.
+        </p>
+      </div>
+      <div class="human">
+        <figure class="human__media">
+          <Figure
+            photo="tecnicoInstrumentos"
+            sizes={sizes.humanFigure}
+          />
+        </figure>
+        <div>
+          <p class="lead">
+            Antes da instalação, a avaliação do aparelho e do local é o que define o serviço.
+            A mesma avaliação aparece quando o aparelho já está instalado e o problema é de
+            funcionamento.
+          </p>
+          <p><a class="link-more" href={routes.manutencao}>Ver manutenção e consertos</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="predios-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="predios-faq-title">Perguntas sobre prédios</h2>
+      </div>
+      <Faq items={faqItems} />
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Quer avaliar a instalação no seu prédio?"
+    text="Envie fotos da fachada, do ponto pretendido e as regras do condomínio. O técnico avalia as condições e conversa sobre o serviço."
+    message={whatsappIntents.altura}
+    primaryLabel="Enviar fotos"
+  />
+</Base>

@@ -1,0 +1,32 @@
+{
+  "generatedBy": "scripts/fetch-fonts.mjs",
+  "license": "SIL Open Font License 1.1",
+  "retrievedVia": "https://fonts.googleapis.com/css2",
+  "note": "Variable fonts, latin subset only. Portuguese diacritics are inside the latin range.",
+  "files": [
+    {
+      "family": "Barlow Condensed",
+      "weightRange": "600",
+      "subset": "latin",
+      "file": "public/fonts/barlow-condensed-600-latin.woff2",
+      "bytes": 22308,
+      "source": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B4873z3bWuQ.woff2"
+    },
+    {
+      "family": "Barlow Condensed",
+      "weightRange": "700",
+      "subset": "latin",
+      "file": "public/fonts/barlow-condensed-700-latin.woff2",
+      "bytes": 22444,
+      "source": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B46r2z3bWuQ.woff2"
+    },
+    {
+      "family": "Manrope",
+      "weightRange": "400 700",
+      "subset": "latin",
+      "file": "public/fonts/manrope-latin.woff2",
+      "bytes": 24836,
+      "source": "https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSg.woff2"
+    }
+  ]
+}

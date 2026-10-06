@@ -1,0 +1,88 @@
+---
+/**
+ * Projects / gallery page.
+ *
+ * The photographs are published records of the work. They do not identify
+ * a client, an address or a date, and no caption invents one.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Gallery from '../components/Gallery.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { galleryPhotos, routes, whatsappIntents } from '../data/site.js';
+
+export const meta = {
+  route: '/projects/',
+  title: 'Trabalhos de climatização e alpinismo | Luscar',
+  description:
+    'Veja registros publicados pela Luscar de instalações, serviços em fachadas e acesso por cordas. Conheça o trabalho e converse sobre seu projeto.',
+  h1: 'Trabalhos da Luscar.',
+  breadcrumb: [{ name: 'Trabalhos', route: '/projects/' }],
+};
+---
+
+<Base meta={meta} barMessage={whatsappIntents.geral}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Trabalhos"
+    h1={meta.h1}
+    lead="Registros publicados pela Luscar de instalações, serviços em fachadas e acesso por cordas. As fotografias são registros do trabalho e não identificam cliente ou local."
+  />
+
+  <section class="section" aria-labelledby="instalacoes-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="instalacoes-title">Instalações e atendimentos</h2>
+        <p class="lead">
+          Fotografias publicadas de instalações e atendimentos da Luscar.
+          As legendas descrevem o que aparece em cada imagem.
+        </p>
+      </div>
+
+      <Gallery
+        items={galleryPhotos}
+        wideIndices={[0, 4]}
+        heading="Abrir a fotografia em tamanho maior"
+      />
+
+      <p style="margin-top:1.75rem">
+        As fotografias são registros publicados do trabalho e não identificam
+        cliente ou local.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="altura-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="altura-title">Serviços em altura</h2>
+        <p class="lead">
+          Parte dos registros mostra serviços em fachadas e acesso por
+          cordas em prédios e apartamentos. Esses trabalhos são avaliados
+          conforme as condições do imóvel.
+        </p>
+      </div>
+      <p>
+        <a class="link-more" href={routes.altura}>Como funciona o acesso por cordas</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="converse-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="converse-title">Converse sobre o seu espaço</h2>
+        <p class="lead">
+          Se você tem um projeto em mente, envie fotos do local e conte o
+          que precisa. A conversa sobre avaliação e orçamento começa pelo
+          WhatsApp.
+        </p>
+      </div>
+      <p>
+        <a class="link-more" href={routes.contact}>Ver canais de contato</a>
+      </p>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

@@ -1,0 +1,108 @@
+---
+/**
+ * About page.
+ *
+ * Only verifiable facts: the services offered, the region served, rope
+ * access for buildings and apartments, PEX/EPEX work, and Instagram as the
+ * place where published work records live. No staff counts, founding
+ * stories, years of experience or certifications.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Figure from '../components/Figure.astro';
+import Gallery from '../components/Gallery.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { contacts, routes, site, whatsappIntents, sizes } from '../data/site.js';
+
+export const meta = {
+  route: '/about/',
+  title: 'Sobre a Luscar Climatização em Joinville',
+  description:
+    'Conheça a Luscar Climatização e seus serviços em Joinville. Instalação, manutenção, acesso por cordas e tubulação flexível com registros reais do trabalho.',
+  h1: 'Conheça a Luscar Climatização.',
+  breadcrumb: [{ name: 'Sobre', route: '/about/' }],
+};
+---
+
+<Base meta={meta} barMessage={whatsappIntents.geral}>
+  <PageHead
+    crumbs={meta.breadcrumb ?? []}
+    eyebrow="Sobre"
+    h1={meta.h1}
+    lead="A Luscar Climatização atende em Joinville e região com instalação, manutenção, acesso por cordas e tubulação flexível PEX/EPEX."
+    photo="lucasRetrato"
+    photoCaption="Lucas Silveira, perfil público da Luscar no Instagram"
+  />
+
+  <section class="section" aria-labelledby="trabalho-title">
+    <div class="container human">
+      <figure class="human__media">
+        <Figure photo="lucasRetrato" sizes={sizes.humanPortrait} />
+        <figcaption class="hero__caption">
+          Perfil público da Luscar no Instagram
+        </figcaption>
+      </figure>
+      <div>
+        <p class="eyebrow">Quem faz</p>
+        <h2 id="trabalho-title">O trabalho da Luscar em Joinville</h2>
+        <p class="lead">
+          A Luscar Climatização atende em {site.regionFull} com serviços de
+          instalação, manutenção, limpeza, acesso por cordas e tubulação
+          flexível.
+        </p>
+        <ul class="human__facts" role="list">
+          <li><strong>Atuação</strong><span>{site.regionFull}</span></li>
+          <li><strong>Serviços</strong><span>Instalação, manutenção, limpeza, acesso por cordas e PEX/EPEX</span></li>
+          <li><strong>Contato</strong><span>WhatsApp {contacts.phoneDisplay}</span></li>
+        </ul>
+        <p style="margin-top:1.25rem">
+          <a class="link-more" href={routes.contact}>Falar com a Luscar</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ice" aria-labelledby="climatizacao-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="climatizacao-title">Climatização e acesso por cordas</h2>
+        <p class="lead">
+          Os serviços cobrem instalação, manutenção e limpeza de
+          ar-condicionado, além de trabalhos em prédios e apartamentos com
+          acesso por cordas quando o local exige. A tubulação flexível
+          PEX/EPEX também faz parte do atendimento, com avaliação da
+          aplicação adequada a cada projeto.
+        </p>
+      </div>
+      <p>
+        <a class="link-more" href={routes.servicos}>Ver os serviços da Luscar</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="bastidores-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="bastidores-title">Acompanhe os bastidores</h2>
+        <p class="lead">
+          Os registros publicados do trabalho ficam no Instagram da Luscar.
+          Veja algumas fotografias do acervo e acompanhe o perfil para mais.
+        </p>
+      </div>
+
+      <Gallery
+        items={['rapelServico', 'instalacaoInterna', 'tecnicoInstrumentos']}
+        wideIndices={[0]}
+        heading="Abrir a fotografia em tamanho maior"
+      />
+
+      <p style="margin-top:1.75rem">
+        <a class="link-more" href={contacts.instagram} target="_blank" rel="noopener">
+          Acompanhar a Luscar no Instagram
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>

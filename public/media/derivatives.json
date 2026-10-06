@@ -1,0 +1,535 @@
+{
+  "generatedBy": "scripts/generate-images.mjs",
+  "note": "No upscaling: every width is <= the source pixel width. See src/data/site.ts.",
+  "photos": [
+    {
+      "key": "hero",
+      "source": "hero-tecnico-em-altura.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/hero/tecnico-em-altura-420.webp",
+          "bytes": 33094
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-420.avif",
+          "bytes": 25883
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-420.jpg",
+          "bytes": 42851
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-560.webp",
+          "bytes": 48114
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-560.avif",
+          "bytes": 35784
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-560.jpg",
+          "bytes": 65319
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-720.webp",
+          "bytes": 65424
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-720.avif",
+          "bytes": 47215
+        },
+        {
+          "path": "public/media/hero/tecnico-em-altura-720.jpg",
+          "bytes": 94619
+        }
+      ]
+    },
+    {
+      "key": "alpinismoFachada",
+      "source": "alpinismo-fachada-horizontal.jpg",
+      "width": 1280,
+      "height": 960,
+      "files": [
+        {
+          "path": "public/media/height/alpinismo-fachada-480.webp",
+          "bytes": 10690
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-480.avif",
+          "bytes": 8131
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-480.jpg",
+          "bytes": 14818
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-720.webp",
+          "bytes": 20130
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-720.avif",
+          "bytes": 14906
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-720.jpg",
+          "bytes": 29355
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-900.webp",
+          "bytes": 28282
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-900.avif",
+          "bytes": 20576
+        },
+        {
+          "path": "public/media/height/alpinismo-fachada-900.jpg",
+          "bytes": 42965
+        }
+      ]
+    },
+    {
+      "key": "instalacaoInterna",
+      "source": "instalacao-interna.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/install/instalacao-interna-400.webp",
+          "bytes": 15704
+        },
+        {
+          "path": "public/media/install/instalacao-interna-400.avif",
+          "bytes": 12290
+        },
+        {
+          "path": "public/media/install/instalacao-interna-400.jpg",
+          "bytes": 25209
+        },
+        {
+          "path": "public/media/install/instalacao-interna-560.webp",
+          "bytes": 25030
+        },
+        {
+          "path": "public/media/install/instalacao-interna-560.avif",
+          "bytes": 18512
+        },
+        {
+          "path": "public/media/install/instalacao-interna-560.jpg",
+          "bytes": 42883
+        },
+        {
+          "path": "public/media/install/instalacao-interna-720.webp",
+          "bytes": 35478
+        },
+        {
+          "path": "public/media/install/instalacao-interna-720.avif",
+          "bytes": 24706
+        },
+        {
+          "path": "public/media/install/instalacao-interna-720.jpg",
+          "bytes": 63829
+        },
+        {
+          "path": "public/media/install/instalacao-interna-800.webp",
+          "bytes": 40236
+        },
+        {
+          "path": "public/media/install/instalacao-interna-800.avif",
+          "bytes": 27459
+        },
+        {
+          "path": "public/media/install/instalacao-interna-800.jpg",
+          "bytes": 75233
+        }
+      ]
+    },
+    {
+      "key": "tecnicoInstrumentos",
+      "source": "tecnico-instrumentos.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/process/tecnico-instrumentos-400.webp",
+          "bytes": 23774
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-400.avif",
+          "bytes": 18870
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-400.jpg",
+          "bytes": 32545
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-560.webp",
+          "bytes": 38138
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-560.avif",
+          "bytes": 29128
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-560.jpg",
+          "bytes": 55204
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-720.webp",
+          "bytes": 54792
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-720.avif",
+          "bytes": 39619
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-720.jpg",
+          "bytes": 80838
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-800.webp",
+          "bytes": 62518
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-800.avif",
+          "bytes": 44397
+        },
+        {
+          "path": "public/media/process/tecnico-instrumentos-800.jpg",
+          "bytes": 95512
+        }
+      ]
+    },
+    {
+      "key": "predioInstalacoes",
+      "source": "predio-instalacoes.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/buildings/predio-instalacoes-400.webp",
+          "bytes": 25426
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-400.avif",
+          "bytes": 18616
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-400.jpg",
+          "bytes": 32323
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-560.webp",
+          "bytes": 46806
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-560.avif",
+          "bytes": 32551
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-560.jpg",
+          "bytes": 57896
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-720.webp",
+          "bytes": 71416
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-720.avif",
+          "bytes": 48465
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-720.jpg",
+          "bytes": 89293
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-800.webp",
+          "bytes": 84058
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-800.avif",
+          "bytes": 56716
+        },
+        {
+          "path": "public/media/buildings/predio-instalacoes-800.jpg",
+          "bytes": 107988
+        }
+      ]
+    },
+    {
+      "key": "lucasRetrato",
+      "source": "lucas-retrato.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/people/lucas-retrato-360.webp",
+          "bytes": 15848
+        },
+        {
+          "path": "public/media/people/lucas-retrato-360.avif",
+          "bytes": 12649
+        },
+        {
+          "path": "public/media/people/lucas-retrato-360.jpg",
+          "bytes": 23826
+        },
+        {
+          "path": "public/media/people/lucas-retrato-520.webp",
+          "bytes": 24790
+        },
+        {
+          "path": "public/media/people/lucas-retrato-520.avif",
+          "bytes": 18697
+        },
+        {
+          "path": "public/media/people/lucas-retrato-520.jpg",
+          "bytes": 40565
+        },
+        {
+          "path": "public/media/people/lucas-retrato-720.webp",
+          "bytes": 38056
+        },
+        {
+          "path": "public/media/people/lucas-retrato-720.avif",
+          "bytes": 26716
+        },
+        {
+          "path": "public/media/people/lucas-retrato-720.jpg",
+          "bytes": 64861
+        },
+        {
+          "path": "public/media/people/lucas-retrato-800.webp",
+          "bytes": 42822
+        },
+        {
+          "path": "public/media/people/lucas-retrato-800.avif",
+          "bytes": 29582
+        },
+        {
+          "path": "public/media/people/lucas-retrato-800.jpg",
+          "bytes": 75981
+        }
+      ]
+    },
+    {
+      "key": "condensadorFachada",
+      "source": "instalacao-condensadora-fachada.jpg",
+      "width": 1280,
+      "height": 960,
+      "files": [
+        {
+          "path": "public/media/gallery/condensador-fachada-480.webp",
+          "bytes": 11510
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-480.avif",
+          "bytes": 9500
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-480.jpg",
+          "bytes": 19022
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-720.webp",
+          "bytes": 21282
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-720.avif",
+          "bytes": 16371
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-720.jpg",
+          "bytes": 36348
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-900.webp",
+          "bytes": 29302
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-900.avif",
+          "bytes": 22228
+        },
+        {
+          "path": "public/media/gallery/condensador-fachada-900.jpg",
+          "bytes": 52549
+        }
+      ]
+    },
+    {
+      "key": "rapelServico",
+      "source": "rapel-servico.jpg",
+      "width": 960,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/gallery/rapel-servico-400.webp",
+          "bytes": 31654
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-400.avif",
+          "bytes": 23400
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-400.jpg",
+          "bytes": 36405
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-560.webp",
+          "bytes": 55394
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-560.avif",
+          "bytes": 38957
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-560.jpg",
+          "bytes": 65148
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-720.webp",
+          "bytes": 81598
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-720.avif",
+          "bytes": 55033
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-720.jpg",
+          "bytes": 99502
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-800.webp",
+          "bytes": 92320
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-800.avif",
+          "bytes": 62553
+        },
+        {
+          "path": "public/media/gallery/rapel-servico-800.jpg",
+          "bytes": 118521
+        }
+      ]
+    },
+    {
+      "key": "instrumentosServico",
+      "source": "instrumentos-em-servico.jpg",
+      "width": 1012,
+      "height": 1280,
+      "files": [
+        {
+          "path": "public/media/process/instrumentos-em-servico-360.webp",
+          "bytes": 24010
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-360.avif",
+          "bytes": 19148
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-360.jpg",
+          "bytes": 31103
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-480.webp",
+          "bytes": 34664
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-480.avif",
+          "bytes": 26079
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-480.jpg",
+          "bytes": 47398
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-640.webp",
+          "bytes": 48906
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-640.avif",
+          "bytes": 35658
+        },
+        {
+          "path": "public/media/process/instrumentos-em-servico-640.jpg",
+          "bytes": 72468
+        }
+      ]
+    },
+    {
+      "key": "pexInstalacao",
+      "source": "pex-instalacao-referencia.jpg",
+      "width": 295,
+      "height": 172,
+      "files": [
+        {
+          "path": "public/media/pex/pex-instalacao-295.webp",
+          "bytes": 4822
+        },
+        {
+          "path": "public/media/pex/pex-instalacao-295.avif",
+          "bytes": 4110
+        },
+        {
+          "path": "public/media/pex/pex-instalacao-295.jpg",
+          "bytes": 7163
+        }
+      ]
+    },
+    {
+      "key": "pexAplicacao",
+      "source": "pex-aplicacao-referencia.jpg",
+      "width": 295,
+      "height": 172,
+      "files": [
+        {
+          "path": "public/media/pex/pex-aplicacao-295.webp",
+          "bytes": 6256
+        },
+        {
+          "path": "public/media/pex/pex-aplicacao-295.avif",
+          "bytes": 4804
+        },
+        {
+          "path": "public/media/pex/pex-aplicacao-295.jpg",
+          "bytes": 8654
+        }
+      ]
+    },
+    {
+      "key": "pexTubos",
+      "source": "pex-tubos-referencia.jpg",
+      "width": 295,
+      "height": 172,
+      "files": [
+        {
+          "path": "public/media/pex/pex-tubos-295.webp",
+          "bytes": 4808
+        },
+        {
+          "path": "public/media/pex/pex-tubos-295.avif",
+          "bytes": 3785
+        },
+        {
+          "path": "public/media/pex/pex-tubos-295.jpg",
+          "bytes": 6842
+        }
+      ]
+    },
+    {
+      "key": "logo",
+      "source": "logo-luscar-original.png",
+      "width": 274,
+      "height": 115
+    },
+    {
+      "key": "og",
+      "source": "instalacao-condensadora-fachada.jpg",
+      "width": 1200,
+      "height": 630
+    }
+  ],
+  "legacyAliases": 35
+}

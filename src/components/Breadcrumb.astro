@@ -1,0 +1,33 @@
+---
+/**
+ * Visible breadcrumb. Mirrors the BreadcrumbList JSON-LD emitted by
+ * data/seo.ts, so what a visitor reads and what a crawler parses agree.
+ */
+interface Crumb {
+  name: string;
+  route: string;
+}
+
+interface Props {
+  crumbs: readonly Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="Caminho da página">
+  <div class="container">
+    <ol>
+      <li><a href="/">Início</a></li>
+      {
+        crumbs.map((crumb) => (
+          <li>
+            <a href={crumb.route} aria-current="page">
+              {crumb.name}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</nav>

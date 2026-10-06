@@ -1,0 +1,151 @@
+---
+/**
+ * Site header.
+ *
+ * Two navigation states, chosen by space rather than by device guesswork:
+ *   < 1024px  logo + a real toggle opening a scrollable panel
+ *   >= 1024px full inline navigation
+ *
+ * The panel is a <nav> containing ordinary links, so it works by keyboard and
+ * touch without any framework. JavaScript only manages open/closed state,
+ * Escape, and returning focus to the toggle.
+ */
+import { photos, logoUrl, routes, site, whatsappLink, whatsappIntents } from '../data/site.js';
+
+const current = Astro.url.pathname;
+
+const navItems = [
+  { label: 'Serviços', href: routes.servicos },
+  { label: 'Trabalhos', href: routes.projects },
+  { label: 'Sobre', href: routes.about },
+  { label: 'Contato', href: routes.contact },
+];
+
+function isCurrent(href: string): boolean {
+  if (href === routes.home) return current === routes.home;
+  return current === href || current.startsWith(href);
+}
+
+const ctaHref = whatsappLink(whatsappIntents.geral);
+const logo = photos.logo;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={routes.home} aria-label={`${site.name} — página inicial`}>
+      <img
+        src={logoUrl}
+        alt={site.name}
+        width={logo.width}
+        height={logo.height}
+        decoding="async"
+      />
+      <span class="brand__text">Climatização<br />Joinville e região</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Navegação principal">
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--on-deep header-cta" href={ctaHref} rel="noopener">
+      Pedir orçamento
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-panel"
+    >
+      <span class="nav-toggle__bars" aria-hidden="true"><span></span></span>
+      <span class="visually-hidden">Abrir menu de navegação</span>
+    </button>
+  </div>
+
+  <nav class="nav-panel" id="nav-panel" data-open="false" aria-label="Navegação principal (compacto)">
+    <ul>
+      {
+        navItems.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href={routes.instalacao}>Instalação</a>
+      </li>
+      <li>
+        <a href={routes.manutencao}>Manutenção e consertos</a>
+      </li>
+      <li>
+        <a href={routes.altura}>Acesso por cordas</a>
+      </li>
+      <li>
+        <a href={routes.limpeza}>Limpeza</a>
+      </li>
+      <li>
+        <a href={routes.pex}>Tubulação PEX/EPEX</a>
+      </li>
+    </ul>
+    <div class="nav-panel__cta">
+      <a class="btn btn--on-deep btn--block" href={ctaHref} rel="noopener">Pedir orçamento</a>
+      <a class="btn btn--ghost-on-deep btn--block" href={routes.contact} style="margin-top:.75rem">
+        Ver canais de contato
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Progressive enhancement: the panel is only interactive once this runs.
+  // Without JS the desktop nav still works and the panel stays closed.
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('nav-panel');
+
+  if (toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.dataset.open = String(open);
+      const label = toggle.querySelector('.visually-hidden');
+      if (label) label.textContent = open ? 'Fechar menu de navegação' : 'Abrir menu de navegação';
+      // Stop the page behind the panel from scrolling on touch devices.
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (toggle.getAttribute('aria-expanded') !== 'true') return;
+      setOpen(false);
+      toggle.focus();
+    });
+
+    // Following a link inside the panel must not leave it stuck open.
+    panel.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
+    });
+
+    // Leaving the small-screen range must not strand the open panel state.
+    const wide = window.matchMedia('(min-width: 1024px)');
+    const onChange = (event: MediaQueryList | MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+    wide.addEventListener('change', onChange as (e: MediaQueryListEvent) => void);
+  }
+</script>
