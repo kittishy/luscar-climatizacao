@@ -207,13 +207,39 @@ function splitCsv(line) {
 }
 
 async function main() {
+  /*
+   * Source material vs. committed derivatives.
+   *
+   * The selected photographs live in ../assets/selecionados, which is
+   * deliberately OUTSIDE this repository: the briefing requires the published
+   * directory to contain no raw research or discarded images. Their
+   * derivatives under public/media ARE committed.
+   *
+   * That means a CI deploy has no source to generate from, and must use the
+   * committed derivatives instead. So:
+   *
+   *   source present            -> regenerate (local development)
+   *   source absent, output ok  -> skip, with a message (CI deploy)
+   *   source absent, no output  -> fail loudly
+   *
+   * The third case must never be allowed to pass: an empty public/media would
+   * deploy a site with no photographs and no error.
+   */
+  const mediaDir = join(publicDir, 'media');
+  const derivativesIndex = join(mediaDir, 'derivatives.json');
+  const hasOutput = existsSync(derivativesIndex);
+
   if (!existsSync(sourceDir)) {
-    console.error(`source directory missing: ${sourceDir}`);
+    if (hasOutput) {
+      console.log('images: no source directory (expected on CI) — using committed derivatives');
+      console.log('images: run `npm run images` locally from the briefing folder to rebuild them');
+      return;
+    }
+    console.error(`image generation failed: source missing at ${sourceDir} and no committed derivatives`);
     process.exit(1);
   }
 
   // Idempotent: clear only generated output, never source material.
-  const mediaDir = join(publicDir, 'media');
   if (existsSync(mediaDir)) await rm(mediaDir, { recursive: true, force: true });
 
   console.log('images: generating derivatives from', sourceDir);
