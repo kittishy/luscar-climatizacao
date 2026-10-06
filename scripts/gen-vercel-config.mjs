@@ -17,8 +17,16 @@
  *    home page: without Search Console we cannot know whether they carry
  *    backlinks, and a misleading redirect is worse than an honest 410.
  *
+ * WHY THE 410s ARE REWRITES, NOT REDIRECTS:
+ * Vercel's `redirects` accepts only 301/302/307/308. A `status: 410` entry is
+ * rejected at deploy time. Serving a static file at those paths would answer
+ * 200 and tell crawlers the page is content; redirecting to the home page is
+ * forbidden by the brief. So the four paths rewrite to api/gone.js, which
+ * returns an actual 410. Hosts that can express 410 directly should prefer the
+ * direct form in MIGRACAO.md.
+ *
  * A static Astro export has no SPA fallback, so an unknown slug naturally 404s.
- * There is deliberately no catch-all rule anywhere in this file.
+ * There is deliberately no catch-all rewrite anywhere in this file.
  */
 
 import { writeFile } from 'node:fs/promises';
@@ -82,15 +90,15 @@ async function main() {
     outputDirectory: 'dist',
     trailingSlash: true,
     cleanUrls: false,
-    // No `rewrites` catch-all: an unknown path must 404, never render home.
+    // No catch-all rewrite: an unknown path must 404, never render home.
     headers,
-    redirects: GONE.map((source) => ({ source, destination: source, status: 410 })),
+    rewrites: GONE.map((source) => ({ source, destination: '/api/gone' })),
   };
 
   await writeFile(join(root, 'vercel.json'), JSON.stringify(config, null, 2) + '\n', 'utf8');
 
   console.log(`vercel.json written for mode=${mode}`);
-  console.log(`  ${GONE.length} routes configured with a real 410`);
+  console.log(`  ${GONE.length} template routes rewritten to /api/gone (real HTTP 410)`);
   console.log(
     mode === 'preview'
       ? '  X-Robots-Tag: noindex, follow'
