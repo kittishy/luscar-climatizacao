@@ -22,11 +22,23 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const seoDir = join(root, 'seo');
 
+/*
+ * Mode and origin are separate decisions, exactly as in astro.config.mjs and
+ * src/data/seo.ts: SITE_MODE makes the build indexable, SITE_ORIGIN decides
+ * where the canonical lives.
+ *
+ * This file writes the sitemap and robots.txt AFTER astro build, so it has to
+ * resolve the same origin the pages did. It previously pinned the client
+ * domain whenever the mode was production, which meant a production build on
+ * another host advertised the new routes in a sitemap pointing at the previous
+ * site. The client domain stays the production default.
+ */
 const mode = process.env.SITE_MODE === 'production' ? 'production' : 'preview';
-const origin =
+const DEFAULT_ORIGIN =
   mode === 'production'
     ? 'https://luscarjoinville.com.br'
-    : (process.env.SITE_ORIGIN ?? 'https://luscar-climatizacao.vercel.app').replace(/\/$/, '');
+    : 'https://luscar-climatizacao.vercel.app';
+const origin = (process.env.SITE_ORIGIN ?? DEFAULT_ORIGIN).replace(/\/$/, '');
 
 /**
  * The route contract is read from this repository's own copy of the

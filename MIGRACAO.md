@@ -100,6 +100,43 @@ cabeçalho `X-Robots-Tag`, que deixa ler e desaconselha indexar.
 
 ## 4. Particularidades por hospedagem
 
+### Modo e origem sao duas decisoes
+
+`SITE_MODE` decide se o build e indexavel. `SITE_ORIGIN` decide onde o canonical
+aponta. Antes eles eram a mesma decisao: qualquer build de production apontava o
+canonical para `luscarjoinville.com.br`, o que tornava inexpressivel "indexavel,
+servido em outro host" e, como esse dominio ainda hospeda o site anterior,
+significava canonicalizar as paginas novas sobre as antigas.
+
+O dominio do cliente continua sendo o **padrao** de production, entao o corte
+final nao exige mudanca de codigo: basta definir `SITE_ORIGIN` e rebuildar.
+
+| Variavel | Default (production) | Default (preview) |
+|---|---|---|
+| `SITE_MODE` | preview | preview |
+| `SITE_ORIGIN` | `https://luscarjoinville.com.br` | `https://luscar-climatizacao.vercel.app` |
+
+Um valor **vazio** conta como ausente. No painel da Vercel, limpar uma variavel
+a deixa presente e vazia com mais frequencia do que a remove, e `??` sozinho
+trataria `''` como escolha deliberada.
+
+As quatro fontes de origem precisam concordar:
+
+| Fonte | Arquivo |
+|---|---|
+| `site` do Astro | `astro.config.mjs` |
+| canonical, og:url, JSON-LD | `src/data/env.ts` (reexportado por `src/data/seo.ts`) |
+| sitemap.xml, robots.txt | `scripts/generate-routes.mjs` (roda depois do build) |
+| headers da borda | `vercel.json` versionado |
+
+O build local e o `vercel.json` versionado precisam estar no mesmo modo, porque
+`tests/deploy-config.test.ts` compara o header com o `<meta>` do build. Para
+verificar localmente o mesmo que vai para a Vercel:
+
+```bash
+SITE_MODE=production SITE_ORIGIN=https://luscar-clamatizacao.vercel.app npm run verify
+```
+
 ### Vercel
 
 `vercel.json` é **gerado** por `npm run config` a partir do modo, para que

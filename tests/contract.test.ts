@@ -15,6 +15,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -399,17 +400,114 @@ test('JSON-LD is valid, references one Organization id, and invents no address',
   }
 });
 
-test('preview build is noindex and production build is indexable', () => {
+/**
+ * Mode resolution, tested directly against the two pure functions.
+ *
+ * This used to assert that the built `dist` is always noindex, which was only
+ * true because nobody ever built locally in production mode. That made an
+ * indexable build impossible to verify at all. The property that actually
+ * matters is split in two here:
+ *
+ *   1. resolution  — with no SITE_MODE the site is preview (the safe default),
+ *      and the origin is decided by SITE_ORIGIN independently of the mode;
+ *   2. coherence   — whatever mode the build ran in, the head, the sitemap and
+ *      robots.txt must agree, and the canonical must be on the same origin as
+ *      the sitemap.
+ *
+ * Run with `node --test`; each case spawns a fresh process so the env of one
+ * case cannot leak into the next. `unset` is modelled by deleting the key,
+ * `''` by setting it empty, because those are different failures in practice.
+ */
+function resolveWithEnv(env: { set?: Record<string, string>; unset?: string[] }): {
+  mode: string;
+  origin: string;
+} {
+  const script =
+    "import { getMode, getOrigin } from './src/data/env.ts';" +
+    "console.log(JSON.stringify({ mode: getMode(), origin: getOrigin() }));";
+  const childEnv = { ...process.env };
+  for (const key of env.unset ?? []) delete childEnv[key];
+  Object.assign(childEnv, env.set ?? {});
+  const out = execFileSync(
+    process.execPath,
+    ['--experimental-strip-types', '--input-type=module', '-e', script],
+    { cwd: root, encoding: 'utf8', env: childEnv },
+  );
+  return JSON.parse(out.trim().split('\n').pop() ?? '{}');
+}
+
+test('no SITE_MODE resolves to the safe preview state', () => {
+  const r = resolveWithEnv({ unset: ['SITE_MODE', 'SITE_ORIGIN'] });
+  assert.equal(r.mode, 'preview', 'unset SITE_MODE must be preview, never production');
+  assert.equal(r.origin, 'https://luscar-climatizacao.vercel.app');
+});
+
+test('an empty SITE_MODE is not production either', () => {
+  const r = resolveWithEnv({ set: { SITE_MODE: '', SITE_ORIGIN: '' } });
+  assert.equal(r.mode, 'preview');
+  assert.equal(r.origin, 'https://luscar-climatizacao.vercel.app');
+});
+
+test('production mode takes the origin from SITE_ORIGIN when given', () => {
+  const r = resolveWithEnv({
+    set: { SITE_MODE: 'production', SITE_ORIGIN: 'https://luscar-climatizacao.vercel.app/' },
+  });
+  assert.equal(r.mode, 'production');
+  // The trailing slash is stripped, or every absolute URL ends up with two.
+  assert.equal(r.origin, 'https://luscar-climatizacao.vercel.app');
+});
+
+test('production without SITE_ORIGIN still defaults to the client domain', () => {
+  const r = resolveWithEnv({ set: { SITE_MODE: 'production' }, unset: ['SITE_ORIGIN'] });
+  assert.equal(r.origin, 'https://luscarjoinville.com.br');
+});
+
+test('production with an EMPTY SITE_ORIGIN still defaults to the client domain', () => {
+  const r = resolveWithEnv({ set: { SITE_MODE: 'production', SITE_ORIGIN: '' } });
+  assert.equal(r.origin, 'https://luscarjoinville.com.br');
+});
+
+test('the built pages, sitemap and robots.txt agree with each other', () => {
   if (!hasBuild) return;
+
   const markup = readFileSync(join(dist, 'index.html'), 'utf8');
   const robots = markup.match(/<meta name="robots" content="([^"]*)"/)?.[1];
   assert.ok(robots, 'no robots meta on home');
-  // Default (no SITE_MODE) must be the safe preview state.
-  assert.ok(robots.includes('noindex'), `default build should be noindex, got "${robots}"`);
+
+  const canonical = markup.match(/<link rel="canonical" href="([^"]*)"/)?.[1];
+  assert.ok(canonical, 'no canonical on home');
 
   const sitemap = readFileSync(join(dist, 'sitemap.xml'), 'utf8');
-  const urls = (sitemap.match(/<loc>/g) || []).length;
-  assert.equal(urls, 0, 'preview sitemap must not advertise indexable pages');
+  const locs = [...sitemap.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
+  const robotsTxt = readFileSync(join(dist, 'robots.txt'), 'utf8');
+  const sitemapRef = robotsTxt.match(/^Sitemap:\s*(\S+)$/m)?.[1];
+
+  const origin = new URL(canonical).origin;
+  const isPreview = robots.includes('noindex');
+
+  // A preview build must advertise nothing: empty sitemap, and no Sitemap:
+  // line either, since pointing a crawler at an empty sitemap is noise.
+  if (isPreview) {
+    assert.equal(locs.length, 0, 'preview sitemap must not advertise indexable pages');
+    assert.equal(sitemapRef, undefined, 'preview robots.txt must not advertise a sitemap');
+  } else {
+    assert.equal(locs.length, 13, 'indexable sitemap must list all 13 routes');
+    assert.ok(sitemapRef, 'indexable robots.txt must advertise the sitemap');
+    assert.equal(new URL(sitemapRef).origin, origin, 'robots.txt sitemap origin differs from the canonical');
+  }
+
+  // One origin everywhere. A sitemap pointing at a different host than the
+  // canonical is the failure that hides a whole migration.
+  for (const loc of locs) {
+    assert.equal(new URL(loc).origin, origin, `sitemap entry on a different origin: ${loc}`);
+  }
+
+  // Every route's canonical must be on the same origin, not just the home page.
+  for (const page of productionRoutes) {
+    const c = html(page.route).match(/<link rel="canonical" href="([^"]*)"/)?.[1];
+    assert.ok(c, `${page.route} has no canonical`);
+    assert.equal(new URL(c).origin, origin, `${page.route} canonical on ${new URL(c).origin}, expected ${origin}`);
+  }
 });
 
 /** The contracted opening messages, mirrored from src/data/site.ts. */

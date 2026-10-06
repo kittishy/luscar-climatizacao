@@ -4,18 +4,15 @@
  */
 
 import { contacts, site } from './site.js';
+import { getMode, getOrigin, type SiteMode } from './env.js';
 
-export type SiteMode = 'preview' | 'production';
-
-export function getMode(): SiteMode {
-  return process.env.SITE_MODE === 'production' ? 'production' : 'preview';
-}
-
-export function getOrigin(): string {
-  if (getMode() === 'production') return 'https://luscarjoinville.com.br';
-  const raw = process.env.SITE_ORIGIN ?? 'https://luscar-climatizacao.vercel.app';
-  return raw.replace(/\/$/, '');
-}
+/*
+ * Mode and origin resolution lives in ./env.ts, which has no imports so the
+ * tests can exercise it directly with bare node. Re-exported here because every
+ * consumer of "which mode / which origin" is doing SEO work.
+ */
+export { getMode, getOrigin };
+export type { SiteMode };
 
 /** Absolute URL for a route. Routes are already slash-terminated. */
 export function absoluteUrl(route: string, base?: string): string {
