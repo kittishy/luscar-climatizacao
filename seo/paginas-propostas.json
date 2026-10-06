@@ -1,0 +1,373 @@
+[
+  {
+    "route": "/",
+    "type": "home",
+    "primary_keyword": "ar condicionado Joinville",
+    "title": "Ar-condicionado em Joinville | Luscar Climatização",
+    "title_chars": 50,
+    "description": "Instalação, manutenção e limpeza de ar-condicionado em Joinville, com acesso por cordas e tubulação PEX/EPEX. Converse com a Luscar.",
+    "description_chars": 132,
+    "h1": "Ar-condicionado em Joinville, da instalação ao cuidado diário.",
+    "h2": [
+      "Serviços da Luscar",
+      "Quando o acesso faz parte do serviço",
+      "Trabalhos da Luscar",
+      "Como solicitar atendimento",
+      "Dúvidas sobre climatização"
+    ],
+    "internal_links": [
+      "/servicos-de-climatizacao-ar-condicionado-joinville/",
+      "/instalacao-ar-condicionado-joinville/",
+      "/projects/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Organization",
+      "WebSite"
+    ],
+    "intent": "navegação/local"
+  },
+  {
+    "route": "/instalacao-ar-condicionado-joinville/",
+    "type": "service",
+    "primary_keyword": "instalação ar condicionado Joinville",
+    "title": "Instalação de ar-condicionado em Joinville | Luscar",
+    "title_chars": 51,
+    "description": "Instalação de ar-condicionado split em Joinville. Saiba quais informações ajudam na avaliação do espaço e converse com o técnico da Luscar.",
+    "description_chars": 139,
+    "h1": "Instalação de ar-condicionado em Joinville.",
+    "h2": [
+      "Instalação para diferentes ambientes",
+      "O que considerar antes de instalar",
+      "Informações para solicitar um orçamento",
+      "Instalações em prédios e locais de difícil acesso"
+    ],
+    "internal_links": [
+      "/instalacao-de-ar-condicionado-predios-joinville/",
+      "/concertos-e-manutencao-ar-condicionado-joinville/",
+      "/guias/instalacao-ar-condicionado-apartamento/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/instalacao-de-ar-condicionado-predios-joinville/",
+    "type": "service",
+    "primary_keyword": "instalação ar condicionado prédios Joinville",
+    "title": "Ar-condicionado em prédios em Joinville | Luscar",
+    "title_chars": 48,
+    "description": "Instalação de ar-condicionado em prédios de Joinville. Condições de acesso, fachada e condomínio entram na avaliação. Fale com a Luscar.",
+    "description_chars": 136,
+    "h1": "Instalação de ar-condicionado em prédios de Joinville.",
+    "h2": [
+      "Cada prédio exige uma avaliação",
+      "Fachada e regras do condomínio",
+      "Acesso às unidades externas",
+      "Como apresentar sua necessidade"
+    ],
+    "internal_links": [
+      "/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/",
+      "/instalacao-ar-condicionado-joinville/",
+      "/guias/instalacao-ar-condicionado-apartamento/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/",
+    "type": "service",
+    "primary_keyword": "alpinismo industrial Joinville ar condicionado",
+    "title": "Ar-condicionado com alpinismo em Joinville | Luscar",
+    "title_chars": 51,
+    "description": "Serviços de ar-condicionado em prédios e apartamentos com acesso por cordas em Joinville. Veja registros do trabalho e fale com a Luscar.",
+    "description_chars": 137,
+    "h1": "Ar-condicionado e acesso por cordas em Joinville.",
+    "h2": [
+      "Quando o local exige acesso por cordas",
+      "Instalações em prédios e apartamentos",
+      "Avaliação das condições de acesso",
+      "Registros do trabalho da Luscar"
+    ],
+    "internal_links": [
+      "/instalacao-de-ar-condicionado-predios-joinville/",
+      "/projects/",
+      "/concertos-e-manutencao-ar-condicionado-joinville/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/servicos-de-climatizacao-ar-condicionado-joinville/",
+    "type": "hub",
+    "primary_keyword": "serviços climatização Joinville",
+    "title": "Serviços de climatização em Joinville | Luscar",
+    "title_chars": 46,
+    "description": "Conheça os serviços da Luscar em Joinville: instalação, manutenção, limpeza, acesso por cordas e tubulação flexível PEX/EPEX.",
+    "description_chars": 125,
+    "h1": "Serviços de climatização em Joinville.",
+    "h2": [
+      "Instalação de ar-condicionado",
+      "Manutenção e limpeza",
+      "Instalações em altura",
+      "Tubulação PEX/EPEX"
+    ],
+    "internal_links": [
+      "/instalacao-ar-condicionado-joinville/",
+      "/limpeza-ar-condicionado-joinville/",
+      "/concertos-e-manutencao-ar-condicionado-joinville/",
+      "/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/",
+      "/encanador-tubulacao-flexivel-pex-e-epex-joinville/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList"
+    ],
+    "intent": "navegação/local"
+  },
+  {
+    "route": "/concertos-e-manutencao-ar-condicionado-joinville/",
+    "type": "service",
+    "primary_keyword": "manutenção conserto ar condicionado Joinville",
+    "title": "Manutenção de ar-condicionado em Joinville | Luscar",
+    "title_chars": 51,
+    "description": "Seu ar-condicionado mudou de desempenho? Converse com a Luscar sobre manutenção e consertos em Joinville e informe os sintomas do aparelho.",
+    "description_chars": 139,
+    "h1": "Manutenção e consertos de ar-condicionado em Joinville.",
+    "h2": [
+      "Quando solicitar uma avaliação",
+      "Manutenção preventiva e corretiva",
+      "O que informar ao técnico",
+      "Limpeza e cuidado do equipamento"
+    ],
+    "internal_links": [
+      "/limpeza-ar-condicionado-joinville/",
+      "/guias/ar-condicionado-nao-gela/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/limpeza-ar-condicionado-joinville/",
+    "type": "service",
+    "primary_keyword": "limpeza ar condicionado Joinville",
+    "title": "Limpeza de ar-condicionado em Joinville | Luscar",
+    "title_chars": 48,
+    "description": "Limpeza e cuidado de ar-condicionado em Joinville. A necessidade varia com o uso e o ambiente. Converse com a Luscar para avaliar seu equipamento.",
+    "description_chars": 146,
+    "h1": "Limpeza de ar-condicionado em Joinville.",
+    "h2": [
+      "Cuidado com os componentes do aparelho",
+      "Quando avaliar a necessidade de limpeza",
+      "Uso e ambiente influenciam a manutenção",
+      "Como iniciar o atendimento"
+    ],
+    "internal_links": [
+      "/concertos-e-manutencao-ar-condicionado-joinville/",
+      "/guias/ar-condicionado-nao-gela/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/encanador-tubulacao-flexivel-pex-e-epex-joinville/",
+    "type": "service",
+    "primary_keyword": "tubulação pex Joinville",
+    "title": "Tubulação flexível PEX/EPEX em Joinville | Luscar",
+    "title_chars": 49,
+    "description": "Serviços com tubulação flexível PEX/EPEX em Joinville. A aplicação depende do projeto e da especificação do sistema. Converse com a Luscar.",
+    "description_chars": 139,
+    "h1": "Tubulação flexível PEX/EPEX em Joinville.",
+    "h2": [
+      "Tubulação flexível e avaliação do projeto",
+      "Compatibilidade depende da especificação",
+      "Informações para conversar sobre o serviço"
+    ],
+    "internal_links": [
+      "/servicos-de-climatizacao-ar-condicionado-joinville/",
+      "/instalacao-ar-condicionado-joinville/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Service"
+    ],
+    "intent": "comercial/local"
+  },
+  {
+    "route": "/about/",
+    "type": "about",
+    "primary_keyword": "Luscar Climatização",
+    "title": "Sobre a Luscar Climatização em Joinville",
+    "title_chars": 40,
+    "description": "Conheça a Luscar Climatização e seus serviços em Joinville. Instalação, manutenção, acesso por cordas e tubulação flexível com registros reais do trabalho.",
+    "description_chars": 155,
+    "h1": "Conheça a Luscar Climatização.",
+    "h2": [
+      "O trabalho da Luscar em Joinville",
+      "Climatização e acesso por cordas",
+      "Acompanhe os bastidores"
+    ],
+    "internal_links": [
+      "/projects/",
+      "/servicos-de-climatizacao-ar-condicionado-joinville/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList"
+    ],
+    "intent": "navegação/local"
+  },
+  {
+    "route": "/projects/",
+    "type": "gallery",
+    "primary_keyword": "trabalhos Luscar climatização",
+    "title": "Trabalhos de climatização e alpinismo | Luscar",
+    "title_chars": 46,
+    "description": "Veja registros publicados pela Luscar de instalações, serviços em fachadas e acesso por cordas. Conheça o trabalho e converse sobre seu projeto.",
+    "description_chars": 144,
+    "h1": "Trabalhos da Luscar.",
+    "h2": [
+      "Instalações e atendimentos",
+      "Serviços em altura",
+      "Converse sobre o seu espaço"
+    ],
+    "internal_links": [
+      "/instalacao-ar-condicionado-joinville/",
+      "/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/",
+      "/contact/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList"
+    ],
+    "intent": "navegação/local"
+  },
+  {
+    "route": "/contact/",
+    "type": "contact",
+    "primary_keyword": "contato Luscar Joinville",
+    "title": "Contato e orçamento em Joinville | Luscar",
+    "title_chars": 41,
+    "description": "Fale com a Luscar pelo WhatsApp sobre instalação, manutenção e outros serviços em Joinville. Envie as informações que tiver para iniciar a conversa.",
+    "description_chars": 148,
+    "h1": "Converse com a Luscar.",
+    "h2": [
+      "Qual serviço você precisa?",
+      "Informações que ajudam no atendimento",
+      "Atendimento em Joinville e região"
+    ],
+    "internal_links": [
+      "/servicos-de-climatizacao-ar-condicionado-joinville/",
+      "/projects/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList"
+    ],
+    "intent": "navegação/local"
+  },
+  {
+    "route": "/guias/instalacao-ar-condicionado-apartamento/",
+    "type": "article",
+    "primary_keyword": "instalar ar condicionado apartamento",
+    "title": "Ar-condicionado no apartamento: o que preparar | Luscar",
+    "title_chars": 55,
+    "description": "Saiba quais informações reunir antes de solicitar instalação de ar-condicionado em apartamento: condomínio, aparelho, local e condições de acesso.",
+    "description_chars": 146,
+    "h1": "O que preparar antes de instalar ar-condicionado no apartamento.",
+    "h2": [
+      "Regras do condomínio e posição permitida",
+      "Informações sobre o aparelho",
+      "Fotos e condições de acesso",
+      "Como conversar com o técnico"
+    ],
+    "internal_links": [
+      "/instalacao-de-ar-condicionado-predios-joinville/",
+      "/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Article"
+    ],
+    "intent": "informacional"
+  },
+  {
+    "route": "/guias/ar-condicionado-nao-gela/",
+    "type": "article",
+    "primary_keyword": "ar condicionado não gela",
+    "title": "Ar-condicionado não gela: quando avaliar | Luscar",
+    "title_chars": 49,
+    "description": "Seu ar-condicionado não está gelando? Entenda quais sintomas relatar e quando buscar avaliação técnica, sem intervenções arriscadas no equipamento.",
+    "description_chars": 147,
+    "h1": "Ar-condicionado não gela: o que relatar ao técnico.",
+    "h2": [
+      "Observe o que mudou no funcionamento",
+      "Configurações e orientação do manual",
+      "Quando parar de usar e buscar avaliação",
+      "Converse sobre manutenção"
+    ],
+    "internal_links": [
+      "/concertos-e-manutencao-ar-condicionado-joinville/",
+      "/limpeza-ar-condicionado-joinville/"
+    ],
+    "indexable_production": true,
+    "indexable_preview": false,
+    "schema": [
+      "WebPage",
+      "BreadcrumbList",
+      "Article"
+    ],
+    "intent": "informacional"
+  }
+]

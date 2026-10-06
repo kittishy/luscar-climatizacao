@@ -21,7 +21,7 @@ import { dirname, join } from 'node:path';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
 const dist = join(root, 'dist');
-const brief = join(root, '..');
+const seoDir = join(root, 'seo');
 
 interface ContractPage {
   route: string;
@@ -33,7 +33,7 @@ interface ContractPage {
 }
 
 const contract = JSON.parse(
-  readFileSync(join(brief, 'seo', 'paginas-propostas.json'), 'utf8'),
+  readFileSync(join(seoDir, 'paginas-propostas.json'), 'utf8'),
 ) as ContractPage[];
 const siteData = readFileSync(join(root, 'src', 'data', 'site.ts'), 'utf8');
 

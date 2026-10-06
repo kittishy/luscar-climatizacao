@@ -1,0 +1,14 @@
+﻿url_atual,caminho_final,acao_producao,status_final,observacao
+https://luscarjoinville.com.br/,/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/about/,/about/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/author/projetos/,,remover_template_apos_arquivamento,410,Não entra no sitemap; não redirecionar genericamente para home
+https://luscarjoinville.com.br/category/sem-categoria/,,remover_template_apos_arquivamento,410,Não entra no sitemap; não redirecionar genericamente para home
+https://luscarjoinville.com.br/concertos-e-manutencao-ar-condicionado-joinville/,/concertos-e-manutencao-ar-condicionado-joinville/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/contact/,/contact/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/encanador-tubulacao-flexivel-pex-e-epex-joinville/,/encanador-tubulacao-flexivel-pex-e-epex-joinville/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/,/instalacao-ar-condicionado-predio-apartamento-alpinismo-joinville/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/instalacao-de-ar-condicionado-predios-joinville/,/instalacao-de-ar-condicionado-predios-joinville/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/ola-mundo/,,remover_template_apos_arquivamento,410,Não entra no sitemap; não redirecionar genericamente para home
+https://luscarjoinville.com.br/pagina-exemplo/,,remover_template_apos_arquivamento,410,Não entra no sitemap; não redirecionar genericamente para home
+https://luscarjoinville.com.br/projects/,/projects/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"
+https://luscarjoinville.com.br/servicos-de-climatizacao-ar-condicionado-joinville/,/servicos-de-climatizacao-ar-condicionado-joinville/,reescrever_preservando_url,200,"Conteúdo novo, canonical e links internos próprios"

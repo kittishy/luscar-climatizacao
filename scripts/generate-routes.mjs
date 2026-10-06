@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
-const brief = join(root, '..');
+const seoDir = join(root, 'seo');
 
 const mode = process.env.SITE_MODE === 'production' ? 'production' : 'preview';
 const origin =
@@ -29,11 +29,12 @@ const origin =
     : (process.env.SITE_ORIGIN ?? 'https://luscar-climatizacao.vercel.app').replace(/\/$/, '');
 
 /**
- * The route contract is read from the briefing's own JSON rather than
- * hardcoded, so seo/paginas-propostas.json stays authoritative.
+ * The route contract is read from this repository's own copy of the
+ * briefing's JSON rather than hardcoded, so seo/paginas-propostas.json stays
+ * authoritative and a CI deploy does not depend on files outside the repo.
  */
 async function loadContract() {
-  const raw = await readFile(join(brief, 'seo', 'paginas-propostas.json'), 'utf8');
+  const raw = await readFile(join(seoDir, 'paginas-propostas.json'), 'utf8');
   return JSON.parse(raw);
 }
 

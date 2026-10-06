@@ -26,7 +26,7 @@ import sharp from 'sharp';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceDir = join(root, '..', 'assets', 'selecionados');
 const publicDir = join(root, 'public');
-const briefDir = join(root, '..');
+const seoDir = join(root, 'seo');
 
 /**
  * Output groups. `dir` becomes public/media/<dir>/<slug>-<width>.<ext>.
@@ -159,7 +159,7 @@ async function emitOg() {
  * The file is parsed rather than hardcoded so the CSV stays the contract.
  */
 async function emitLegacyAliases() {
-  const csvPath = join(briefDir, 'seo', 'assets-publicados.csv');
+  const csvPath = join(seoDir, 'assets-publicados.csv');
   if (!existsSync(csvPath)) {
     console.warn('  ! seo/assets-publicados.csv not found; legacy aliases skipped');
     return 0;
@@ -178,7 +178,9 @@ async function emitLegacyAliases() {
 
   let count = 0;
   for (const [oldPath, localFile] of byLocal) {
-    const src = join(briefDir, localFile);
+    // The CSV's local-file column is relative to the briefing root, which is
+    // the parent of this repository during local development.
+    const src = join(root, '..', localFile);
     if (!existsSync(src)) {
       console.warn(`  ! legacy alias skipped, source missing: ${localFile}`);
       continue;
